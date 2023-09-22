@@ -40,28 +40,6 @@ CREATE TYPE crowdfunding.contacts AS (
 	last_name varchar(50),
 	email varchar(50));
 
--- DROP TYPE crowdfunding.crowdfunding;
-
-CREATE TYPE crowdfunding.crowdfunding AS (
-	project_id serial4,
-	"name" varchar(255),
-	description text,
-	cf_id int4,
-	contact_id int4,
-	company_name varchar(50),
-	blurb varchar(50),
-	goal int4,
-	pledged int4,
-	outcome varchar(50),
-	backers_count int4,
-	country varchar(50),
-	currency varchar(50),
-	launched_at int4,
-	deadline int4,
-	staff_pick bool,
-	spotlight bool,
-	"category & sub-category" varchar(50));
-
 -- DROP TYPE crowdfunding.subcategory;
 
 CREATE TYPE crowdfunding.subcategory AS (
@@ -113,19 +91,6 @@ CREATE TYPE crowdfunding."_contacts" (
 	ELEMENT = crowdfunding.contacts,
 	DELIMITER = ',');
 
--- DROP TYPE crowdfunding."_crowdfunding";
-
-CREATE TYPE crowdfunding."_crowdfunding" (
-	INPUT = array_in,
-	OUTPUT = array_out,
-	RECEIVE = array_recv,
-	SEND = array_send,
-	ANALYZE = array_typanalyze,
-	ALIGNMENT = 8,
-	STORAGE = any,
-	CATEGORY = A,
-	ELEMENT = crowdfunding.crowdfunding,
-	DELIMITER = ',');
 
 -- DROP TYPE crowdfunding."_subcategory";
 
@@ -233,36 +198,6 @@ CREATE TABLE contacts (
 	last_name varchar(50) NULL,
 	email varchar(50) NULL
 );
-
-
--- crowdfunding.crowdfunding definition
-
--- Drop table
-
--- DROP TABLE crowdfunding;
-
-CREATE TABLE crowdfunding (
-	project_id serial4 NOT NULL,
-	"name" varchar(255) NULL,
-	description text NULL,
-	cf_id int4 NULL,
-	contact_id int4 NULL,
-	company_name varchar(50) NULL,
-	blurb varchar(50) NULL,
-	goal int4 NULL,
-	pledged int4 NULL,
-	outcome varchar(50) NULL,
-	backers_count int4 NULL,
-	country varchar(50) NULL,
-	currency varchar(50) NULL,
-	launched_at int4 NULL,
-	deadline int4 NULL,
-	staff_pick bool NULL,
-	spotlight bool NULL,
-	"category & sub-category" varchar(50) NULL,
-	CONSTRAINT crowdfunding_pkey PRIMARY KEY (project_id)
-);
-
 
 -- crowdfunding.subcategory definition
 
