@@ -1,3 +1,49 @@
+CREATE TABLE campaign (
+  project_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description text
+    );
+   
+
+CREATE TABLE category (
+    project_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT
+);
+
+CREATE TABLE contacts (
+    project_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT
+);
+
+CREATE TABLE subcategory (
+    project_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT
+);
+
+CREATE TABLE crowdfunding (
+    project_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT
+);
+
+ALTER TABLE public.campaign
+ALTER COLUMN name DROP NOT NULL;
+
+ALTER TABLE public.category
+ALTER COLUMN name DROP NOT NULL;
+
+ALTER TABLE public.contacts
+ALTER COLUMN name DROP NOT NULL;
+
+ALTER TABLE public.crowdfunding
+ALTER COLUMN name DROP NOT NULL;
+
+ALTER TABLE public.subcategory
+ALTER COLUMN name DROP NOT NULL;
+
 INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
 	 ('Note: The contact information needs to be separated into the following columns: contact_id,  first name, last name,  and email.'),
 	 ('   '),
