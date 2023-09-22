@@ -1,2287 +1,280 @@
+
+CREATE SCHEMA crowdfunding AUTHORIZATION pg_database_owner;
+
+-- DROP TYPE crowdfunding.campaign;
+
+CREATE TYPE crowdfunding.campaign AS (
+	project_id serial4,
+	"name" varchar(255),
+	description text,
+	cf_id int4,
+	contact_id int4,
+	company_name varchar(50),
+	goal float4,
+	pledged float4,
+	outcome varchar(50),
+	backers_count int4,
+	country varchar(50),
+	currency varchar(50),
+	launched_date varchar(50),
+	end_date varchar(50),
+	staff_pick bool,
+	spotlight bool,
+	category_id varchar(50),
+	subcategory_id varchar(50));
+
+-- DROP TYPE crowdfunding.category;
+
+CREATE TYPE crowdfunding.category AS (
+	project_id serial4,
+	"name" varchar(255),
+	description text,
+	category_id varchar(50),
+	category varchar(50));
+
+-- DROP TYPE crowdfunding.contacts;
+
+CREATE TYPE crowdfunding.contacts AS (
+	contact_id int4,
+	first_name varchar(50),
+	last_name varchar(50),
+	email varchar(50));
+
+-- DROP TYPE crowdfunding.crowdfunding;
+
+CREATE TYPE crowdfunding.crowdfunding AS (
+	project_id serial4,
+	"name" varchar(255),
+	description text,
+	cf_id int4,
+	contact_id int4,
+	company_name varchar(50),
+	blurb varchar(50),
+	goal int4,
+	pledged int4,
+	outcome varchar(50),
+	backers_count int4,
+	country varchar(50),
+	currency varchar(50),
+	launched_at int4,
+	deadline int4,
+	staff_pick bool,
+	spotlight bool,
+	"category & sub-category" varchar(50));
+
+-- DROP TYPE crowdfunding.subcategory;
+
+CREATE TYPE crowdfunding.subcategory AS (
+	project_id serial4,
+	"name" varchar(255),
+	description text,
+	subcategory_id varchar(50),
+	subcategory varchar(50));
+
+-- DROP TYPE crowdfunding."_campaign";
+
+CREATE TYPE crowdfunding."_campaign" (
+	INPUT = array_in,
+	OUTPUT = array_out,
+	RECEIVE = array_recv,
+	SEND = array_send,
+	ANALYZE = array_typanalyze,
+	ALIGNMENT = 8,
+	STORAGE = any,
+	CATEGORY = A,
+	ELEMENT = crowdfunding.campaign,
+	DELIMITER = ',');
+
+-- DROP TYPE crowdfunding."_category";
+
+CREATE TYPE crowdfunding."_category" (
+	INPUT = array_in,
+	OUTPUT = array_out,
+	RECEIVE = array_recv,
+	SEND = array_send,
+	ANALYZE = array_typanalyze,
+	ALIGNMENT = 8,
+	STORAGE = any,
+	CATEGORY = A,
+	ELEMENT = crowdfunding.category,
+	DELIMITER = ',');
+
+-- DROP TYPE crowdfunding."_contacts";
+
+CREATE TYPE crowdfunding."_contacts" (
+	INPUT = array_in,
+	OUTPUT = array_out,
+	RECEIVE = array_recv,
+	SEND = array_send,
+	ANALYZE = array_typanalyze,
+	ALIGNMENT = 8,
+	STORAGE = any,
+	CATEGORY = A,
+	ELEMENT = crowdfunding.contacts,
+	DELIMITER = ',');
+
+-- DROP TYPE crowdfunding."_crowdfunding";
+
+CREATE TYPE crowdfunding."_crowdfunding" (
+	INPUT = array_in,
+	OUTPUT = array_out,
+	RECEIVE = array_recv,
+	SEND = array_send,
+	ANALYZE = array_typanalyze,
+	ALIGNMENT = 8,
+	STORAGE = any,
+	CATEGORY = A,
+	ELEMENT = crowdfunding.crowdfunding,
+	DELIMITER = ',');
+
+-- DROP TYPE crowdfunding."_subcategory";
+
+CREATE TYPE crowdfunding."_subcategory" (
+	INPUT = array_in,
+	OUTPUT = array_out,
+	RECEIVE = array_recv,
+	SEND = array_send,
+	ANALYZE = array_typanalyze,
+	ALIGNMENT = 8,
+	STORAGE = any,
+	CATEGORY = A,
+	ELEMENT = crowdfunding.subcategory,
+	DELIMITER = ',');
+
+-- DROP SEQUENCE crowdfunding.campaign_project_id_seq;
+
+CREATE SEQUENCE crowdfunding.campaign_project_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE crowdfunding.category_project_id_seq;
+
+CREATE SEQUENCE crowdfunding.category_project_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE crowdfunding.crowdfunding_project_id_seq;
+
+CREATE SEQUENCE crowdfunding.crowdfunding_project_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE crowdfunding.subcategory_project_id_seq;
+
+CREATE SEQUENCE crowdfunding.subcategory_project_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;-- crowdfunding.campaign definition
+
+-- Drop table
+
+-- DROP TABLE campaign;
+
 CREATE TABLE campaign (
-  project_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description text
-    );
-   
+	project_id serial4 NOT NULL,
+	"name" varchar(255) NULL,
+	description text NULL,
+	cf_id int4 NULL,
+	contact_id int4 NULL,
+	company_name varchar(50) NULL,
+	goal float4 NULL,
+	pledged float4 NULL,
+	outcome varchar(50) NULL,
+	backers_count int4 NULL,
+	country varchar(50) NULL,
+	currency varchar(50) NULL,
+	launched_date varchar(50) NULL,
+	end_date varchar(50) NULL,
+	staff_pick bool NULL,
+	spotlight bool NULL,
+	category_id varchar(50) NULL,
+	subcategory_id varchar(50) NULL,
+	CONSTRAINT campaign_pkey PRIMARY KEY (project_id)
+);
+
+
+-- crowdfunding.category definition
+
+-- Drop table
+
+-- DROP TABLE category;
 
 CREATE TABLE category (
-    project_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT
+	project_id serial4 NOT NULL,
+	"name" varchar(255) NULL,
+	description text NULL,
+	category_id varchar(50) NULL,
+	category varchar(50) NULL,
+	CONSTRAINT category_pkey PRIMARY KEY (project_id)
 );
+
+
+-- crowdfunding.contacts definition
+
+-- Drop table
+
+-- DROP TABLE contacts;
 
 CREATE TABLE contacts (
-    project_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT
+	contact_id int4 NULL,
+	first_name varchar(50) NULL,
+	last_name varchar(50) NULL,
+	email varchar(50) NULL
 );
 
-CREATE TABLE subcategory (
-    project_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT
-);
+
+-- crowdfunding.crowdfunding definition
+
+-- Drop table
+
+-- DROP TABLE crowdfunding;
 
 CREATE TABLE crowdfunding (
-    project_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT
+	project_id serial4 NOT NULL,
+	"name" varchar(255) NULL,
+	description text NULL,
+	cf_id int4 NULL,
+	contact_id int4 NULL,
+	company_name varchar(50) NULL,
+	blurb varchar(50) NULL,
+	goal int4 NULL,
+	pledged int4 NULL,
+	outcome varchar(50) NULL,
+	backers_count int4 NULL,
+	country varchar(50) NULL,
+	currency varchar(50) NULL,
+	launched_at int4 NULL,
+	deadline int4 NULL,
+	staff_pick bool NULL,
+	spotlight bool NULL,
+	"category & sub-category" varchar(50) NULL,
+	CONSTRAINT crowdfunding_pkey PRIMARY KEY (project_id)
 );
 
-ALTER TABLE public.campaign
-ALTER COLUMN name DROP NOT NULL;
 
-ALTER TABLE public.category
-ALTER COLUMN name DROP NOT NULL;
+-- crowdfunding.subcategory definition
 
-ALTER TABLE public.contacts
-ALTER COLUMN name DROP NOT NULL;
+-- Drop table
 
-ALTER TABLE public.crowdfunding
-ALTER COLUMN name DROP NOT NULL;
+-- DROP TABLE subcategory;
 
-ALTER TABLE public.subcategory
-ALTER COLUMN name DROP NOT NULL;
-
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('Note: The contact information needs to be separated into the following columns: contact_id,  first name, last name,  and email.'),
-	 ('   '),
-	 ('contact_info'),
-	 ('{"contact_id": 4661, "name": "Cecilia Velasco", "email": "cecilia.velasco@rodrigues.fr"}'),
-	 ('{"contact_id": 3765, "name": "Mariana Ellis", "email": "mariana.ellis@rossi.org"}'),
-	 ('{"contact_id": 4187, "name": "Sofie Woods", "email": "sofie.woods@riviere.com"}'),
-	 ('{"contact_id": 4941, "name": "Jeanette Iannotti", "email": "jeanette.iannotti@yahoo.com"}'),
-	 ('{"contact_id": 2199, "name": "Samuel Sorgatz", "email": "samuel.sorgatz@gmail.com"}'),
-	 ('{"contact_id": 5650, "name": "Socorro Luna", "email": "socorro.luna@hotmail.com"}'),
-	 ('{"contact_id": 5889, "name": "Carolina Murray", "email": "carolina.murray@knight.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4842, "name": "Kayla Moon", "email": "kayla.moon@yahoo.de"}'),
-	 ('{"contact_id": 3280, "name": "Ariadna Geisel", "email": "ariadna.geisel@rangel.com"}'),
-	 ('{"contact_id": 5468, "name": "Danielle Ladeck", "email": "danielle.ladeck@scalfaro.net"}'),
-	 ('{"contact_id": 3064, "name": "Tatiana Thompson", "email": "tatiana.thompson@hunt.net"}'),
-	 ('{"contact_id": 4904, "name": "Caleb Benavides", "email": "caleb.benavides@rubio.com"}'),
-	 ('{"contact_id": 1299, "name": "Sandra Hardy", "email": "sandra.hardy@web.de"}'),
-	 ('{"contact_id": 5602, "name": "Lotti Morris", "email": "lotti.morris@yahoo.co.uk"}'),
-	 ('{"contact_id": 5753, "name": "Reinhilde White", "email": "reinhilde.white@voila.fr"}'),
-	 ('{"contact_id": 4495, "name": "Kerry Patel", "email": "kerry.patel@hutchinson.com"}'),
-	 ('{"contact_id": 4269, "name": "Sophie Antoine", "email": "sophie.antoine@andersen.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2226, "name": "Martha Girard", "email": "martha.girard@web.de"}'),
-	 ('{"contact_id": 1558, "name": "Stephanie King", "email": "stephanie.king@cervantes.com"}'),
-	 ('{"contact_id": 2307, "name": "Amanda Palmer", "email": "amanda.palmer@didier.fr"}'),
-	 ('{"contact_id": 2900, "name": "Lina Alcala", "email": "lina.alcala@vespa.net"}'),
-	 ('{"contact_id": 5695, "name": "Itzel Murphy", "email": "itzel.murphy@muelichen.de"}'),
-	 ('{"contact_id": 5708, "name": "Filippo Parry", "email": "filippo.parry@live.com"}'),
-	 ('{"contact_id": 1663, "name": "Katelyn Cole", "email": "katelyn.cole@fiebig.com"}'),
-	 ('{"contact_id": 3605, "name": "Brian Novak", "email": "brian.novak@ford.net"}'),
-	 ('{"contact_id": 4678, "name": "Cilly Gay", "email": "cilly.gay@callegaro.it"}'),
-	 ('{"contact_id": 2251, "name": "Yolanda Snyder", "email": "yolanda.snyder@gmx.de"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 6202, "name": "Evelin Odonnell", "email": "evelin.odonnell@ibarra.net"}'),
-	 ('{"contact_id": 3715, "name": "Ingeborg Alba", "email": "ingeborg.alba@hotmail.com"}'),
-	 ('{"contact_id": 4242, "name": "Marina Madrid", "email": "marina.madrid@galarza-alba.com"}'),
-	 ('{"contact_id": 4326, "name": "Sheila Goodwin", "email": "sheila.goodwin@yahoo.com"}'),
-	 ('{"contact_id": 5560, "name": "Valeria Rich", "email": "valeria.rich@turchetta-mondadori.it"}'),
-	 ('{"contact_id": 4002, "name": "Dustin Camacho", "email": "dustin.camacho@rhodes.org.au"}'),
-	 ('{"contact_id": 3813, "name": "Amalia Marenzio", "email": "amalia.marenzio@grupo.com"}'),
-	 ('{"contact_id": 5336, "name": "Gian Long", "email": "gian.long@hotmail.com"}'),
-	 ('{"contact_id": 4994, "name": "Stewart Hunt", "email": "stewart.hunt@anderson-vargas.biz"}'),
-	 ('{"contact_id": 1471, "name": "Greca Ruiz", "email": "greca.ruiz@carr.co.uk"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4482, "name": "Gerald Olivera", "email": "gerald.olivera@outlook.com"}'),
-	 ('{"contact_id": 3241, "name": "Jaqueline Wallace", "email": "jaqueline.wallace@gmail.com"}'),
-	 ('{"contact_id": 3477, "name": "John Lane", "email": "john.lane@gregoire.fr"}'),
-	 ('{"contact_id": 2265, "name": "Pero Joly", "email": "pero.joly@bernard.net"}'),
-	 ('{"contact_id": 5911, "name": "Chad Turner", "email": "chad.turner@gmail.com"}'),
-	 ('{"contact_id": 2288, "name": "Adam Zavala", "email": "adam.zavala@guichard.fr"}'),
-	 ('{"contact_id": 4064, "name": "Tyler Rivera", "email": "tyler.rivera@guajardo-ozuna.com"}'),
-	 ('{"contact_id": 1294, "name": "Jens Graham", "email": "jens.graham@jones-buckley.com"}'),
-	 ('{"contact_id": 5008, "name": "Virginia Caetani", "email": "virginia.caetani@sosa.biz"}'),
-	 ('{"contact_id": 3604, "name": "Martino Wagner", "email": "martino.wagner@laposte.net"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3263, "name": "Martin Meyer", "email": "martin.meyer@davis.co.uk"}'),
-	 ('{"contact_id": 5631, "name": "Marguerite Walls", "email": "marguerite.walls@martinez.fr"}'),
-	 ('{"contact_id": 2851, "name": "Peter Vogt", "email": "peter.vogt@yahoo.com"}'),
-	 ('{"contact_id": 3714, "name": "Nicholas Christian", "email": "nicholas.christian@hotmail.de"}'),
-	 ('{"contact_id": 1664, "name": "Susi Steinberg", "email": "susi.steinberg@preiss.com"}'),
-	 ('{"contact_id": 5027, "name": "Tammy Ramazzotti", "email": "tammy.ramazzotti@gmail.com"}'),
-	 ('{"contact_id": 3070, "name": "Abdul Thomas", "email": "abdul.thomas@vasari.com"}'),
-	 ('{"contact_id": 4248, "name": "Justin Luxardo", "email": "justin.luxardo@googlemail.com"}'),
-	 ('{"contact_id": 2034, "name": "Antonio Gibson", "email": "antonio.gibson@faust.net"}'),
-	 ('{"contact_id": 4085, "name": "Jeremy Gomez", "email": "jeremy.gomez@oconnor.org"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3569, "name": "Raymond Solorzano", "email": "raymond.solorzano@gmail.com"}'),
-	 ('{"contact_id": 3889, "name": "Flora Harris", "email": "flora.harris@hotmail.com.au"}'),
-	 ('{"contact_id": 3136, "name": "Cheryl Boyd", "email": "cheryl.boyd@segni.it"}'),
-	 ('{"contact_id": 2103, "name": "Rhys Leiva", "email": "rhys.leiva@gmx.de"}'),
-	 ('{"contact_id": 2329, "name": "Mariano Prieto", "email": "mariano.prieto@vodafone.it"}'),
-	 ('{"contact_id": 3325, "name": "Laurie Fibonacci", "email": "laurie.fibonacci@gmail.com"}'),
-	 ('{"contact_id": 3131, "name": "David Rudolph", "email": "david.rudolph@nelson.com"}'),
-	 ('{"contact_id": 4995, "name": "Bryan Ross", "email": "bryan.ross@yahoo.com"}'),
-	 ('{"contact_id": 3631, "name": "Ubaldo Brown", "email": "ubaldo.brown@philippe.com"}'),
-	 ('{"contact_id": 5373, "name": "Clelia Faulkner", "email": "clelia.faulkner@hotmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3126, "name": "Sara Erickson", "email": "sara.erickson@yahoo.de"}'),
-	 ('{"contact_id": 2194, "name": "Rupert Valle", "email": "rupert.valle@filogamo.it"}'),
-	 ('{"contact_id": 2906, "name": "Puccio Kitzmann", "email": "puccio.kitzmann@yahoo.com"}'),
-	 ('{"contact_id": 2611, "name": "Thomas Hutchinson", "email": "thomas.hutchinson@gmx.de"}'),
-	 ('{"contact_id": 2374, "name": "Abelardo Castro", "email": "abelardo.castro@gmail.com"}'),
-	 ('{"contact_id": 3254, "name": "Greco Walker", "email": "greco.walker@yahoo.com"}'),
-	 ('{"contact_id": 3571, "name": "Miranda Lacombe", "email": "miranda.lacombe@longoria-vanegas.net"}'),
-	 ('{"contact_id": 2812, "name": "Diana Schuchhardt", "email": "diana.schuchhardt@libero.it"}'),
-	 ('{"contact_id": 3961, "name": "Stacey Knox", "email": "stacey.knox@corporacin.com"}'),
-	 ('{"contact_id": 3872, "name": "Glen Faivre", "email": "glen.faivre@yahoo.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4736, "name": "Andrew Torres", "email": "andrew.torres@ruiz-torres.org"}'),
-	 ('{"contact_id": 5119, "name": "Denny Fritz", "email": "denny.fritz@despacho.biz"}'),
-	 ('{"contact_id": 5725, "name": "Martyn Caldera", "email": "martyn.caldera@hotmail.co.uk"}'),
-	 ('{"contact_id": 4037, "name": "Abigail Foster", "email": "abigail.foster@taylor.net"}'),
-	 ('{"contact_id": 2109, "name": "Anthony Hauffer", "email": "anthony.hauffer@tlustek.org"}'),
-	 ('{"contact_id": 3283, "name": "Roger Gerlach", "email": "roger.gerlach@may-mitchell.co.uk"}'),
-	 ('{"contact_id": 6181, "name": "Christopher Poirier", "email": "christopher.poirier@hotmail.com"}'),
-	 ('{"contact_id": 3251, "name": "Branka Traore", "email": "branka.traore@jacobi.com"}'),
-	 ('{"contact_id": 3443, "name": "Briana Etienne", "email": "briana.etienne@bishop-coates.com"}'),
-	 ('{"contact_id": 2988, "name": "Brandon Olson", "email": "brandon.olson@prince-moreno.net"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1673, "name": "Celia Ungaretti", "email": "celia.ungaretti@fox.com"}'),
-	 ('{"contact_id": 2085, "name": "Barbara Guibert", "email": "barbara.guibert@casares-sanches.com"}'),
-	 ('{"contact_id": 1672, "name": "Daniela Bell", "email": "daniela.bell@vollbrecht.org"}'),
-	 ('{"contact_id": 4426, "name": "Phyllis Gurule", "email": "phyllis.gurule@rodriguez-pham.com"}'),
-	 ('{"contact_id": 3211, "name": "Alejandra Joseph", "email": "alejandra.joseph@escalante-abrego.biz"}'),
-	 ('{"contact_id": 3190, "name": "Giulio Bohlander", "email": "giulio.bohlander@dbmail.com"}'),
-	 ('{"contact_id": 2081, "name": "Amber Weller", "email": "amber.weller@toso.eu"}'),
-	 ('{"contact_id": 3185, "name": "Mary Etzold", "email": "mary.etzold@conrad-harrison.com"}'),
-	 ('{"contact_id": 5044, "name": "Amy Georges", "email": "amy.georges@raedel.de"}'),
-	 ('{"contact_id": 1883, "name": "Jennifer Giraud", "email": "jennifer.giraud@yahoo.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2067, "name": "Rosie Peltier", "email": "rosie.peltier@voila.fr"}'),
-	 ('{"contact_id": 4604, "name": "Oreste Ward", "email": "oreste.ward@proyectos.com"}'),
-	 ('{"contact_id": 3203, "name": "Luis Edwards", "email": "luis.edwards@live.com"}'),
-	 ('{"contact_id": 5758, "name": "Fiona Griffiths", "email": "fiona.griffiths@curatoli-verdone.it"}'),
-	 ('{"contact_id": 5755, "name": "Sally Raya", "email": "sally.raya@tarchetti.it"}'),
-	 ('{"contact_id": 5150, "name": "Carolyn Charpentier", "email": "carolyn.charpentier@hotmail.de"}'),
-	 ('{"contact_id": 4181, "name": "Nathalie Alvarez", "email": "nathalie.alvarez@live.com"}'),
-	 ('{"contact_id": 3006, "name": "Abril Lowery", "email": "abril.lowery@novak.net"}'),
-	 ('{"contact_id": 4865, "name": "Ottone Sullivan", "email": "ottone.sullivan@hussain-kaur.com"}'),
-	 ('{"contact_id": 2862, "name": "Esmeralda Sollima", "email": "esmeralda.sollima@visintini.it"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 6070, "name": "Silvia Gierschner", "email": "silvia.gierschner@tele2.it"}'),
-	 ('{"contact_id": 5300, "name": "Kyle Cunningham", "email": "kyle.cunningham@voila.fr"}'),
-	 ('{"contact_id": 3486, "name": "Anel Carpentier", "email": "anel.carpentier@klein-joseph.org"}'),
-	 ('{"contact_id": 5989, "name": "Sarah Davis", "email": "sarah.davis@david.com"}'),
-	 ('{"contact_id": 2849, "name": "Luke Klein", "email": "luke.klein@hotmail.com"}'),
-	 ('{"contact_id": 1612, "name": "Gudrun Mueller", "email": "gudrun.mueller@dillon-fuller.info"}'),
-	 ('{"contact_id": 3307, "name": "Melissa Canali", "email": "melissa.canali@libero.it"}'),
-	 ('{"contact_id": 5288, "name": "Gabrielle Ayala", "email": "gabrielle.ayala@hotmail.com"}'),
-	 ('{"contact_id": 6026, "name": "Laura Buckley", "email": "laura.buckley@ryan.org"}'),
-	 ('{"contact_id": 2212, "name": "Wilfrido Lorch", "email": "wilfrido.lorch@leclerc.fr"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4591, "name": "Robert Bruder", "email": "robert.bruder@manzoni.com"}'),
-	 ('{"contact_id": 2771, "name": "Phillip Soliz", "email": "phillip.soliz@outlook.com"}'),
-	 ('{"contact_id": 5682, "name": "Alex Smith", "email": "alex.smith@fournier.fr"}'),
-	 ('{"contact_id": 5368, "name": "Jessica Martinez", "email": "jessica.martinez@salieri.com"}'),
-	 ('{"contact_id": 3706, "name": "Kelly Carter", "email": "kelly.carter@hotmail.com.au"}'),
-	 ('{"contact_id": 4034, "name": "Ahmad Sosa", "email": "ahmad.sosa@gmail.com"}'),
-	 ('{"contact_id": 3209, "name": "Toralf Iglesias", "email": "toralf.iglesias@borrego.com"}'),
-	 ('{"contact_id": 2384, "name": "Irene Anichini", "email": "irene.anichini@yahoo.com"}'),
-	 ('{"contact_id": 3074, "name": "Alicia Cainero", "email": "alicia.cainero@yahoo.com"}'),
-	 ('{"contact_id": 2031, "name": "Tracey Laboy", "email": "tracey.laboy@bell.biz"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5873, "name": "Donald Reynaud", "email": "donald.reynaud@green.edu.au"}'),
-	 ('{"contact_id": 5501, "name": "Venancio Stadelmann", "email": "venancio.stadelmann@gmx.de"}'),
-	 ('{"contact_id": 3489, "name": "Seth Olivier", "email": "seth.olivier@yahoo.com"}'),
-	 ('{"contact_id": 4210, "name": "Dennis Boaga", "email": "dennis.boaga@gmx.de"}'),
-	 ('{"contact_id": 6151, "name": "Pedro Wilson", "email": "pedro.wilson@outlook.com"}'),
-	 ('{"contact_id": 6047, "name": "Roland Weihmann", "email": "roland.weihmann@gmail.com"}'),
-	 ('{"contact_id": 5445, "name": "Hector Morrison", "email": "hector.morrison@web.de"}'),
-	 ('{"contact_id": 5493, "name": "Evangelos Peters", "email": "evangelos.peters@sanchez.net"}'),
-	 ('{"contact_id": 6036, "name": "Gerardo Hamilton", "email": "gerardo.hamilton@libero.it"}'),
-	 ('{"contact_id": 2368, "name": "Meta Cuzzocrea", "email": "meta.cuzzocrea@howard-jensen.org"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1501, "name": "Alma Raymond", "email": "alma.raymond@tin.it"}'),
-	 ('{"contact_id": 4351, "name": "Kathleen Solimena", "email": "kathleen.solimena@wallace.biz"}'),
-	 ('{"contact_id": 3096, "name": "Zacharie Cordier", "email": "zacharie.cordier@gmail.com"}'),
-	 ('{"contact_id": 6162, "name": "Riza Techer", "email": "riza.techer@yahoo.com"}'),
-	 ('{"contact_id": 1433, "name": "Enrique Guillen", "email": "enrique.guillen@hotmail.co.uk"}'),
-	 ('{"contact_id": 2720, "name": "Tristan Weeks", "email": "tristan.weeks@pena.com"}'),
-	 ('{"contact_id": 5251, "name": "Natalie Lerma", "email": "natalie.lerma@boucher.com"}'),
-	 ('{"contact_id": 1797, "name": "Rodney Hamon", "email": "rodney.hamon@hotmail.com"}'),
-	 ('{"contact_id": 1656, "name": "Adalberto Lombardo", "email": "adalberto.lombardo@sfr.fr"}'),
-	 ('{"contact_id": 1346, "name": "Florencia Querini", "email": "florencia.querini@gmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2989, "name": "Liam Rolland", "email": "liam.rolland@yahoo.fr"}'),
-	 ('{"contact_id": 5629, "name": "Ian Kelly", "email": "ian.kelly@reeves.com.au"}'),
-	 ('{"contact_id": 3456, "name": "Mehdi Todd", "email": "mehdi.todd@web.de"}'),
-	 ('{"contact_id": 3229, "name": "Rembrandt Liguori", "email": "rembrandt.liguori@davis.org"}'),
-	 ('{"contact_id": 2277, "name": "Irmi Schweitzer", "email": "irmi.schweitzer@ozuna.com"}'),
-	 ('{"contact_id": 1276, "name": "Gioffre Stein", "email": "gioffre.stein@hotmail.com.au"}'),
-	 ('{"contact_id": 3694, "name": "Frida Villarreal", "email": "frida.villarreal@hotmail.de"}'),
-	 ('{"contact_id": 2260, "name": "Steffen Mangold", "email": "steffen.mangold@paul.net"}'),
-	 ('{"contact_id": 5374, "name": "Elias Marin", "email": "elias.marin@herve.net"}'),
-	 ('{"contact_id": 4420, "name": "Roman Gonzalez", "email": "roman.gonzalez@anderson.net"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3849, "name": "Reina Middleton", "email": "reina.middleton@hotmail.com"}'),
-	 ('{"contact_id": 1638, "name": "Sandro Moran", "email": "sandro.moran@hotmail.de"}'),
-	 ('{"contact_id": 5230, "name": "Gebhard Thanel", "email": "gebhard.thanel@gmail.com"}'),
-	 ('{"contact_id": 1763, "name": "Antonino Bolander", "email": "antonino.bolander@gmail.com"}'),
-	 ('{"contact_id": 4323, "name": "Karl Trevisani", "email": "karl.trevisani@anguissola.it"}'),
-	 ('{"contact_id": 5256, "name": "Silvester Brookes", "email": "silvester.brookes@franco.org"}'),
-	 ('{"contact_id": 4836, "name": "Octavio Pratt", "email": "octavio.pratt@web.de"}'),
-	 ('{"contact_id": 5981, "name": "Rebecca Greer", "email": "rebecca.greer@hotmail.com"}'),
-	 ('{"contact_id": 1463, "name": "Pierina Gaggini", "email": "pierina.gaggini@free.fr"}'),
-	 ('{"contact_id": 4577, "name": "Robin Schleich", "email": "robin.schleich@rogers-barrera.biz"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4951, "name": "Sergio Abbott", "email": "sergio.abbott@moore.net.au"}'),
-	 ('{"contact_id": 3567, "name": "Gilberto Evans", "email": "gilberto.evans@salcedo-archuleta.net"}'),
-	 ('{"contact_id": 5475, "name": "James Elliott", "email": "james.elliott@gmail.com"}'),
-	 ('{"contact_id": 2114, "name": "Timoteo Bolnbach", "email": "timoteo.bolnbach@laboratorios.com"}'),
-	 ('{"contact_id": 5216, "name": "Tonino Stanley", "email": "tonino.stanley@hotmail.com"}'),
-	 ('{"contact_id": 1665, "name": "Margaretha Murialdo", "email": "margaretha.murialdo@meunier.com"}'),
-	 ('{"contact_id": 6051, "name": "Bianca Drubin", "email": "bianca.drubin@libero.it"}'),
-	 ('{"contact_id": 3983, "name": "Kaylee Hoffmann", "email": "kaylee.hoffmann@poulain.com"}'),
-	 ('{"contact_id": 2966, "name": "Teresa Vecellio", "email": "teresa.vecellio@yahoo.com"}'),
-	 ('{"contact_id": 4478, "name": "Emine Tacchini", "email": "emine.tacchini@dbmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4238, "name": "Dawn Cortez", "email": "dawn.cortez@gmail.com"}'),
-	 ('{"contact_id": 4404, "name": "Emily Cundari", "email": "emily.cundari@clark.com.au"}'),
-	 ('{"contact_id": 5666, "name": "Eleanor Hall", "email": "eleanor.hall@hotmail.com"}'),
-	 ('{"contact_id": 3691, "name": "Monique Delgadillo", "email": "monique.delgadillo@hotmail.co.uk"}'),
-	 ('{"contact_id": 2703, "name": "Arnaude Warner", "email": "arnaude.warner@gmail.com"}'),
-	 ('{"contact_id": 4253, "name": "Jason Howell", "email": "jason.howell@gmx.de"}'),
-	 ('{"contact_id": 5652, "name": "Nicole Mccullough", "email": "nicole.mccullough@hall.com"}'),
-	 ('{"contact_id": 3279, "name": "Rosmarie Esquibel", "email": "rosmarie.esquibel@bouygtel.fr"}'),
-	 ('{"contact_id": 3233, "name": "Leonor Ferreira", "email": "leonor.ferreira@gmail.com"}'),
-	 ('{"contact_id": 3017, "name": "Brett Jones", "email": "brett.jones@alice.it"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3482, "name": "Nino Bien", "email": "nino.bien@gmail.com"}'),
-	 ('{"contact_id": 2166, "name": "Jemma Tate", "email": "jemma.tate@hotmail.de"}'),
-	 ('{"contact_id": 4146, "name": "Denis Rogers", "email": "denis.rogers@poste.it"}'),
-	 ('{"contact_id": 2651, "name": "Vanesa Khan", "email": "vanesa.khan@voila.fr"}'),
-	 ('{"contact_id": 1409, "name": "Victoria Ojeda", "email": "victoria.ojeda@doehn.com"}'),
-	 ('{"contact_id": 3717, "name": "Eugenio Martin", "email": "eugenio.martin@yahoo.de"}'),
-	 ('{"contact_id": 3963, "name": "Nancy Hayes", "email": "nancy.hayes@hotmail.com"}'),
-	 ('{"contact_id": 2152, "name": "Lara Jacob", "email": "lara.jacob@buckley.org"}'),
-	 ('{"contact_id": 2974, "name": "Gino Hernandez", "email": "gino.hernandez@covarrubias.com"}'),
-	 ('{"contact_id": 1268, "name": "Vicente Tijerina", "email": "vicente.tijerina@montanariello.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1822, "name": "Michele Brambilla", "email": "michele.brambilla@yahoo.com"}'),
-	 ('{"contact_id": 5066, "name": "Dana Ritacca", "email": "dana.ritacca@gmail.com"}'),
-	 ('{"contact_id": 5075, "name": "Mitchell Bachmann", "email": "mitchell.bachmann@suarez-cruz.com"}'),
-	 ('{"contact_id": 3855, "name": "Vincenza Key", "email": "vincenza.key@adams.com"}'),
-	 ('{"contact_id": 5923, "name": "Salvador Gaillard", "email": "salvador.gaillard@yahoo.de"}'),
-	 ('{"contact_id": 1867, "name": "Diane Rogner", "email": "diane.rogner@kelly.co.uk"}'),
-	 ('{"contact_id": 4376, "name": "Josette Laine", "email": "josette.laine@saracino-parisi.net"}'),
-	 ('{"contact_id": 2785, "name": "Courtney Fiebig", "email": "courtney.fiebig@doerschner.com"}'),
-	 ('{"contact_id": 5884, "name": "Hugues Oliver", "email": "hugues.oliver@stiffel.com"}'),
-	 ('{"contact_id": 2441, "name": "Espartaco Willis", "email": "espartaco.willis@hotmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1243, "name": "Flavia Yoder", "email": "flavia.yoder@hotmail.de"}'),
-	 ('{"contact_id": 3411, "name": "Casey Flores", "email": "casey.flores@baggio.org"}'),
-	 ('{"contact_id": 2467, "name": "Calogero Cross", "email": "calogero.cross@mercantini.it"}'),
-	 ('{"contact_id": 1850, "name": "Charles Begum", "email": "charles.begum@laboratorios.info"}'),
-	 ('{"contact_id": 2604, "name": "Adina Pollard", "email": "adina.pollard@outlook.com"}'),
-	 ('{"contact_id": 1693, "name": "Natasha Lara", "email": "natasha.lara@outlook.com"}'),
-	 ('{"contact_id": 2969, "name": "Benita Pottier", "email": "benita.pottier@sfr.fr"}'),
-	 ('{"contact_id": 1544, "name": "Elizabeth Valdivia", "email": "elizabeth.valdivia@gmail.com"}'),
-	 ('{"contact_id": 4149, "name": "Mattia Huet", "email": "mattia.huet@aol.de"}'),
-	 ('{"contact_id": 3463, "name": "Geza Howard", "email": "geza.howard@voila.fr"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2939, "name": "Lauren Guillaume", "email": "lauren.guillaume@sorgatz.org"}'),
-	 ('{"contact_id": 2202, "name": "Joanna Baxter", "email": "joanna.baxter@bruce-wright.com"}'),
-	 ('{"contact_id": 1728, "name": "Tracy Metz", "email": "tracy.metz@bryant.info"}'),
-	 ('{"contact_id": 5362, "name": "Birgit Pena", "email": "birgit.pena@armellini.it"}'),
-	 ('{"contact_id": 4840, "name": "Elvira Papafava", "email": "elvira.papafava@ifrance.com"}'),
-	 ('{"contact_id": 2955, "name": "Ernest Delorme", "email": "ernest.delorme@dowerg.de"}'),
-	 ('{"contact_id": 5354, "name": "Christy Grossi", "email": "christy.grossi@alarcon-tafoya.com"}'),
-	 ('{"contact_id": 3847, "name": "Hermelinda Olmos", "email": "hermelinda.olmos@portillo.com"}'),
-	 ('{"contact_id": 3025, "name": "Herbert Fraser", "email": "herbert.fraser@holloway.org.au"}'),
-	 ('{"contact_id": 1615, "name": "Giancarlo Heydrich", "email": "giancarlo.heydrich@hotmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5154, "name": "Constance Maldonado", "email": "constance.maldonado@spiess.net"}'),
-	 ('{"contact_id": 5005, "name": "Giampiero Carlier", "email": "giampiero.carlier@hotmail.com"}'),
-	 ('{"contact_id": 1349, "name": "Carlo Jacquot", "email": "carlo.jacquot@hotmail.com"}'),
-	 ('{"contact_id": 3670, "name": "Gabriel Robles", "email": "gabriel.robles@yahoo.com"}'),
-	 ('{"contact_id": 2912, "name": "Gerd Gunpf", "email": "gerd.gunpf@gmail.com"}'),
-	 ('{"contact_id": 4336, "name": "Ashley Hellwig", "email": "ashley.hellwig@libero.it"}'),
-	 ('{"contact_id": 5576, "name": "Patrick Rosas", "email": "patrick.rosas@yahoo.com"}'),
-	 ('{"contact_id": 2736, "name": "Lilla Leonard", "email": "lilla.leonard@jungfer.com"}'),
-	 ('{"contact_id": 3321, "name": "Tony Nicolas", "email": "tony.nicolas@morrocco-seddio.net"}'),
-	 ('{"contact_id": 3353, "name": "Allegra Benedetti", "email": "allegra.benedetti@miller.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2336, "name": "Camille Tafuri", "email": "camille.tafuri@aol.de"}'),
-	 ('{"contact_id": 4369, "name": "Juan Wheeler", "email": "juan.wheeler@gilmore.net"}'),
-	 ('{"contact_id": 4464, "name": "Leopoldo Johnson", "email": "leopoldo.johnson@hotmail.com.au"}'),
-	 ('{"contact_id": 5626, "name": "Dietmar Grenier", "email": "dietmar.grenier@tele2.it"}'),
-	 ('{"contact_id": 1669, "name": "Leonid Scholl", "email": "leonid.scholl@collin.com"}'),
-	 ('{"contact_id": 5544, "name": "Olivie Contarini", "email": "olivie.contarini@marshall-wright.biz"}'),
-	 ('{"contact_id": 6078, "name": "Jeffery Lacroix", "email": "jeffery.lacroix@medina.org"}'),
-	 ('{"contact_id": 2580, "name": "Edeltraud Chavez", "email": "edeltraud.chavez@hotmail.com.au"}'),
-	 ('{"contact_id": 3592, "name": "Mesut Morvan", "email": "mesut.morvan@gmail.com"}'),
-	 ('{"contact_id": 4914, "name": "Gregory Jackson", "email": "gregory.jackson@ortiz.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3848, "name": "Nicola Rossi", "email": "nicola.rossi@berry.org"}'),
-	 ('{"contact_id": 2619, "name": "Eddie Collazo", "email": "eddie.collazo@gmail.com"}'),
-	 ('{"contact_id": 4605, "name": "Philippe Gardner", "email": "philippe.gardner@howells-jones.net"}'),
-	 ('{"contact_id": 6147, "name": "Roy Fox", "email": "roy.fox@tejeda.com"}'),
-	 ('{"contact_id": 1383, "name": "Heiderose Garcia", "email": "heiderose.garcia@noos.fr"}'),
-	 ('{"contact_id": 1757, "name": "Claudine Rowley", "email": "claudine.rowley@industrias.com"}'),
-	 ('{"contact_id": 4390, "name": "Astrid Roht", "email": "astrid.roht@fastwebnet.it"}'),
-	 ('{"contact_id": 4165, "name": "Auguste Burnett", "email": "auguste.burnett@yahoo.fr"}'),
-	 ('{"contact_id": 4529, "name": "Pellegrino Allen", "email": "pellegrino.allen@gmail.com"}'),
-	 ('{"contact_id": 6084, "name": "Angela Bowers", "email": "angela.bowers@laboratorios.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2916, "name": "Michael Descamps", "email": "michael.descamps@gmail.com"}'),
-	 ('{"contact_id": 2005, "name": "Heidelore Kennedy", "email": "heidelore.kennedy@guinizzelli.org"}'),
-	 ('{"contact_id": 2261, "name": "Lucrezia Koch", "email": "lucrezia.koch@petit.com"}'),
-	 ('{"contact_id": 5342, "name": "Ivan Accardo", "email": "ivan.accardo@web.de"}'),
-	 ('{"contact_id": 4087, "name": "Karen Avogadro", "email": "karen.avogadro@yahoo.com"}'),
-	 ('{"contact_id": 2761, "name": "Laetitia Gallet", "email": "laetitia.gallet@aubry.org"}'),
-	 ('{"contact_id": 2908, "name": "Amico Gosselin", "email": "amico.gosselin@shaw.info"}'),
-	 ('{"contact_id": 2155, "name": "Ilaria Bowen", "email": "ilaria.bowen@hotmail.it"}'),
-	 ('{"contact_id": 5642, "name": "Marlen Coardi", "email": "marlen.coardi@colletti.eu"}'),
-	 ('{"contact_id": 6217, "name": "Rafael Alexander", "email": "rafael.alexander@jenkins.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4222, "name": "Herma Gabbana", "email": "herma.gabbana@hotmail.com"}'),
-	 ('{"contact_id": 4798, "name": "Zachary Vespucci", "email": "zachary.vespucci@industrias.com"}'),
-	 ('{"contact_id": 5660, "name": "Marisol Richard", "email": "marisol.richard@gmail.com"}'),
-	 ('{"contact_id": 5000, "name": "Joseph Glover", "email": "joseph.glover@laposte.net"}'),
-	 ('{"contact_id": 2809, "name": "Lauretta Neal", "email": "lauretta.neal@hotmail.de"}'),
-	 ('{"contact_id": 3349, "name": "Simone Sauvage", "email": "simone.sauvage@yahoo.com"}'),
-	 ('{"contact_id": 3647, "name": "Ramona Brooks", "email": "ramona.brooks@kensy.de"}'),
-	 ('{"contact_id": 5745, "name": "Gioele Schwital", "email": "gioele.schwital@moody.com"}'),
-	 ('{"contact_id": 2583, "name": "Elena Jimenez", "email": "elena.jimenez@yahoo.com.au"}'),
-	 ('{"contact_id": 5441, "name": "Pam Vargas", "email": "pam.vargas@guillot.net"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2090, "name": "Alison Morales", "email": "alison.morales@lewis.com"}'),
-	 ('{"contact_id": 3386, "name": "Marc Aumann", "email": "marc.aumann@holland.com"}'),
-	 ('{"contact_id": 1816, "name": "Carla Butler", "email": "carla.butler@yahoo.com"}'),
-	 ('{"contact_id": 4718, "name": "Dionigi Bruce", "email": "dionigi.bruce@industrias.com"}'),
-	 ('{"contact_id": 1677, "name": "Frank Henry", "email": "frank.henry@yahoo.com"}'),
-	 ('{"contact_id": 4218, "name": "Brent Pons", "email": "brent.pons@proyectos.net"}'),
-	 ('{"contact_id": 4548, "name": "Patricia Liebelt", "email": "patricia.liebelt@baca.org"}'),
-	 ('{"contact_id": 1431, "name": "Micheletto Sykes", "email": "micheletto.sykes@thompson-thompson.com"}'),
-	 ('{"contact_id": 2830, "name": "Rose Blanc", "email": "rose.blanc@grupo.com"}'),
-	 ('{"contact_id": 4400, "name": "Vincent Singh", "email": "vincent.singh@gmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5773, "name": "Jamie Peacock", "email": "jamie.peacock@interiano-nordio.com"}'),
-	 ('{"contact_id": 4161, "name": "Giorgia Dijoux", "email": "giorgia.dijoux@paul.com"}'),
-	 ('{"contact_id": 2062, "name": "Serena Piacentini", "email": "serena.piacentini@yahoo.de"}'),
-	 ('{"contact_id": 3458, "name": "Dimitri Posada", "email": "dimitri.posada@gmail.com"}'),
-	 ('{"contact_id": 3174, "name": "Alexa Barillaro", "email": "alexa.barillaro@ramos.net"}'),
-	 ('{"contact_id": 5565, "name": "Megan Kuhl", "email": "megan.kuhl@despacho.com"}'),
-	 ('{"contact_id": 1906, "name": "Kaitlyn Farinelli", "email": "kaitlyn.farinelli@outlook.com"}'),
-	 ('{"contact_id": 5479, "name": "Jonathan Castellitto", "email": "jonathan.castellitto@libero.it"}'),
-	 ('{"contact_id": 4320, "name": "Lisa Terragni", "email": "lisa.terragni@proyectos.com"}'),
-	 ('{"contact_id": 4213, "name": "Olivier Petrucelli", "email": "olivier.petrucelli@letta-raurica.eu"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3373, "name": "Jos Trobbiani", "email": "jos.trobbiani@samson.com"}'),
-	 ('{"contact_id": 4184, "name": "Mirjam Dawson", "email": "mirjam.dawson@yahoo.com"}'),
-	 ('{"contact_id": 5472, "name": "Javier Tessier", "email": "javier.tessier@mclaughlin.biz"}'),
-	 ('{"contact_id": 5559, "name": "Mirjana Collins", "email": "mirjana.collins@hotmail.com"}'),
-	 ('{"contact_id": 5419, "name": "Vanessa Tschentscher", "email": "vanessa.tschentscher@mitchell.com"}'),
-	 ('{"contact_id": 4171, "name": "Antonina Cobb", "email": "antonina.cobb@gibson.org"}'),
-	 ('{"contact_id": 1302, "name": "Bernard Durand", "email": "bernard.durand@royer.com"}'),
-	 ('{"contact_id": 3520, "name": "Corey Greggio", "email": "corey.greggio@johnson.org.au"}'),
-	 ('{"contact_id": 6010, "name": "Rodolfo Couturier", "email": "rodolfo.couturier@tim.it"}'),
-	 ('{"contact_id": 4617, "name": "Pierre Cardenas", "email": "pierre.cardenas@luzi-bonomo.eu"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1417, "name": "Romeo Surian", "email": "romeo.surian@batista.com"}'),
-	 ('{"contact_id": 4770, "name": "Ivo Moreno", "email": "ivo.moreno@hotmail.com"}'),
-	 ('{"contact_id": 4328, "name": "Federico Marie", "email": "federico.marie@jourdan.fr"}'),
-	 ('{"contact_id": 5171, "name": "Maggie Boito", "email": "maggie.boito@yahoo.com"}'),
-	 ('{"contact_id": 4394, "name": "Brianna Hanson", "email": "brianna.hanson@stanley.com"}'),
-	 ('{"contact_id": 1794, "name": "Heiko Bourgeois", "email": "heiko.bourgeois@togliatti.com"}'),
-	 ('{"contact_id": 3510, "name": "Benito Gritti", "email": "benito.gritti@gmail.com"}'),
-	 ('{"contact_id": 2487, "name": "Mitzy Junk", "email": "mitzy.junk@zaragoza.com"}'),
-	 ('{"contact_id": 2215, "name": "Samantha Lowe", "email": "samantha.lowe@praga.it"}'),
-	 ('{"contact_id": 4136, "name": "Ernesto Nerger", "email": "ernesto.nerger@middleton.co.uk"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3723, "name": "Melinda Canova", "email": "melinda.canova@orange.fr"}'),
-	 ('{"contact_id": 5842, "name": "Mohammad Hartung", "email": "mohammad.hartung@hotmail.com"}'),
-	 ('{"contact_id": 3289, "name": "Ben Maillot", "email": "ben.maillot@ramos.net"}'),
-	 ('{"contact_id": 1249, "name": "Isabel Pruschke", "email": "isabel.pruschke@gmail.com"}'),
-	 ('{"contact_id": 5409, "name": "Linda Franceschi", "email": "linda.franceschi@richards.net"}'),
-	 ('{"contact_id": 2951, "name": "Olivia Striebitz", "email": "olivia.striebitz@gmail.com"}'),
-	 ('{"contact_id": 3432, "name": "Penny Watson", "email": "penny.watson@matthews.net"}'),
-	 ('{"contact_id": 2297, "name": "Manfred James", "email": "manfred.james@davies.org"}'),
-	 ('{"contact_id": 6161, "name": "Hazel Pierce", "email": "hazel.pierce@outlook.com"}'),
-	 ('{"contact_id": 4603, "name": "Alf Bates", "email": "alf.bates@dunn.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5818, "name": "Scott Gough", "email": "scott.gough@industrias.com"}'),
-	 ('{"contact_id": 4270, "name": "Konrad Briones", "email": "konrad.briones@fierro.com"}'),
-	 ('{"contact_id": 6007, "name": "Mathilde Kruschwitz", "email": "mathilde.kruschwitz@yahoo.com"}'),
-	 ('{"contact_id": 4084, "name": "Irma Gemito", "email": "irma.gemito@googlemail.com"}'),
-	 ('{"contact_id": 1340, "name": "Antoine Guyon", "email": "antoine.guyon@yahoo.com"}'),
-	 ('{"contact_id": 5675, "name": "William Gibilisco", "email": "william.gibilisco@gaillard.com"}'),
-	 ('{"contact_id": 2010, "name": "Judith Butte", "email": "judith.butte@fischer-vaughn.info"}'),
-	 ('{"contact_id": 6201, "name": "Joanne Henderson", "email": "joanne.henderson@gmail.com"}'),
-	 ('{"contact_id": 1791, "name": "Ludovica Arellano", "email": "ludovica.arellano@morandi-argento.com"}'),
-	 ('{"contact_id": 3314, "name": "Catherine Gray", "email": "catherine.gray@hotmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5852, "name": "Franco Fioravanti", "email": "franco.fioravanti@barry-gill.com.au"}'),
-	 ('{"contact_id": 4618, "name": "Heather Zimmer", "email": "heather.zimmer@bluemel.de"}'),
-	 ('{"contact_id": 2618, "name": "Hortense Taylor", "email": "hortense.taylor@chambers.biz"}'),
-	 ('{"contact_id": 4967, "name": "Livia Ernst", "email": "livia.ernst@colas.fr"}'),
-	 ('{"contact_id": 4594, "name": "Toby Etzler", "email": "toby.etzler@industrias.com"}'),
-	 ('{"contact_id": 2080, "name": "Ennio Leoncavallo", "email": "ennio.leoncavallo@sanchez.org"}'),
-	 ('{"contact_id": 2793, "name": "Philippine Vaca", "email": "philippine.vaca@hotmail.com"}'),
-	 ('{"contact_id": 4890, "name": "Rhonda Phillips", "email": "rhonda.phillips@yahoo.com"}'),
-	 ('{"contact_id": 3528, "name": "Alphonse Nitto", "email": "alphonse.nitto@voila.fr"}'),
-	 ('{"contact_id": 5810, "name": "Karina Arreola", "email": "karina.arreola@yahoo.com.au"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5720, "name": "Denise Wood", "email": "denise.wood@mantegna.com"}'),
-	 ('{"contact_id": 4593, "name": "Burghard Rosenow", "email": "burghard.rosenow@hotmail.com"}'),
-	 ('{"contact_id": 3186, "name": "Friedl Powell", "email": "friedl.powell@laposte.net"}'),
-	 ('{"contact_id": 5136, "name": "Benjamin Schultz", "email": "benjamin.schultz@rivero-davila.com"}'),
-	 ('{"contact_id": 2646, "name": "Rachel Ulibarri", "email": "rachel.ulibarri@schueler.com"}'),
-	 ('{"contact_id": 3460, "name": "Silvano Blanchet", "email": "silvano.blanchet@yahoo.com"}'),
-	 ('{"contact_id": 4345, "name": "Kurt Sauer", "email": "kurt.sauer@almanza.biz"}'),
-	 ('{"contact_id": 2690, "name": "Nayeli Gehringer", "email": "nayeli.gehringer@hotmail.com"}'),
-	 ('{"contact_id": 4025, "name": "Imelda Guerin", "email": "imelda.guerin@stumpf.net"}'),
-	 ('{"contact_id": 4524, "name": "Zbigniew Holmes", "email": "zbigniew.holmes@stiffel.net"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3978, "name": "Adela Alfonsi", "email": "adela.alfonsi@despacho.com"}'),
-	 ('{"contact_id": 3910, "name": "Hilary Clark", "email": "hilary.clark@libero.it"}'),
-	 ('{"contact_id": 5825, "name": "Kornelius Molina", "email": "kornelius.molina@heuser.com"}'),
-	 ('{"contact_id": 3564, "name": "Christian Anderson", "email": "christian.anderson@tim.it"}'),
-	 ('{"contact_id": 2396, "name": "Francisco Dorsey", "email": "francisco.dorsey@tiscali.fr"}'),
-	 ('{"contact_id": 2140, "name": "Walli Albert", "email": "walli.albert@dussen.com"}'),
-	 ('{"contact_id": 3079, "name": "Siegrun Mota", "email": "siegrun.mota@matthews-montoya.org.au"}'),
-	 ('{"contact_id": 2017, "name": "Alberico Herve", "email": "alberico.herve@beer.net"}'),
-	 ('{"contact_id": 5444, "name": "Serafina Bonnin", "email": "serafina.bonnin@mendes.com"}'),
-	 ('{"contact_id": 2216, "name": "Marcelle Bender", "email": "marcelle.bender@edwards-robinson.info"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1241, "name": "Hartmuth Robertson", "email": "hartmuth.robertson@thomas.edu.au"}'),
-	 ('{"contact_id": 1484, "name": "Herlinde George", "email": "herlinde.george@free.fr"}'),
-	 ('{"contact_id": 3475, "name": "Pamela Payne", "email": "pamela.payne@yahoo.com"}'),
-	 ('{"contact_id": 4333, "name": "Gastone Beyer", "email": "gastone.beyer@stewart-sanchez.edu"}'),
-	 ('{"contact_id": 5657, "name": "Lydia Berengario", "email": "lydia.berengario@aol.de"}'),
-	 ('{"contact_id": 2527, "name": "Lucy Davidson", "email": "lucy.davidson@tele2.it"}'),
-	 ('{"contact_id": 5967, "name": "Franck Wade", "email": "franck.wade@gute.org"}'),
-	 ('{"contact_id": 5698, "name": "Heidi Barker", "email": "heidi.barker@gmail.com"}'),
-	 ('{"contact_id": 3331, "name": "Arnaldo Ocasio", "email": "arnaldo.ocasio@hotmail.com"}'),
-	 ('{"contact_id": 3841, "name": "Francis Bernier", "email": "francis.bernier@rodriguez.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 6105, "name": "Johanne Strong", "email": "johanne.strong@yahoo.de"}'),
-	 ('{"contact_id": 3895, "name": "Debra Langlois", "email": "debra.langlois@schmiedecke.com"}'),
-	 ('{"contact_id": 1891, "name": "Reingard Kambs", "email": "reingard.kambs@sagese.eu"}'),
-	 ('{"contact_id": 1281, "name": "Mauro Ortiz", "email": "mauro.ortiz@oquendo.net"}'),
-	 ('{"contact_id": 4186, "name": "Griselda Carranza", "email": "griselda.carranza@krause.de"}'),
-	 ('{"contact_id": 2511, "name": "Janet Madrigal", "email": "janet.madrigal@gmail.com"}'),
-	 ('{"contact_id": 4272, "name": "Jenna Day", "email": "jenna.day@reed.com"}'),
-	 ('{"contact_id": 3533, "name": "Modesto Wright", "email": "modesto.wright@pareto.com"}'),
-	 ('{"contact_id": 3618, "name": "Alice Wall", "email": "alice.wall@zaccardo.it"}'),
-	 ('{"contact_id": 2177, "name": "Brenda Sontag", "email": "brenda.sontag@solari.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4102, "name": "Sergius Mace", "email": "sergius.mace@palazzo.com"}'),
-	 ('{"contact_id": 6089, "name": "Antonia Kline", "email": "antonia.kline@gmail.com"}'),
-	 ('{"contact_id": 4701, "name": "Maurice Gumprich", "email": "maurice.gumprich@griffin.net.au"}'),
-	 ('{"contact_id": 5645, "name": "Daniel Anders", "email": "daniel.anders@yahoo.com"}'),
-	 ('{"contact_id": 4499, "name": "Zaira Cattaneo", "email": "zaira.cattaneo@yahoo.com"}'),
-	 ('{"contact_id": 3365, "name": "Alessio Bruneau", "email": "alessio.bruneau@hotmail.co.uk"}'),
-	 ('{"contact_id": 2290, "name": "Gerdi Guerrero", "email": "gerdi.guerrero@tele2.fr"}'),
-	 ('{"contact_id": 1890, "name": "Brigitte Stiebitz", "email": "brigitte.stiebitz@gmail.com"}'),
-	 ('{"contact_id": 1304, "name": "June Sinisi", "email": "june.sinisi@manzoni-giannini.it"}'),
-	 ('{"contact_id": 3799, "name": "Carl Macias", "email": "carl.macias@yahoo.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2749, "name": "Veronica Trapp", "email": "veronica.trapp@tiscali.it"}'),
-	 ('{"contact_id": 2028, "name": "Frances Garnier", "email": "frances.garnier@aporti-guidotti.org"}'),
-	 ('{"contact_id": 2383, "name": "Terri Iannelli", "email": "terri.iannelli@hotmail.com"}'),
-	 ('{"contact_id": 5721, "name": "Odette Moore", "email": "odette.moore@hall.edu"}'),
-	 ('{"contact_id": 1394, "name": "Mercedes Trujillo", "email": "mercedes.trujillo@aol.de"}'),
-	 ('{"contact_id": 3451, "name": "Babette Dumas", "email": "babette.dumas@brady.net"}'),
-	 ('{"contact_id": 5512, "name": "Jerry Santiago", "email": "jerry.santiago@soprano-ferragni.it"}'),
-	 ('{"contact_id": 2453, "name": "Ronald Simpson", "email": "ronald.simpson@ovadia.net"}'),
-	 ('{"contact_id": 6055, "name": "Emmanuel Dominguez", "email": "emmanuel.dominguez@gmail.com"}'),
-	 ('{"contact_id": 5704, "name": "Christiane Ricciardi", "email": "christiane.ricciardi@zavala.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3707, "name": "Ingolf Zamora", "email": "ingolf.zamora@yahoo.com.au"}'),
-	 ('{"contact_id": 2205, "name": "Rita Sharp", "email": "rita.sharp@beard-scott.edu.au"}'),
-	 ('{"contact_id": 5976, "name": "Geraldine Cabrera", "email": "geraldine.cabrera@green-smith.info"}'),
-	 ('{"contact_id": 3290, "name": "Chantal Armas", "email": "chantal.armas@jenkins.net"}'),
-	 ('{"contact_id": 4257, "name": "Louis Gilbert", "email": "louis.gilbert@gmail.com"}'),
-	 ('{"contact_id": 4588, "name": "Michelle Collier", "email": "michelle.collier@peruzzi.it"}'),
-	 ('{"contact_id": 4785, "name": "Guillermina Nicholson", "email": "guillermina.nicholson@grondin.fr"}'),
-	 ('{"contact_id": 3033, "name": "Bertrand Hopkins", "email": "bertrand.hopkins@gmail.com"}'),
-	 ('{"contact_id": 2779, "name": "Alonso Palomo", "email": "alonso.palomo@gehringer.de"}'),
-	 ('{"contact_id": 2131, "name": "Tina Rodriguez", "email": "tina.rodriguez@web.de"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 6229, "name": "Eva Francis", "email": "eva.francis@parker.org"}'),
-	 ('{"contact_id": 3429, "name": "Ottavio Rust", "email": "ottavio.rust@crespi.com"}'),
-	 ('{"contact_id": 1613, "name": "Amelia Olvera", "email": "amelia.olvera@hotmail.com"}'),
-	 ('{"contact_id": 4734, "name": "Paul Palladio", "email": "paul.palladio@mclaughlin.net.au"}'),
-	 ('{"contact_id": 4439, "name": "Bernardo Wieloch", "email": "bernardo.wieloch@budig.com"}'),
-	 ('{"contact_id": 1441, "name": "Umberto Hicks", "email": "umberto.hicks@hill.com"}'),
-	 ('{"contact_id": 5799, "name": "Janko Bishop", "email": "janko.bishop@tim.it"}'),
-	 ('{"contact_id": 1419, "name": "Jessika Meunier", "email": "jessika.meunier@gmx.de"}'),
-	 ('{"contact_id": 3059, "name": "Isaac Benard", "email": "isaac.benard@googlemail.com"}'),
-	 ('{"contact_id": 3224, "name": "Alexandrie Lambert", "email": "alexandrie.lambert@yahoo.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3181, "name": "Roberto Guyot", "email": "roberto.guyot@bennett.com"}'),
-	 ('{"contact_id": 6061, "name": "Giulietta Lucas", "email": "giulietta.lucas@club.com"}'),
-	 ('{"contact_id": 4466, "name": "Damaris Pininfarina", "email": "damaris.pininfarina@gmail.com"}'),
-	 ('{"contact_id": 6081, "name": "Fabrizia Renard", "email": "fabrizia.renard@higgins-marks.com"}'),
-	 ('{"contact_id": 2159, "name": "Camillo Dehmel", "email": "camillo.dehmel@brown-campbell.com"}'),
-	 ('{"contact_id": 3324, "name": "Ruggero Parpinel", "email": "ruggero.parpinel@gmail.com"}'),
-	 ('{"contact_id": 3176, "name": "Stephen Pratesi", "email": "stephen.pratesi@hotmail.com"}'),
-	 ('{"contact_id": 5874, "name": "Ludger Naccari", "email": "ludger.naccari@ingram.biz"}'),
-	 ('{"contact_id": 5110, "name": "Meryem Tapia", "email": "meryem.tapia@yahoo.com"}'),
-	 ('{"contact_id": 5490, "name": "Jasmine Juvara", "email": "jasmine.juvara@yahoo.com.au"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1922, "name": "Victoire Travaglia", "email": "victoire.travaglia@zacchia.com"}'),
-	 ('{"contact_id": 4398, "name": "Adrian Noel", "email": "adrian.noel@perrin.com"}'),
-	 ('{"contact_id": 4754, "name": "Marvin Howe", "email": "marvin.howe@gmail.com"}'),
-	 ('{"contact_id": 3309, "name": "Hanne Kidd", "email": "hanne.kidd@yahoo.com"}'),
-	 ('{"contact_id": 1244, "name": "Donatello Millet", "email": "donatello.millet@fritsch.net"}'),
-	 ('{"contact_id": 2892, "name": "Eloisa Pascarella", "email": "eloisa.pascarella@gmail.com"}'),
-	 ('{"contact_id": 2777, "name": "Erica Zambrano", "email": "erica.zambrano@gmail.com"}'),
-	 ('{"contact_id": 4952, "name": "Paula Canales", "email": "paula.canales@gilmore-guerrero.com"}'),
-	 ('{"contact_id": 5144, "name": "Claudia Bernard", "email": "claudia.bernard@mazzanti.it"}'),
-	 ('{"contact_id": 5487, "name": "Paulina Miller", "email": "paulina.miller@lewis-barker.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1932, "name": "Kathrin Godfrey", "email": "kathrin.godfrey@tele2.fr"}'),
-	 ('{"contact_id": 3364, "name": "Pina Passalacqua", "email": "pina.passalacqua@yahoo.co.uk"}'),
-	 ('{"contact_id": 5165, "name": "Julien Miles", "email": "julien.miles@stevens-rose.com"}'),
-	 ('{"contact_id": 3858, "name": "Suzanne Benigni", "email": "suzanne.benigni@mennea-morlacchi.com"}'),
-	 ('{"contact_id": 4666, "name": "Annalisa Pugh", "email": "annalisa.pugh@hotmail.fr"}'),
-	 ('{"contact_id": 2896, "name": "Mathew Maestas", "email": "mathew.maestas@casas-garrido.com"}'),
-	 ('{"contact_id": 4520, "name": "Laszlo Vallee", "email": "laszlo.vallee@verdier.com"}'),
-	 ('{"contact_id": 5726, "name": "Helen Polanco", "email": "helen.polanco@hotmail.com"}'),
-	 ('{"contact_id": 5661, "name": "Mateo Sorrentino", "email": "mateo.sorrentino@calderon.com"}'),
-	 ('{"contact_id": 4765, "name": "Eric Barnes", "email": "eric.barnes@barrett-winter.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3710, "name": "Dragica West", "email": "dragica.west@yahoo.com.au"}'),
-	 ('{"contact_id": 4925, "name": "Antje Voisin", "email": "antje.voisin@gmail.com"}'),
-	 ('{"contact_id": 1533, "name": "Stanley Mills", "email": "stanley.mills@parker-lee.biz"}'),
-	 ('{"contact_id": 5264, "name": "Brandy Meraz", "email": "brandy.meraz@yahoo.com"}'),
-	 ('{"contact_id": 4606, "name": "Conor Reinhardt", "email": "conor.reinhardt@yahoo.com.au"}'),
-	 ('{"contact_id": 2043, "name": "Gabino Blot", "email": "gabino.blot@lewis-russell.org"}'),
-	 ('{"contact_id": 3871, "name": "Alvaro Lemus", "email": "alvaro.lemus@yahoo.com"}'),
-	 ('{"contact_id": 6205, "name": "Patrizia Wilms", "email": "patrizia.wilms@dbmail.com"}'),
-	 ('{"contact_id": 3193, "name": "Metin Coulon", "email": "metin.coulon@ashley.com"}'),
-	 ('{"contact_id": 1810, "name": "Reece Valencia", "email": "reece.valencia@laboy-palomo.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4797, "name": "Troy Schmiedecke", "email": "troy.schmiedecke@picard.com"}'),
-	 ('{"contact_id": 1487, "name": "Wendy Bustos", "email": "wendy.bustos@libero.it"}'),
-	 ('{"contact_id": 3474, "name": "Guglielmo Caldwell", "email": "guglielmo.caldwell@loeffler.com"}'),
-	 ('{"contact_id": 5771, "name": "Travis Cowan", "email": "travis.cowan@turner.info"}'),
-	 ('{"contact_id": 6074, "name": "Brandi Abbagnale", "email": "brandi.abbagnale@tele2.fr"}'),
-	 ('{"contact_id": 1568, "name": "Hanno Gollum", "email": "hanno.gollum@smith.com"}'),
-	 ('{"contact_id": 4263, "name": "Jutta Burke", "email": "jutta.burke@elliott.com"}'),
-	 ('{"contact_id": 5850, "name": "Dorothe Paz", "email": "dorothe.paz@fiebig.de"}'),
-	 ('{"contact_id": 5619, "name": "Desiree Huerta", "email": "desiree.huerta@morris.com"}'),
-	 ('{"contact_id": 1904, "name": "Ilse Bray", "email": "ilse.bray@venturi.it"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5388, "name": "Pierpaolo Scaduto", "email": "pierpaolo.scaduto@sanders-gibson.com.au"}'),
-	 ('{"contact_id": 2150, "name": "Amedeo Bradford", "email": "amedeo.bradford@yahoo.com"}'),
-	 ('{"contact_id": 2653, "name": "Julia Ali", "email": "julia.ali@yahoo.com"}'),
-	 ('{"contact_id": 2687, "name": "Catalina Pizzetti", "email": "catalina.pizzetti@tim.it"}'),
-	 ('{"contact_id": 3779, "name": "Dylan Porzio", "email": "dylan.porzio@yahoo.de"}'),
-	 ('{"contact_id": 1494, "name": "Iris Trincavelli", "email": "iris.trincavelli@tiscali.fr"}'),
-	 ('{"contact_id": 4129, "name": "Johnathan Guidotti", "email": "johnathan.guidotti@cox-sanchez.net"}'),
-	 ('{"contact_id": 3035, "name": "Walburga Vollbrecht", "email": "walburga.vollbrecht@aol.de"}'),
-	 ('{"contact_id": 2069, "name": "Kendra David", "email": "kendra.david@allan-morton.com"}'),
-	 ('{"contact_id": 5469, "name": "Aleksandr Weiss", "email": "aleksandr.weiss@blanc.org"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3903, "name": "Cornelio Guardado", "email": "cornelio.guardado@gmail.com"}'),
-	 ('{"contact_id": 4083, "name": "Ferdi Blackburn", "email": "ferdi.blackburn@christensen.net"}'),
-	 ('{"contact_id": 4003, "name": "Bill Gallagher", "email": "bill.gallagher@green.com"}'),
-	 ('{"contact_id": 3565, "name": "Leonard Harvey", "email": "leonard.harvey@hotmail.com"}'),
-	 ('{"contact_id": 1640, "name": "Milan Montenegro", "email": "milan.montenegro@langern.com"}'),
-	 ('{"contact_id": 4769, "name": "Philip Perez", "email": "philip.perez@hotmail.co.uk"}'),
-	 ('{"contact_id": 3398, "name": "Kathryn Hentschel", "email": "kathryn.hentschel@shaw.com"}'),
-	 ('{"contact_id": 1865, "name": "Xavier Samson", "email": "xavier.samson@baggio.it"}'),
-	 ('{"contact_id": 5690, "name": "Hartwig Roberts", "email": "hartwig.roberts@saraceno.net"}'),
-	 ('{"contact_id": 3814, "name": "Kimberly Chan", "email": "kimberly.chan@gmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2942, "name": "Lorraine Crawford", "email": "lorraine.crawford@gmail.com"}'),
-	 ('{"contact_id": 5095, "name": "Maximiliano Knowles", "email": "maximiliano.knowles@gmail.com"}'),
-	 ('{"contact_id": 2878, "name": "Gabriella Avila", "email": "gabriella.avila@gmail.com"}'),
-	 ('{"contact_id": 3697, "name": "Rico Mortati", "email": "rico.mortati@faivre.fr"}'),
-	 ('{"contact_id": 4744, "name": "Gail Petrocelli", "email": "gail.petrocelli@yahoo.com"}'),
-	 ('{"contact_id": 2104, "name": "Liberto Niemeier", "email": "liberto.niemeier@germano-dibiasi.it"}'),
-	 ('{"contact_id": 4883, "name": "Luciana Petitjean", "email": "luciana.petitjean@patterson-cole.biz"}'),
-	 ('{"contact_id": 4807, "name": "Ron Cavazos", "email": "ron.cavazos@yahoo.com"}'),
-	 ('{"contact_id": 1372, "name": "Aldo Cibin", "email": "aldo.cibin@gmx.de"}'),
-	 ('{"contact_id": 3666, "name": "Alexandre Serrano", "email": "alexandre.serrano@yahoo.co.uk"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2066, "name": "Lori Fagotto", "email": "lori.fagotto@hill-anderson.com"}'),
-	 ('{"contact_id": 1834, "name": "Perla Figueroa", "email": "perla.figueroa@live.com"}'),
-	 ('{"contact_id": 5853, "name": "Reginald Hughes", "email": "reginald.hughes@gmail.com"}'),
-	 ('{"contact_id": 2219, "name": "Uriel Holt", "email": "uriel.holt@gmail.com"}'),
-	 ('{"contact_id": 4148, "name": "Stefano Lemonnier", "email": "stefano.lemonnier@binner.com"}'),
-	 ('{"contact_id": 4477, "name": "Madeleine Cooper", "email": "madeleine.cooper@poste.it"}'),
-	 ('{"contact_id": 1786, "name": "Alban Barbier", "email": "alban.barbier@ortiz.org"}'),
-	 ('{"contact_id": 3455, "name": "Alfonso Finetti", "email": "alfonso.finetti@quiroz.com"}'),
-	 ('{"contact_id": 5707, "name": "Ryan Kim", "email": "ryan.kim@noos.fr"}'),
-	 ('{"contact_id": 5470, "name": "Augustin Wohlgemut", "email": "augustin.wohlgemut@watson.info"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3274, "name": "Rolando Bibi", "email": "rolando.bibi@tin.it"}'),
-	 ('{"contact_id": 4613, "name": "Berthold Randall", "email": "berthold.randall@mcdonald.com"}'),
-	 ('{"contact_id": 4465, "name": "Genaro Briand", "email": "genaro.briand@sfr.fr"}'),
-	 ('{"contact_id": 1652, "name": "Rudolf Jenkins", "email": "rudolf.jenkins@hotmail.com"}'),
-	 ('{"contact_id": 2100, "name": "Pauline Ackermann", "email": "pauline.ackermann@arredondo-roque.com"}'),
-	 ('{"contact_id": 4321, "name": "Folker Swanson", "email": "folker.swanson@rodrigues.fr"}'),
-	 ('{"contact_id": 4168, "name": "Ashleigh Montez", "email": "ashleigh.montez@perry-schneider.com"}'),
-	 ('{"contact_id": 3733, "name": "Liliana Barber", "email": "liliana.barber@libero.it"}'),
-	 ('{"contact_id": 2594, "name": "Caridad Carr", "email": "caridad.carr@huhn.com"}'),
-	 ('{"contact_id": 3909, "name": "Lolita Borrego", "email": "lolita.borrego@gmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5179, "name": "Gunar Patrick", "email": "gunar.patrick@leroy.com"}'),
-	 ('{"contact_id": 2228, "name": "Leokadia Verdier", "email": "leokadia.verdier@hotmail.com.au"}'),
-	 ('{"contact_id": 6222, "name": "Hanna Reid", "email": "hanna.reid@salas.org"}'),
-	 ('{"contact_id": 2354, "name": "Edelgard Kreusel", "email": "edelgard.kreusel@hotmail.com"}'),
-	 ('{"contact_id": 1725, "name": "Svenja Perrin", "email": "svenja.perrin@berger.com"}'),
-	 ('{"contact_id": 2960, "name": "Pierluigi Taccola", "email": "pierluigi.taccola@gmx.de"}'),
-	 ('{"contact_id": 2077, "name": "Cilli Watts", "email": "cilli.watts@yahoo.com"}'),
-	 ('{"contact_id": 5662, "name": "Emiliano Wells", "email": "emiliano.wells@gmx.de"}'),
-	 ('{"contact_id": 3481, "name": "April Davids", "email": "april.davids@fisher.info"}'),
-	 ('{"contact_id": 2565, "name": "Dolores Didier", "email": "dolores.didier@yahoo.com.au"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4436, "name": "Sylvia Bonomo", "email": "sylvia.bonomo@poulain.com"}'),
-	 ('{"contact_id": 5072, "name": "Nelly Marsh", "email": "nelly.marsh@hotmail.it"}'),
-	 ('{"contact_id": 5200, "name": "Beth Miniati", "email": "beth.miniati@hudson.net"}'),
-	 ('{"contact_id": 4502, "name": "Renee Merino", "email": "renee.merino@gmail.com"}'),
-	 ('{"contact_id": 4945, "name": "Hailey Russell", "email": "hailey.russell@jourdan.org"}'),
-	 ('{"contact_id": 3012, "name": "Raphaela Gotthard", "email": "raphaela.gotthard@outlook.com"}'),
-	 ('{"contact_id": 6094, "name": "Pomponio Comencini", "email": "pomponio.comencini@hotmail.co.uk"}'),
-	 ('{"contact_id": 3815, "name": "Leone Richardson", "email": "leone.richardson@yahoo.com"}'),
-	 ('{"contact_id": 4838, "name": "Valentine Acosta", "email": "valentine.acosta@peters.net"}'),
-	 ('{"contact_id": 3469, "name": "Ricciotti Laureano", "email": "ricciotti.laureano@parsons.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4874, "name": "Jacques Heidrich", "email": "jacques.heidrich@zamudio-chapa.com"}'),
-	 ('{"contact_id": 1792, "name": "Anne Snow", "email": "anne.snow@gmail.com"}'),
-	 ('{"contact_id": 4356, "name": "Sonia Volta", "email": "sonia.volta@gmx.de"}'),
-	 ('{"contact_id": 6196, "name": "Dale Leblanc", "email": "dale.leblanc@stewart.com"}'),
-	 ('{"contact_id": 3578, "name": "Alejandro Cruz", "email": "alejandro.cruz@hotmail.com"}'),
-	 ('{"contact_id": 4491, "name": "Elsa Cugia", "email": "elsa.cugia@yahoo.com"}'),
-	 ('{"contact_id": 3054, "name": "Geronimo Pechel", "email": "geronimo.pechel@hotmail.com"}'),
-	 ('{"contact_id": 1968, "name": "Melania Klemm", "email": "melania.klemm@seidel.com"}'),
-	 ('{"contact_id": 5869, "name": "Katherine Cooley", "email": "katherine.cooley@yahoo.com"}'),
-	 ('{"contact_id": 5858, "name": "Guillermo Larsen", "email": "guillermo.larsen@yahoo.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5203, "name": "Jill Barrios", "email": "jill.barrios@gmail.com"}'),
-	 ('{"contact_id": 2577, "name": "Austin Musatti", "email": "austin.musatti@tin.it"}'),
-	 ('{"contact_id": 3216, "name": "Jacinto Rose", "email": "jacinto.rose@yahoo.com"}'),
-	 ('{"contact_id": 2037, "name": "Lucie Redi", "email": "lucie.redi@googlemail.com"}'),
-	 ('{"contact_id": 3867, "name": "Tania Chapman", "email": "tania.chapman@remy.com"}'),
-	 ('{"contact_id": 5109, "name": "Alexandria Best", "email": "alexandria.best@yahoo.co.uk"}'),
-	 ('{"contact_id": 1376, "name": "Edward Scott", "email": "edward.scott@yahoo.com"}'),
-	 ('{"contact_id": 5260, "name": "Jake Wiley", "email": "jake.wiley@outlook.com"}'),
-	 ('{"contact_id": 2350, "name": "Claudio Reuter", "email": "claudio.reuter@morgan-collins.org.au"}'),
-	 ('{"contact_id": 2269, "name": "Laure Traetta", "email": "laure.traetta@kay-perkins.co.uk"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3650, "name": "Magarete Valentin", "email": "magarete.valentin@yahoo.com"}'),
-	 ('{"contact_id": 3934, "name": "Paige Hill", "email": "paige.hill@jones.org.au"}'),
-	 ('{"contact_id": 4048, "name": "Fulvio Curiel", "email": "fulvio.curiel@reynolds.com"}'),
-	 ('{"contact_id": 4266, "name": "Thibaut Camarillo", "email": "thibaut.camarillo@hotmail.com"}'),
-	 ('{"contact_id": 3863, "name": "Romana Blanchard", "email": "romana.blanchard@googlemail.com"}'),
-	 ('{"contact_id": 4922, "name": "Thibault Savorgnan", "email": "thibault.savorgnan@butler.biz"}'),
-	 ('{"contact_id": 4517, "name": "Alexander Pausini", "email": "alexander.pausini@gonzalez.info"}'),
-	 ('{"contact_id": 3259, "name": "Pierangelo Scholtz", "email": "pierangelo.scholtz@lefevre.com"}'),
-	 ('{"contact_id": 3123, "name": "Emmanuelle Keller", "email": "emmanuelle.keller@morton-clarke.com"}'),
-	 ('{"contact_id": 3870, "name": "Isabella Deleon", "email": "isabella.deleon@web.de"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2996, "name": "Timothy Weitzel", "email": "timothy.weitzel@gmail.com"}'),
-	 ('{"contact_id": 2993, "name": "Alfredo Ingram", "email": "alfredo.ingram@hotmail.com"}'),
-	 ('{"contact_id": 4556, "name": "Francesca Kade", "email": "francesca.kade@luna-rael.org"}'),
-	 ('{"contact_id": 2326, "name": "Tonia Coleman", "email": "tonia.coleman@hotmail.com"}'),
-	 ('{"contact_id": 4109, "name": "Gottfried Barbe", "email": "gottfried.barbe@hotmail.com"}'),
-	 ('{"contact_id": 5739, "name": "Jeffrey Trommler", "email": "jeffrey.trommler@yahoo.com"}'),
-	 ('{"contact_id": 5887, "name": "Giacobbe Owens", "email": "giacobbe.owens@huet.fr"}'),
-	 ('{"contact_id": 1651, "name": "Conchita Pagliaro", "email": "conchita.pagliaro@googlemail.com"}'),
-	 ('{"contact_id": 1628, "name": "Kevin Delahaye", "email": "kevin.delahaye@ellis-wilson.com"}'),
-	 ('{"contact_id": 2642, "name": "Rouven Ovadia", "email": "rouven.ovadia@gmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 6020, "name": "Piermaria Laporte", "email": "piermaria.laporte@wesack.com"}'),
-	 ('{"contact_id": 4747, "name": "Karolin Johann", "email": "karolin.johann@hotmail.com"}'),
-	 ('{"contact_id": 5534, "name": "Steven Folliero", "email": "steven.folliero@noos.fr"}'),
-	 ('{"contact_id": 4790, "name": "Livio Rosselli", "email": "livio.rosselli@green.co.uk"}'),
-	 ('{"contact_id": 4632, "name": "Gaetano Leonardi", "email": "gaetano.leonardi@despacho.com"}'),
-	 ('{"contact_id": 1952, "name": "Cynthia Robinson", "email": "cynthia.robinson@gilles.net"}'),
-	 ('{"contact_id": 4388, "name": "Eleni Aponte", "email": "eleni.aponte@club-internet.fr"}'),
-	 ('{"contact_id": 5529, "name": "Noelia Romo", "email": "noelia.romo@yahoo.com"}'),
-	 ('{"contact_id": 1316, "name": "Evelyn Haynes", "email": "evelyn.haynes@clark.info"}'),
-	 ('{"contact_id": 1670, "name": "Katharine Zaccagnini", "email": "katharine.zaccagnini@hotmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4909, "name": "Lea Merle", "email": "lea.merle@stey.de"}'),
-	 ('{"contact_id": 3401, "name": "Marta Huynh", "email": "marta.huynh@hernandez.info"}'),
-	 ('{"contact_id": 4619, "name": "Amador Riley", "email": "amador.riley@hotmail.com"}'),
-	 ('{"contact_id": 4722, "name": "Julie Coles", "email": "julie.coles@hotmail.fr"}'),
-	 ('{"contact_id": 2188, "name": "Beverley Telesio", "email": "beverley.telesio@regnier.fr"}'),
-	 ('{"contact_id": 5497, "name": "Corinne Mitschke", "email": "corinne.mitschke@hauffer.net"}'),
-	 ('{"contact_id": 5711, "name": "Valerie Ortega", "email": "valerie.ortega@tele2.it"}'),
-	 ('{"contact_id": 4076, "name": "Carlos Delle", "email": "carlos.delle@hicks.com"}'),
-	 ('{"contact_id": 1847, "name": "Christina Besnard", "email": "christina.besnard@delorme.com"}'),
-	 ('{"contact_id": 2816, "name": "Rosario Jacques", "email": "rosario.jacques@yahoo.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5019, "name": "Celal Fischer", "email": "celal.fischer@aol.de"}'),
-	 ('{"contact_id": 4869, "name": "Leonardo Guzman", "email": "leonardo.guzman@andreozzi-abba.com"}'),
-	 ('{"contact_id": 3613, "name": "Clinton Mason", "email": "clinton.mason@yahoo.com"}'),
-	 ('{"contact_id": 3069, "name": "Loretta Mallet", "email": "loretta.mallet@sansoni-toscani.it"}'),
-	 ('{"contact_id": 2601, "name": "Lorenzo Roero", "email": "lorenzo.roero@hotmail.co.uk"}'),
-	 ('{"contact_id": 2133, "name": "Lando Gutierrez", "email": "lando.gutierrez@heser.com"}'),
-	 ('{"contact_id": 3164, "name": "Elaine Patterson", "email": "elaine.patterson@rose-morris.org"}'),
-	 ('{"contact_id": 3897, "name": "Marcella Govoni", "email": "marcella.govoni@barkholz.net"}'),
-	 ('{"contact_id": 5663, "name": "Ettore Amaldi", "email": "ettore.amaldi@germain.com"}'),
-	 ('{"contact_id": 3879, "name": "Rufino Gallegos", "email": "rufino.gallegos@webster-newton.co.uk"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5900, "name": "Georges Richards", "email": "georges.richards@macdonald.com"}'),
-	 ('{"contact_id": 2272, "name": "Janice Infantino", "email": "janice.infantino@hotmail.com"}'),
-	 ('{"contact_id": 5436, "name": "Svetlana Montanariello", "email": "svetlana.montanariello@putz.de"}'),
-	 ('{"contact_id": 3676, "name": "Agnolo Cedillo", "email": "agnolo.cedillo@laboratorios.biz"}'),
-	 ('{"contact_id": 4676, "name": "Hannah Jockel", "email": "hannah.jockel@ceravolo-tonisto.eu"}'),
-	 ('{"contact_id": 1563, "name": "Yvonne Stout", "email": "yvonne.stout@sims.edu"}'),
-	 ('{"contact_id": 4349, "name": "Anouk Pace", "email": "anouk.pace@gmail.com"}'),
-	 ('{"contact_id": 1658, "name": "Esteban Valdez", "email": "esteban.valdez@hotmail.com"}'),
-	 ('{"contact_id": 2552, "name": "Angelina Davies", "email": "angelina.davies@hotmail.com"}'),
-	 ('{"contact_id": 4847, "name": "Anastasie Cadena", "email": "anastasie.cadena@live.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1553, "name": "Hansjoachim Lettiere", "email": "hansjoachim.lettiere@hall-mcdaniel.net"}'),
-	 ('{"contact_id": 2632, "name": "Yeni Tejada", "email": "yeni.tejada@olson.edu.au"}'),
-	 ('{"contact_id": 1908, "name": "Dulce Adinolfi", "email": "dulce.adinolfi@hotmail.com"}'),
-	 ('{"contact_id": 5801, "name": "Sean Mielcarek", "email": "sean.mielcarek@gmail.com"}'),
-	 ('{"contact_id": 1935, "name": "Omar Fonseca", "email": "omar.fonseca@grupo.org"}'),
-	 ('{"contact_id": 2609, "name": "Henry Gucci", "email": "henry.gucci@leleu.fr"}'),
-	 ('{"contact_id": 2740, "name": "Samira Bottaro", "email": "samira.bottaro@vasseur.fr"}'),
-	 ('{"contact_id": 1907, "name": "Korinna Arnold", "email": "korinna.arnold@zapata-saenz.biz"}'),
-	 ('{"contact_id": 1831, "name": "Marcela Ferrante", "email": "marcela.ferrante@gmx.de"}'),
-	 ('{"contact_id": 5177, "name": "Douglas Amaya", "email": "douglas.amaya@favata-brenna.net"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 6179, "name": "Katherina Barrientos", "email": "katherina.barrientos@trobbiani.eu"}'),
-	 ('{"contact_id": 2917, "name": "Brittany Tran", "email": "brittany.tran@tele2.it"}'),
-	 ('{"contact_id": 1486, "name": "Caroline Reeves", "email": "caroline.reeves@yahoo.com"}'),
-	 ('{"contact_id": 3735, "name": "Joe Michaud", "email": "joe.michaud@yahoo.fr"}'),
-	 ('{"contact_id": 3838, "name": "Marco Vittadello", "email": "marco.vittadello@gmail.com"}'),
-	 ('{"contact_id": 2430, "name": "Kim Webb", "email": "kim.webb@yahoo.com.au"}'),
-	 ('{"contact_id": 2480, "name": "Eugenia Zichichi", "email": "eugenia.zichichi@yahoo.com"}'),
-	 ('{"contact_id": 3431, "name": "Aurore Rosemann", "email": "aurore.rosemann@leoncavallo-rusticucci.com"}'),
-	 ('{"contact_id": 1742, "name": "Giustino Luzi", "email": "giustino.luzi@rolland.fr"}'),
-	 ('{"contact_id": 4628, "name": "Anita Galindo", "email": "anita.galindo@gmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2385, "name": "Gunhild Carrillo", "email": "gunhild.carrillo@elliott-gilbert.org"}'),
-	 ('{"contact_id": 2213, "name": "Rosa Paul", "email": "rosa.paul@bien.com"}'),
-	 ('{"contact_id": 5188, "name": "Marliese Oneal", "email": "marliese.oneal@gmail.com"}'),
-	 ('{"contact_id": 3418, "name": "Bethany Hartmann", "email": "bethany.hartmann@yahoo.com"}'),
-	 ('{"contact_id": 5637, "name": "Irina Martineau", "email": "irina.martineau@gmail.com"}'),
-	 ('{"contact_id": 3530, "name": "Beatriz Moulin", "email": "beatriz.moulin@pinto.com"}'),
-	 ('{"contact_id": 3731, "name": "Lucas Austin", "email": "lucas.austin@gmail.com"}'),
-	 ('{"contact_id": 3219, "name": "Carole Nohlmans", "email": "carole.nohlmans@yahoo.com"}'),
-	 ('{"contact_id": 2392, "name": "Bozena Schmitt", "email": "bozena.schmitt@vallet.com"}'),
-	 ('{"contact_id": 5103, "name": "Aimee Foconi", "email": "aimee.foconi@outlook.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3992, "name": "Marzena Carrero", "email": "marzena.carrero@roskoth.de"}'),
-	 ('{"contact_id": 2442, "name": "Raisa Poulain", "email": "raisa.poulain@fastwebnet.it"}'),
-	 ('{"contact_id": 2913, "name": "Marcantonio Bennett", "email": "marcantonio.bennett@hopkins.com.au"}'),
-	 ('{"contact_id": 1631, "name": "Kenneth Hurst", "email": "kenneth.hurst@meunier.net"}'),
-	 ('{"contact_id": 4073, "name": "Marisela Mende", "email": "marisela.mende@godoy-enriquez.com"}'),
-	 ('{"contact_id": 4568, "name": "Blanka Villareal", "email": "blanka.villareal@monduzzi.net"}'),
-	 ('{"contact_id": 1830, "name": "Tomislav Stoppani", "email": "tomislav.stoppani@corporacin.org"}'),
-	 ('{"contact_id": 2623, "name": "Krystal Ammaniti", "email": "krystal.ammaniti@barbier.fr"}'),
-	 ('{"contact_id": 4327, "name": "Deanna Aporti", "email": "deanna.aporti@bouygtel.fr"}'),
-	 ('{"contact_id": 3713, "name": "Donatella Burns", "email": "donatella.burns@yahoo.de"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2389, "name": "Margrit Hooper", "email": "margrit.hooper@douglas.com"}'),
-	 ('{"contact_id": 5141, "name": "Baccio Marcacci", "email": "baccio.marcacci@laposte.net"}'),
-	 ('{"contact_id": 3522, "name": "Alfio Roman", "email": "alfio.roman@hotmail.co.uk"}'),
-	 ('{"contact_id": 1334, "name": "Soledad Soto", "email": "soledad.soto@hotmail.de"}'),
-	 ('{"contact_id": 4721, "name": "Josh Cimarosa", "email": "josh.cimarosa@hotmail.com"}'),
-	 ('{"contact_id": 3768, "name": "Nath Rico", "email": "nath.rico@yahoo.com"}'),
-	 ('{"contact_id": 1639, "name": "Gary Armani", "email": "gary.armani@web.de"}'),
-	 ('{"contact_id": 5149, "name": "Miriam Oquendo", "email": "miriam.oquendo@smith-watson.biz"}'),
-	 ('{"contact_id": 2153, "name": "Monica Mohaupt", "email": "monica.mohaupt@live.com"}'),
-	 ('{"contact_id": 2767, "name": "Alec Ho", "email": "alec.ho@parra-esparza.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5124, "name": "Harry Fouquet", "email": "harry.fouquet@ibarra-cooper.com"}'),
-	 ('{"contact_id": 2097, "name": "Arcelia Babati", "email": "arcelia.babati@orange.fr"}'),
-	 ('{"contact_id": 4796, "name": "Trinidad Vespa", "email": "trinidad.vespa@gmail.com"}'),
-	 ('{"contact_id": 5849, "name": "Colette Ryan", "email": "colette.ryan@hotmail.com"}'),
-	 ('{"contact_id": 1495, "name": "Richard Andre", "email": "richard.andre@porras.org"}'),
-	 ('{"contact_id": 2462, "name": "Ellinor Leclercq", "email": "ellinor.leclercq@gmail.com"}'),
-	 ('{"contact_id": 2280, "name": "Patricio Guillon", "email": "patricio.guillon@web.de"}'),
-	 ('{"contact_id": 1877, "name": "Kirsten Chindamo", "email": "kirsten.chindamo@carrillo-wall.com"}'),
-	 ('{"contact_id": 6108, "name": "Leo Petruzzi", "email": "leo.petruzzi@yahoo.com"}'),
-	 ('{"contact_id": 4427, "name": "Margot Tomaselli", "email": "margot.tomaselli@junck.org"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2881, "name": "Ansaldo Marks", "email": "ansaldo.marks@patel-odonnell.com"}'),
-	 ('{"contact_id": 2339, "name": "Regina Morin", "email": "regina.morin@barcaccia.net"}'),
-	 ('{"contact_id": 5156, "name": "Karla Medici", "email": "karla.medici@yahoo.com"}'),
-	 ('{"contact_id": 4750, "name": "Morgan Irizarry", "email": "morgan.irizarry@williams-harris.biz"}'),
-	 ('{"contact_id": 4852, "name": "Natividad Wong", "email": "natividad.wong@hoevel.com"}'),
-	 ('{"contact_id": 5734, "name": "Anna Freeman", "email": "anna.freeman@snyder.net"}'),
-	 ('{"contact_id": 3801, "name": "Emilia Vivaldi", "email": "emilia.vivaldi@garnier.fr"}'),
-	 ('{"contact_id": 4474, "name": "Gerda Cook", "email": "gerda.cook@tin.it"}'),
-	 ('{"contact_id": 1992, "name": "Andrey Faure", "email": "andrey.faure@frederick-mitchell.info"}'),
-	 ('{"contact_id": 5796, "name": "Charlotte Duke", "email": "charlotte.duke@ochoa.org"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1373, "name": "Cindy Castillo", "email": "cindy.castillo@virgilio.it"}'),
-	 ('{"contact_id": 1879, "name": "Hiltrud Thibault", "email": "hiltrud.thibault@barbe.com"}'),
-	 ('{"contact_id": 3072, "name": "Kasimir Jaime", "email": "kasimir.jaime@gmail.com"}'),
-	 ('{"contact_id": 4561, "name": "Sabine Lachmann", "email": "sabine.lachmann@phillips.org"}'),
-	 ('{"contact_id": 5201, "name": "Andrea Arroyo", "email": "andrea.arroyo@yahoo.com.au"}'),
-	 ('{"contact_id": 5871, "name": "Matthew Velasquez", "email": "matthew.velasquez@gmail.com"}'),
-	 ('{"contact_id": 3041, "name": "Severino Linares", "email": "severino.linares@angeli.com"}'),
-	 ('{"contact_id": 5864, "name": "Swantje Lomeli", "email": "swantje.lomeli@gmx.de"}'),
-	 ('{"contact_id": 3999, "name": "Marcus Espino", "email": "marcus.espino@comolli.eu"}'),
-	 ('{"contact_id": 4849, "name": "Allen Gates", "email": "allen.gates@gmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5461, "name": "Mauricio Saunders", "email": "mauricio.saunders@hotmail.co.uk"}'),
-	 ('{"contact_id": 5946, "name": "Gilbert Cornejo", "email": "gilbert.cornejo@hotmail.com"}'),
-	 ('{"contact_id": 4508, "name": "Letizia Gulotta", "email": "letizia.gulotta@howard.biz"}'),
-	 ('{"contact_id": 5096, "name": "Etta Gutknecht", "email": "etta.gutknecht@leconte.net"}'),
-	 ('{"contact_id": 5443, "name": "Shelley Perry", "email": "shelley.perry@gierschner.de"}'),
-	 ('{"contact_id": 2165, "name": "Geoffrey Williams", "email": "geoffrey.williams@poste.it"}'),
-	 ('{"contact_id": 2125, "name": "Cory Stewart", "email": "cory.stewart@voila.fr"}'),
-	 ('{"contact_id": 6141, "name": "Kristy Bartlett", "email": "kristy.bartlett@outlook.com"}'),
-	 ('{"contact_id": 5245, "name": "Gianluca Beck", "email": "gianluca.beck@green.biz"}'),
-	 ('{"contact_id": 2190, "name": "Guido Krein", "email": "guido.krein@gmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2243, "name": "Leif Monnier", "email": "leif.monnier@querini.it"}'),
-	 ('{"contact_id": 3336, "name": "Jonas Badoer", "email": "jonas.badoer@kennedy.biz"}'),
-	 ('{"contact_id": 3305, "name": "Devin Ebert", "email": "devin.ebert@yahoo.fr"}'),
-	 ('{"contact_id": 6191, "name": "Slobodan Camiscione", "email": "slobodan.camiscione@hotmail.com"}'),
-	 ('{"contact_id": 1326, "name": "Volkmar Gauthier", "email": "volkmar.gauthier@hotmail.com"}'),
-	 ('{"contact_id": 6159, "name": "Jordan Rowe", "email": "jordan.rowe@outlook.com"}'),
-	 ('{"contact_id": 2003, "name": "Manon Daugherty", "email": "manon.daugherty@segre.com"}'),
-	 ('{"contact_id": 5881, "name": "Estela Segovia", "email": "estela.segovia@vodafone.it"}'),
-	 ('{"contact_id": 1918, "name": "Giada Celentano", "email": "giada.celentano@evans.net"}'),
-	 ('{"contact_id": 2157, "name": "Clayton Salcedo", "email": "clayton.salcedo@hotmail.co.uk"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3149, "name": "Raven Pinto", "email": "raven.pinto@hotmail.com"}'),
-	 ('{"contact_id": 2444, "name": "Lewis Lewis", "email": "lewis.lewis@pisano.net"}'),
-	 ('{"contact_id": 6207, "name": "Rochus Rousseau", "email": "rochus.rousseau@nguyen.com"}'),
-	 ('{"contact_id": 5580, "name": "Belinda Gamez", "email": "belinda.gamez@leleu.com"}'),
-	 ('{"contact_id": 5942, "name": "Angelo Lozano", "email": "angelo.lozano@macias.com"}'),
-	 ('{"contact_id": 1592, "name": "Jorge Monti", "email": "jorge.monti@clement.fr"}'),
-	 ('{"contact_id": 2344, "name": "Ricky Harrell", "email": "ricky.harrell@martin.edu"}'),
-	 ('{"contact_id": 5995, "name": "Adriano Wulf", "email": "adriano.wulf@schmidtke.net"}'),
-	 ('{"contact_id": 5022, "name": "Pompeo Bourdon", "email": "pompeo.bourdon@gmail.com"}'),
-	 ('{"contact_id": 5991, "name": "Kristie Garrett", "email": "kristie.garrett@wernecke.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4020, "name": "Lodovico Conley", "email": "lodovico.conley@yahoo.com"}'),
-	 ('{"contact_id": 6028, "name": "Jean Berthelot", "email": "jean.berthelot@oscuro.it"}'),
-	 ('{"contact_id": 2790, "name": "Tadeusz Medina", "email": "tadeusz.medina@jackson-clark.net"}'),
-	 ('{"contact_id": 4033, "name": "Ruby Carriera", "email": "ruby.carriera@hotmail.it"}'),
-	 ('{"contact_id": 1261, "name": "Theres Antonioni", "email": "theres.antonioni@hotmail.com"}'),
-	 ('{"contact_id": 1979, "name": "Gloria Morton", "email": "gloria.morton@outlook.com"}'),
-	 ('{"contact_id": 2122, "name": "Graziano Jensen", "email": "graziano.jensen@gmail.com"}'),
-	 ('{"contact_id": 4506, "name": "Gianpaolo Massey", "email": "gianpaolo.massey@bouvier.com"}'),
-	 ('{"contact_id": 3016, "name": "Alain Farmer", "email": "alain.farmer@hotmail.it"}'),
-	 ('{"contact_id": 3272, "name": "Renato Murillo", "email": "renato.murillo@club.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1375, "name": "Edda Ferraris", "email": "edda.ferraris@libero.it"}'),
-	 ('{"contact_id": 4014, "name": "Luce Marty", "email": "luce.marty@waehner.org"}'),
-	 ('{"contact_id": 3199, "name": "Rotraud Mitchell", "email": "rotraud.mitchell@laboratorios.com"}'),
-	 ('{"contact_id": 2184, "name": "Israel Watkins", "email": "israel.watkins@hotmail.com"}'),
-	 ('{"contact_id": 2170, "name": "Nathan Jennings", "email": "nathan.jennings@kim.com"}'),
-	 ('{"contact_id": 1478, "name": "Gavin Proietti", "email": "gavin.proietti@gmx.de"}'),
-	 ('{"contact_id": 6163, "name": "Emma Rios", "email": "emma.rios@yahoo.com.au"}'),
-	 ('{"contact_id": 1889, "name": "Todd Douglas", "email": "todd.douglas@web.de"}'),
-	 ('{"contact_id": 5912, "name": "Oscar Holsten", "email": "oscar.holsten@yahoo.com"}'),
-	 ('{"contact_id": 2537, "name": "Ann Peron", "email": "ann.peron@grupo.biz"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2118, "name": "Senta Grassi", "email": "senta.grassi@hotmail.com"}'),
-	 ('{"contact_id": 3234, "name": "Kata Mena", "email": "kata.mena@gmail.com"}'),
-	 ('{"contact_id": 3842, "name": "Gianfranco Hethur", "email": "gianfranco.hethur@stewart-lee.com.au"}'),
-	 ('{"contact_id": 3032, "name": "Florentine Saraceno", "email": "florentine.saraceno@gmail.com"}'),
-	 ('{"contact_id": 3238, "name": "Giuliano Bolzmann", "email": "giuliano.bolzmann@pacillo.it"}'),
-	 ('{"contact_id": 2059, "name": "Alwine Kostolzin", "email": "alwine.kostolzin@holloway.com"}'),
-	 ('{"contact_id": 5238, "name": "Giacinto Briggs", "email": "giacinto.briggs@yahoo.co.uk"}'),
-	 ('{"contact_id": 2578, "name": "Holly Negrete", "email": "holly.negrete@hotmail.com"}'),
-	 ('{"contact_id": 4789, "name": "Mark Trapanese", "email": "mark.trapanese@gmail.com"}'),
-	 ('{"contact_id": 2357, "name": "Alyssa Brun", "email": "alyssa.brun@chittolini-spadafora.it"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1235, "name": "Cristina Chevalier", "email": "cristina.chevalier@proyectos.com"}'),
-	 ('{"contact_id": 3558, "name": "Shannon Lefevre", "email": "shannon.lefevre@gmail.com"}'),
-	 ('{"contact_id": 1707, "name": "Logan Hornich", "email": "logan.hornich@tin.it"}'),
-	 ('{"contact_id": 2842, "name": "Rosalia Toro", "email": "rosalia.toro@free.fr"}'),
-	 ('{"contact_id": 5318, "name": "Reiner Poerio", "email": "reiner.poerio@yahoo.com"}'),
-	 ('{"contact_id": 1620, "name": "Valentina Pages", "email": "valentina.pages@hotmail.de"}'),
-	 ('{"contact_id": 4998, "name": "Enrico Fabre", "email": "enrico.fabre@gmail.com"}'),
-	 ('{"contact_id": 3111, "name": "Sevim Begue", "email": "sevim.begue@yahoo.com.au"}'),
-	 ('{"contact_id": 1424, "name": "Sonja Patberg", "email": "sonja.patberg@hotmail.com"}'),
-	 ('{"contact_id": 3244, "name": "Christine Hiller", "email": "christine.hiller@yahoo.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4643, "name": "Maik Beasley", "email": "maik.beasley@harper-brooks.biz"}'),
-	 ('{"contact_id": 6132, "name": "Elliot Santana", "email": "elliot.santana@gmx.de"}'),
-	 ('{"contact_id": 3790, "name": "Eloy Renzi", "email": "eloy.renzi@gmail.com"}'),
-	 ('{"contact_id": 1312, "name": "Wolf Lutz", "email": "wolf.lutz@nichols-jackson.com.au"}'),
-	 ('{"contact_id": 5686, "name": "Giuseppe Lee", "email": "giuseppe.lee@mahe.org"}'),
-	 ('{"contact_id": 2111, "name": "Angelica Cuellar", "email": "angelica.cuellar@zaguri-bellucci.net"}'),
-	 ('{"contact_id": 5685, "name": "Bekir Normand", "email": "bekir.normand@yahoo.de"}'),
-	 ('{"contact_id": 1905, "name": "Carmine Gonzales", "email": "carmine.gonzales@schleich.net"}'),
-	 ('{"contact_id": 3271, "name": "Marianne Hubert", "email": "marianne.hubert@hotmail.com"}'),
-	 ('{"contact_id": 4178, "name": "Gonzalo Montes", "email": "gonzalo.montes@hotmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3275, "name": "Shelly Guichard", "email": "shelly.guichard@gmail.com"}'),
-	 ('{"contact_id": 5713, "name": "Tobias Carbajal", "email": "tobias.carbajal@live.com"}'),
-	 ('{"contact_id": 3339, "name": "Santiago Berry", "email": "santiago.berry@aol.de"}'),
-	 ('{"contact_id": 5585, "name": "Emilio Davenport", "email": "emilio.davenport@zamora-russo.net"}'),
-	 ('{"contact_id": 4407, "name": "Maurizio Gute", "email": "maurizio.gute@knight.info"}'),
-	 ('{"contact_id": 1941, "name": "Nadia Travaglio", "email": "nadia.travaglio@colletti-broggini.com"}'),
-	 ('{"contact_id": 4690, "name": "Elisa Barkholz", "email": "elisa.barkholz@sfr.fr"}'),
-	 ('{"contact_id": 3607, "name": "Cristal Mazzini", "email": "cristal.mazzini@gmail.com"}'),
-	 ('{"contact_id": 2670, "name": "Trevor Granados", "email": "trevor.granados@gmail.com"}'),
-	 ('{"contact_id": 5261, "name": "Matthieu Mcdonald", "email": "matthieu.mcdonald@morrison.org"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4121, "name": "Juliette Preston", "email": "juliette.preston@gmail.com"}'),
-	 ('{"contact_id": 4620, "name": "Stanislaw Montalvo", "email": "stanislaw.montalvo@mcpherson-hughes.info"}'),
-	 ('{"contact_id": 4630, "name": "Lilia Lollobrigida", "email": "lilia.lollobrigida@le.com"}'),
-	 ('{"contact_id": 3440, "name": "Brigitta Shaw", "email": "brigitta.shaw@hotmail.co.uk"}'),
-	 ('{"contact_id": 3572, "name": "Rebeca Frey", "email": "rebeca.frey@gerard.fr"}'),
-	 ('{"contact_id": 5306, "name": "Nicolas Palacios", "email": "nicolas.palacios@meraz.com"}'),
-	 ('{"contact_id": 5122, "name": "Susanna Bonneau", "email": "susanna.bonneau@klingelhoefer.de"}'),
-	 ('{"contact_id": 1368, "name": "Romina Valentine", "email": "romina.valentine@hotmail.com"}'),
-	 ('{"contact_id": 5370, "name": "Erika Toussaint", "email": "erika.toussaint@sfr.fr"}'),
-	 ('{"contact_id": 5636, "name": "Lothar Laurent", "email": "lothar.laurent@garcia.com.au"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 6033, "name": "Chelsea Verdugo", "email": "chelsea.verdugo@campbell.com"}'),
-	 ('{"contact_id": 3599, "name": "Ria Venier", "email": "ria.venier@murillo-estevez.com"}'),
-	 ('{"contact_id": 5566, "name": "Carly Summers", "email": "carly.summers@yahoo.co.uk"}'),
-	 ('{"contact_id": 1873, "name": "Pasquale Tomasini", "email": "pasquale.tomasini@hotmail.co.uk"}'),
-	 ('{"contact_id": 3904, "name": "Stefani Ughi", "email": "stefani.ughi@hotmail.it"}'),
-	 ('{"contact_id": 4453, "name": "Jose Huang", "email": "jose.huang@gmx.de"}'),
-	 ('{"contact_id": 5481, "name": "Petros Gaona", "email": "petros.gaona@googlemail.com"}'),
-	 ('{"contact_id": 2987, "name": "Maximilian Siering", "email": "maximilian.siering@gaito-fornaciari.org"}'),
-	 ('{"contact_id": 2431, "name": "Ermenegildo Holzapfel", "email": "ermenegildo.holzapfel@aol.de"}'),
-	 ('{"contact_id": 4158, "name": "Damien Leger", "email": "damien.leger@dixon.biz"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3753, "name": "Zeferino Barrera", "email": "zeferino.barrera@zedillo-velazquez.com"}'),
-	 ('{"contact_id": 4391, "name": "Alfred Pohl", "email": "alfred.pohl@fechner.net"}'),
-	 ('{"contact_id": 2026, "name": "Marissa Gaito", "email": "marissa.gaito@reed-campbell.edu"}'),
-	 ('{"contact_id": 4547, "name": "Ariana Houston", "email": "ariana.houston@hotmail.it"}'),
-	 ('{"contact_id": 2798, "name": "Victor Jacobs", "email": "victor.jacobs@young.com"}'),
-	 ('{"contact_id": 4732, "name": "Henriette Lang", "email": "henriette.lang@mimun.it"}'),
-	 ('{"contact_id": 5126, "name": "Wilfriede Baca", "email": "wilfriede.baca@caraballo.com"}'),
-	 ('{"contact_id": 5151, "name": "Lucia Riviere", "email": "lucia.riviere@samaniego.biz"}'),
-	 ('{"contact_id": 2134, "name": "Gordon Vigorelli", "email": "gordon.vigorelli@solano.com"}'),
-	 ('{"contact_id": 5786, "name": "Diethard Salgado", "email": "diethard.salgado@gmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5515, "name": "Sue Corrales", "email": "sue.corrales@cardenas-serna.org"}'),
-	 ('{"contact_id": 4530, "name": "Arthur Salazar", "email": "arthur.salazar@yahoo.com.au"}'),
-	 ('{"contact_id": 4088, "name": "Fortunata Schneider", "email": "fortunata.schneider@tiscali.it"}'),
-	 ('{"contact_id": 3667, "name": "Gretchen Serna", "email": "gretchen.serna@pichon.org"}'),
-	 ('{"contact_id": 3286, "name": "Egon Caron", "email": "egon.caron@hotmail.com"}'),
-	 ('{"contact_id": 4804, "name": "Roberta Finzi", "email": "roberta.finzi@knight-davies.co.uk"}'),
-	 ('{"contact_id": 5768, "name": "Editha Savage", "email": "editha.savage@davies.co.uk"}'),
-	 ('{"contact_id": 6098, "name": "Allan Emanuelli", "email": "allan.emanuelli@fernandes.org"}'),
-	 ('{"contact_id": 2508, "name": "Laurence Lucero", "email": "laurence.lucero@martin.org"}'),
-	 ('{"contact_id": 5779, "name": "Istvan Draghi", "email": "istvan.draghi@ifrance.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1717, "name": "Luigi Bonnet", "email": "luigi.bonnet@carriera-federico.it"}'),
-	 ('{"contact_id": 3368, "name": "Yuridia Fantozzi", "email": "yuridia.fantozzi@mcdonald.com"}'),
-	 ('{"contact_id": 4265, "name": "Eraldo Schmiedt", "email": "eraldo.schmiedt@hotmail.de"}'),
-	 ('{"contact_id": 4455, "name": "Antoinette Cox", "email": "antoinette.cox@bustamante.com"}'),
-	 ('{"contact_id": 2940, "name": "Cameron Ocampo", "email": "cameron.ocampo@hotmail.com.au"}'),
-	 ('{"contact_id": 6144, "name": "Lynn Lawson", "email": "lynn.lawson@leclercq.com"}'),
-	 ('{"contact_id": 3657, "name": "Natalia Seifert", "email": "natalia.seifert@ifrance.com"}'),
-	 ('{"contact_id": 1537, "name": "Nuray Anguillara", "email": "nuray.anguillara@yahoo.co.uk"}'),
-	 ('{"contact_id": 2116, "name": "Beate Morgan", "email": "beate.morgan@gmail.com"}'),
-	 ('{"contact_id": 5102, "name": "Mario Rees", "email": "mario.rees@gmx.de"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5815, "name": "Galasso Junken", "email": "galasso.junken@yahoo.co.uk"}'),
-	 ('{"contact_id": 4250, "name": "Luca Moses", "email": "luca.moses@franke.de"}'),
-	 ('{"contact_id": 4533, "name": "Aurelio Gertz", "email": "aurelio.gertz@hewitt.net"}'),
-	 ('{"contact_id": 3329, "name": "Uberto Steele", "email": "uberto.steele@outlook.com"}'),
-	 ('{"contact_id": 3606, "name": "Annie Hunter", "email": "annie.hunter@allen.co.uk"}'),
-	 ('{"contact_id": 4749, "name": "Jo Mccarty", "email": "jo.mccarty@hotmail.com"}'),
-	 ('{"contact_id": 2222, "name": "Eitel Lombard", "email": "eitel.lombard@thomas.net"}'),
-	 ('{"contact_id": 1939, "name": "Susan Vigliotti", "email": "susan.vigliotti@yahoo.co.uk"}'),
-	 ('{"contact_id": 2456, "name": "Jacqueline Germano", "email": "jacqueline.germano@valette.fr"}'),
-	 ('{"contact_id": 2794, "name": "Fidel Ruppert", "email": "fidel.ruppert@yahoo.co.uk"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2648, "name": "Margaret Eigenwillig", "email": "margaret.eigenwillig@yahoo.com"}'),
-	 ('{"contact_id": 2545, "name": "Yvette Harding", "email": "yvette.harding@yahoo.co.uk"}'),
-	 ('{"contact_id": 3273, "name": "Federigo Karge", "email": "federigo.karge@bohlander.com"}'),
-	 ('{"contact_id": 6155, "name": "Guenther Armenta", "email": "guenther.armenta@free.fr"}'),
-	 ('{"contact_id": 6064, "name": "Coriolano Higgins", "email": "coriolano.higgins@murphy.org.au"}'),
-	 ('{"contact_id": 1729, "name": "Felix Rubio", "email": "felix.rubio@ebert.de"}'),
-	 ('{"contact_id": 4969, "name": "Melanie Leveque", "email": "melanie.leveque@fleury.net"}'),
-	 ('{"contact_id": 3402, "name": "Abbie Galeati", "email": "abbie.galeati@ubaldi.it"}'),
-	 ('{"contact_id": 2810, "name": "Vittorio Caccioppoli", "email": "vittorio.caccioppoli@yahoo.com"}'),
-	 ('{"contact_id": 2217, "name": "Biagio Valenzuela", "email": "biagio.valenzuela@robinson.info"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5140, "name": "Dario Green", "email": "dario.green@live.com"}'),
-	 ('{"contact_id": 4497, "name": "Alwina Textor", "email": "alwina.textor@poste.it"}'),
-	 ('{"contact_id": 5100, "name": "Diether Baeza", "email": "diether.baeza@grupo.biz"}'),
-	 ('{"contact_id": 3390, "name": "Sole Trevino", "email": "sole.trevino@hotmail.com"}'),
-	 ('{"contact_id": 1926, "name": "Darren Bernardi", "email": "darren.bernardi@brooks-martin.com"}'),
-	 ('{"contact_id": 3264, "name": "Martina Heser", "email": "martina.heser@morellato.it"}'),
-	 ('{"contact_id": 2573, "name": "Bethan Giacometti", "email": "bethan.giacometti@gmail.com"}'),
-	 ('{"contact_id": 3628, "name": "Ethan Duhamel", "email": "ethan.duhamel@sfr.fr"}'),
-	 ('{"contact_id": 3826, "name": "Corrado Warren", "email": "corrado.warren@hotmail.com.au"}'),
-	 ('{"contact_id": 5983, "name": "Damian Pulido", "email": "damian.pulido@yahoo.de"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5678, "name": "Dino Osborne", "email": "dino.osborne@despacho.com"}'),
-	 ('{"contact_id": 2093, "name": "Nicolaus Bernetti", "email": "nicolaus.bernetti@aol.de"}'),
-	 ('{"contact_id": 5333, "name": "Gianna Carroll", "email": "gianna.carroll@perez.com"}'),
-	 ('{"contact_id": 5139, "name": "Grit Knight", "email": "grit.knight@web.de"}'),
-	 ('{"contact_id": 3173, "name": "Erin Weinhold", "email": "erin.weinhold@hotmail.fr"}'),
-	 ('{"contact_id": 3333, "name": "Craig Jordan", "email": "craig.jordan@gmail.com"}'),
-	 ('{"contact_id": 2262, "name": "Homero Respighi", "email": "homero.respighi@gmail.com"}'),
-	 ('{"contact_id": 1531, "name": "Fanny Pertile", "email": "fanny.pertile@gmail.com"}'),
-	 ('{"contact_id": 4881, "name": "Fridolin Comboni", "email": "fridolin.comboni@graf.com"}'),
-	 ('{"contact_id": 3928, "name": "Hugh Cantu", "email": "hugh.cantu@libero.it"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1803, "name": "Alphons Simmons", "email": "alphons.simmons@hotmail.com"}'),
-	 ('{"contact_id": 2321, "name": "Ludovico Cafarchia", "email": "ludovico.cafarchia@gmail.com"}'),
-	 ('{"contact_id": 6234, "name": "Nico Kaiser", "email": "nico.kaiser@almonte.com"}'),
-	 ('{"contact_id": 1422, "name": "Kirsty Lamy", "email": "kirsty.lamy@alonzi.it"}'),
-	 ('{"contact_id": 2660, "name": "Joshua Scheibe", "email": "joshua.scheibe@turci.org"}'),
-	 ('{"contact_id": 5361, "name": "Carin Pineau", "email": "carin.pineau@yahoo.com"}'),
-	 ('{"contact_id": 3420, "name": "Ellie Galarza", "email": "ellie.galarza@pareto-cattaneo.net"}'),
-	 ('{"contact_id": 4337, "name": "Marion Lira", "email": "marion.lira@ifrance.com"}'),
-	 ('{"contact_id": 2338, "name": "Aurelia Angiolello", "email": "aurelia.angiolello@lord.com"}'),
-	 ('{"contact_id": 4140, "name": "Maura Ravaglioli", "email": "maura.ravaglioli@yahoo.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2373, "name": "Brunhilde Fletcher", "email": "brunhilde.fletcher@schomber.de"}'),
-	 ('{"contact_id": 1344, "name": "Ottfried Marques", "email": "ottfried.marques@tyler-watson.info"}'),
-	 ('{"contact_id": 2141, "name": "Christelle Blasi", "email": "christelle.blasi@morris-chan.com"}'),
-	 ('{"contact_id": 3415, "name": "Augusto Vercelloni", "email": "augusto.vercelloni@club-internet.fr"}'),
-	 ('{"contact_id": 5696, "name": "Michela Pruvost", "email": "michela.pruvost@holt.co.uk"}'),
-	 ('{"contact_id": 1798, "name": "Guarino Escalante", "email": "guarino.escalante@hotmail.com"}'),
-	 ('{"contact_id": 1657, "name": "Gabriela Padilla", "email": "gabriela.padilla@pearson-russell.com"}'),
-	 ('{"contact_id": 3651, "name": "Agathe Dias", "email": "agathe.dias@jackson.com"}'),
-	 ('{"contact_id": 3574, "name": "Werner Kallert", "email": "werner.kallert@gmail.com"}'),
-	 ('{"contact_id": 6063, "name": "Lore Delaunay", "email": "lore.delaunay@yahoo.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2404, "name": "Enzio Campos", "email": "enzio.campos@tim.it"}'),
-	 ('{"contact_id": 2705, "name": "Walther Duarte", "email": "walther.duarte@web.de"}'),
-	 ('{"contact_id": 5059, "name": "Adelgunde Trevisan", "email": "adelgunde.trevisan@gmail.com"}'),
-	 ('{"contact_id": 5466, "name": "Thierry Schwartz", "email": "thierry.schwartz@travaglio.net"}'),
-	 ('{"contact_id": 5821, "name": "Katie Andersen", "email": "katie.andersen@haney.com.au"}'),
-	 ('{"contact_id": 5385, "name": "Kathy Zamorani", "email": "kathy.zamorani@hotmail.com"}'),
-	 ('{"contact_id": 3506, "name": "Giuseppina Tanguy", "email": "giuseppina.tanguy@wanadoo.fr"}'),
-	 ('{"contact_id": 5427, "name": "Jack Klapp", "email": "jack.klapp@hotmail.com.au"}'),
-	 ('{"contact_id": 6142, "name": "Tom Leconte", "email": "tom.leconte@woods-johnson.com"}'),
-	 ('{"contact_id": 2873, "name": "Bonnie Cignaroli", "email": "bonnie.cignaroli@yahoo.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3916, "name": "Danny Farrell", "email": "danny.farrell@hotmail.com"}'),
-	 ('{"contact_id": 1687, "name": "Fiorenzo Bauer", "email": "fiorenzo.bauer@gmail.com"}'),
-	 ('{"contact_id": 1542, "name": "Randy Alfieri", "email": "randy.alfieri@verri.org"}'),
-	 ('{"contact_id": 3087, "name": "Tim Bradley", "email": "tim.bradley@schlosser.de"}'),
-	 ('{"contact_id": 3857, "name": "Yves Mendez", "email": "yves.mendez@gmail.com"}'),
-	 ('{"contact_id": 5921, "name": "Raffaella Esquivel", "email": "raffaella.esquivel@gmail.com"}'),
-	 ('{"contact_id": 3144, "name": "Lawrence Vasari", "email": "lawrence.vasari@castillo.edu"}'),
-	 ('{"contact_id": 2676, "name": "Sam Adams", "email": "sam.adams@yahoo.com"}'),
-	 ('{"contact_id": 3646, "name": "Mirco Nicolini", "email": "mirco.nicolini@blin.net"}'),
-	 ('{"contact_id": 1321, "name": "Graham Bajardi", "email": "graham.bajardi@yahoo.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1399, "name": "Luc Quinn", "email": "luc.quinn@walker.com"}'),
-	 ('{"contact_id": 3169, "name": "Stella Ullrich", "email": "stella.ullrich@hotmail.com.au"}'),
-	 ('{"contact_id": 2058, "name": "Calcedonio Remy", "email": "calcedonio.remy@edwards-benton.com"}'),
-	 ('{"contact_id": 1300, "name": "Nanni Almaraz", "email": "nanni.almaraz@martin.com"}'),
-	 ('{"contact_id": 2075, "name": "Pascual Corradi", "email": "pascual.corradi@lopez.net.au"}'),
-	 ('{"contact_id": 2984, "name": "Kristi Grant", "email": "kristi.grant@yahoo.co.uk"}'),
-	 ('{"contact_id": 4768, "name": "Manuel Gracia", "email": "manuel.gracia@trussardi.eu"}'),
-	 ('{"contact_id": 3682, "name": "Gionata Hussain", "email": "gionata.hussain@yahoo.com"}'),
-	 ('{"contact_id": 5901, "name": "Maria Nguyen", "email": "maria.nguyen@hernadez.com"}'),
-	 ('{"contact_id": 3540, "name": "Leon Baker", "email": "leon.baker@hotmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2225, "name": "Gianmarco Alcaraz", "email": "gianmarco.alcaraz@zacchia.net"}'),
-	 ('{"contact_id": 1485, "name": "Derrick Little", "email": "derrick.little@small.org"}'),
-	 ('{"contact_id": 5343, "name": "Terry Ramirez", "email": "terry.ramirez@hotmail.co.uk"}'),
-	 ('{"contact_id": 5594, "name": "Katarina Clarke", "email": "katarina.clarke@hotmail.com.au"}'),
-	 ('{"contact_id": 2482, "name": "Leila Washington", "email": "leila.washington@gmail.com"}'),
-	 ('{"contact_id": 2706, "name": "Mirko Townsend", "email": "mirko.townsend@schmitt.com"}'),
-	 ('{"contact_id": 4861, "name": "Randall Connolly", "email": "randall.connolly@jovinelli-castelli.com"}'),
-	 ('{"contact_id": 2961, "name": "Pia Burgess", "email": "pia.burgess@proyectos.org"}'),
-	 ('{"contact_id": 3043, "name": "Justine Mancini", "email": "justine.mancini@tiscali.it"}'),
-	 ('{"contact_id": 6103, "name": "Reynaldo Wagenknecht", "email": "reynaldo.wagenknecht@faure.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4708, "name": "Toni Magrassi", "email": "toni.magrassi@gmail.com"}'),
-	 ('{"contact_id": 4395, "name": "Patrizio Cisneros", "email": "patrizio.cisneros@martinez.edu.au"}'),
-	 ('{"contact_id": 4912, "name": "Durante Lindner", "email": "durante.lindner@picard.fr"}'),
-	 ('{"contact_id": 2030, "name": "Rosl Lamborghini", "email": "rosl.lamborghini@hiller.net"}'),
-	 ('{"contact_id": 5235, "name": "Ugo Harrison", "email": "ugo.harrison@morley-chapman.co.uk"}'),
-	 ('{"contact_id": 5001, "name": "Isidor Carpenter", "email": "isidor.carpenter@chauvin.com"}'),
-	 ('{"contact_id": 4093, "name": "Marie Zoppetto", "email": "marie.zoppetto@kallert.de"}'),
-	 ('{"contact_id": 2576, "name": "Branko Chambers", "email": "branko.chambers@ifrance.com"}'),
-	 ('{"contact_id": 6122, "name": "Alan Pineda", "email": "alan.pineda@proyectos.info"}'),
-	 ('{"contact_id": 2813, "name": "Carmen Oestrovsky", "email": "carmen.oestrovsky@gmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 3737, "name": "Shane Fernandez", "email": "shane.fernandez@hotmail.de"}'),
-	 ('{"contact_id": 2803, "name": "Debbie Guilbert", "email": "debbie.guilbert@berg.edu"}'),
-	 ('{"contact_id": 5508, "name": "Vito Dossi", "email": "vito.dossi@hotmail.co.uk"}'),
-	 ('{"contact_id": 3850, "name": "Evan Schacht", "email": "evan.schacht@price.com"}'),
-	 ('{"contact_id": 4220, "name": "Mandy Weston", "email": "mandy.weston@free.fr"}'),
-	 ('{"contact_id": 4532, "name": "Paulo Zito", "email": "paulo.zito@nelson.biz"}'),
-	 ('{"contact_id": 6013, "name": "Alberto Girschner", "email": "alberto.girschner@laboratorios.com"}'),
-	 ('{"contact_id": 3396, "name": "Giacomo Bouvet", "email": "giacomo.bouvet@gmail.com"}'),
-	 ('{"contact_id": 4401, "name": "Ehrentraud Puga", "email": "ehrentraud.puga@laboratorios.com"}'),
-	 ('{"contact_id": 2981, "name": "Cristian Hale", "email": "cristian.hale@hotmail.co.uk"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 4467, "name": "Lilija Charles", "email": "lilija.charles@gmail.com"}'),
-	 ('{"contact_id": 1377, "name": "Albert Legendre", "email": "albert.legendre@lee.com"}'),
-	 ('{"contact_id": 5036, "name": "Marisa Renaud", "email": "marisa.renaud@smith.org"}'),
-	 ('{"contact_id": 5761, "name": "Sharon Diallo", "email": "sharon.diallo@gmail.com"}'),
-	 ('{"contact_id": 3699, "name": "Eduardo Delattre", "email": "eduardo.delattre@lynch.net.au"}'),
-	 ('{"contact_id": 4519, "name": "Bernadette Wang", "email": "bernadette.wang@gmail.com"}'),
-	 ('{"contact_id": 5395, "name": "Dina Gibbons", "email": "dina.gibbons@brewer.net"}'),
-	 ('{"contact_id": 3057, "name": "Clara Armstrong", "email": "clara.armstrong@vodafone.it"}'),
-	 ('{"contact_id": 2741, "name": "Elliott Herrmann", "email": "elliott.herrmann@hotmail.com.au"}'),
-	 ('{"contact_id": 1675, "name": "Graziella Vidal", "email": "graziella.vidal@hotmail.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 2712, "name": "Francisca Becerra", "email": "francisca.becerra@young.com.au"}'),
-	 ('{"contact_id": 4527, "name": "Edeltrud Boyer", "email": "edeltrud.boyer@outlook.com"}'),
-	 ('{"contact_id": 1722, "name": "Julian Noble", "email": "julian.noble@hill.org.au"}'),
-	 ('{"contact_id": 4330, "name": "Christophe Bohnbach", "email": "christophe.bohnbach@ifrance.com"}'),
-	 ('{"contact_id": 5219, "name": "Ippazio Angulo", "email": "ippazio.angulo@yahoo.com"}'),
-	 ('{"contact_id": 4997, "name": "Grace Kroker", "email": "grace.kroker@hotmail.com"}'),
-	 ('{"contact_id": 2239, "name": "Jared Ferguson", "email": "jared.ferguson@roberts.com"}'),
-	 ('{"contact_id": 4587, "name": "Virginie McLean", "email": "virginie.mclean@yahoo.com"}'),
-	 ('{"contact_id": 4113, "name": "Mason Potter", "email": "mason.potter@gmail.com"}'),
-	 ('{"contact_id": 4762, "name": "Aaron Anaya", "email": "aaron.anaya@hotmail.com.au"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 5242, "name": "Leah Ornelas", "email": "leah.ornelas@gmail.com"}'),
-	 ('{"contact_id": 5765, "name": "Harald Roy", "email": "harald.roy@web.de"}'),
-	 ('{"contact_id": 2185, "name": "Micaela Martel", "email": "micaela.martel@hotmail.com"}'),
-	 ('{"contact_id": 5500, "name": "Vincentio Sanders", "email": "vincentio.sanders@voila.fr"}'),
-	 ('{"contact_id": 3494, "name": "Bettina Norbiato", "email": "bettina.norbiato@allen-lutz.org"}'),
-	 ('{"contact_id": 3924, "name": "Julio Renner", "email": "julio.renner@industrias.net"}'),
-	 ('{"contact_id": 3521, "name": "Jelena Stiffel", "email": "jelena.stiffel@trupp.de"}'),
-	 ('{"contact_id": 5262, "name": "Guadalupe Munoz", "email": "guadalupe.munoz@murray-hamilton.com.au"}'),
-	 ('{"contact_id": 3684, "name": "Whitney Noack", "email": "whitney.noack@laboratorios.org"}'),
-	 ('{"contact_id": 5784, "name": "Gelsomina Migliaccio", "email": "gelsomina.migliaccio@junk.com"}');
-INSERT INTO crowdfunding.contacts ("This list of contacts was updated on 11/10/2020.") VALUES
-	 ('{"contact_id": 1498, "name": "Evangelista Pereira", "email": "evangelista.pereira@thompson-peterson.biz"}'),
-	 ('{"contact_id": 6073, "name": "Gareth Comolli", "email": "gareth.comolli@tiscali.fr"}'),
-	 ('{"contact_id": 4939, "name": "Michelangelo Hess", "email": "michelangelo.hess@bouygtel.fr"}');
-INSERT INTO crowdfunding.subcategory ("name",description,subcategory_id,subcategory) VALUES
-	 (NULL,NULL,'subcat1','food trucks'),
-	 (NULL,NULL,'subcat2','rock'),
-	 (NULL,NULL,'subcat3','web'),
-	 (NULL,NULL,'subcat4','plays'),
-	 (NULL,NULL,'subcat5','documentary'),
-	 (NULL,NULL,'subcat6','electric music'),
-	 (NULL,NULL,'subcat7','drama'),
-	 (NULL,NULL,'subcat8','indie rock'),
-	 (NULL,NULL,'subcat9','wearables'),
-	 (NULL,NULL,'subcat10','nonfiction');
-INSERT INTO crowdfunding.subcategory ("name",description,subcategory_id,subcategory) VALUES
-	 (NULL,NULL,'subcat11','animation'),
-	 (NULL,NULL,'subcat12','video games'),
-	 (NULL,NULL,'subcat13','shorts'),
-	 (NULL,NULL,'subcat14','fiction'),
-	 (NULL,NULL,'subcat15','photography books'),
-	 (NULL,NULL,'subcat16','radio & podcasts'),
-	 (NULL,NULL,'subcat17','metal'),
-	 (NULL,NULL,'subcat18','jazz'),
-	 (NULL,NULL,'subcat19','translations'),
-	 (NULL,NULL,'subcat20','television');
-INSERT INTO crowdfunding.subcategory ("name",description,subcategory_id,subcategory) VALUES
-	 (NULL,NULL,'subcat21','mobile games'),
-	 (NULL,NULL,'subcat22','world music'),
-	 (NULL,NULL,'subcat23','science fiction'),
-	 (NULL,NULL,'subcat24','audio');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Pre-emptive tertiary standardization',147,4661,'Baldwin, Riley and Jackson',100.0,0.0,'failed',0,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Managed bottom-line architecture',1621,3765,'Odom Inc',1400.0,14560.0,'successful',158,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Function-based leadingedge pricing structure',1812,4187,'Melton, Robinson and Fritz',108400.0,142523.0,'successful',1425,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Vision-oriented fresh-thinking conglomeration',2156,4941,'Mcdonald, Gonzalez and Ross',4200.0,2477.0,'failed',24,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Proactive foreground core',1365,2199,'Larson-Little',7600.0,5265.0,'failed',53,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Open-source optimizing database',2057,5650,'Harris Group',7600.0,13195.0,'successful',174,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Operative upward-trending algorithm',1894,5889,'Ortiz, Coleman and Mitchell',5200.0,1090.0,'failed',18,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Centralized cohesive challenge',2669,4842,'Carter-Guzman',4500.0,14741.0,'successful',227,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Exclusive attitude-oriented intranet',1114,3280,'Nunez-Richards',110100.0,21946.0,'live',708,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Open-source fresh-thinking model',970,5468,'Rangel, Holt and Jones',6200.0,3208.0,'failed',44,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Monitored empowering installation',2340,3064,'Green Ltd',5200.0,13838.0,'successful',220,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Grass-roots zero administration system engine',601,4904,'Perez, Johnson and Gardner',6300.0,3030.0,'failed',27,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Assimilated hybrid intranet',1950,1299,'Kim Ltd',6300.0,5629.0,'failed',55,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Multi-tiered directional open architecture',671,5602,'Walker, Taylor and Coleman',4200.0,10295.0,'successful',98,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Cloned directional synergy',1683,5753,'Rodriguez, Rose and Stewart',28200.0,18829.0,'failed',200,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Extended eco-centric pricing structure',505,4495,'Wright, Hunt and Rowe',81200.0,38414.0,'failed',452,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Cross-platform systemic adapter',1245,4269,'Hines Inc',1700.0,11041.0,'successful',100,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Seamless 4thgeneration methodology',2550,2226,'Cochran-Nguyen',84600.0,134845.0,'successful',1249,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Exclusive needs-based adapter',875,1558,'Johnson-Gould',9100.0,6089.0,'canceled',135,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Down-sized cohesive archive',2283,2307,'Perez-Hess',62500.0,30331.0,'failed',674,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Proactive composite alliance',118,2900,'Reeves, Thompson and Richardson',131800.0,147936.0,'successful',1396,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Re-engineered intangible definition',711,5695,'Simmons-Reynolds',94000.0,38533.0,'failed',558,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Enhanced dynamic definition',1747,5708,'Collier Inc',59100.0,75690.0,'successful',890,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Devolved next generation adapter',1825,1663,'Gray-Jenkins',4500.0,14942.0,'successful',142,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Cross-platform intermediate frame',1019,3605,'Scott, Wilson and Martin',92400.0,104257.0,'successful',2673,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Monitored impactful analyzer',821,4678,'Caldwell, Velazquez and Wilson',5500.0,11904.0,'successful',163,'US','USD','1970-01-01','1970-01-01',false,true,'cat7','subcat12'),
-	 (NULL,'Optional responsive customer loyalty',2653,2251,'Spencer-Bates',107500.0,51814.0,'canceled',1480,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Diverse transitional migration',2502,6202,'Best, Carr and Williams',2000.0,1599.0,'failed',15,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Synchronized global task-force',325,3715,'Campbell, Brown and Powell',130800.0,137635.0,'successful',2220,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Focused 6thgeneration forecast',1345,4242,'Johnson, Parker and Haynes',45900.0,150965.0,'successful',1606,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat5','subcat13');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Down-sized analyzing challenge',2303,4326,'Clark-Cooke',9000.0,14455.0,'successful',129,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Progressive needs-based focus group',2224,5560,'Schroeder Ltd',3500.0,10850.0,'successful',226,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Ergonomic 6thgeneration success',1173,4002,'Jackson PLC',101000.0,87676.0,'failed',2307,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Exclusive interactive approach',210,3813,'Blair, Collins and Carter',50200.0,189666.0,'successful',5419,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Reverse-engineered asynchronous archive',1546,5336,'Maldonado and Sons',9300.0,14025.0,'successful',165,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Synergized intangible challenge',2871,4994,'Mitchell and Sons',125500.0,188628.0,'successful',1965,'DK','DKK','1970-01-01','1970-01-01',false,true,'cat5','subcat7'),
-	 (NULL,'Monitored multi-state encryption',2034,1471,'Jackson-Lewis',700.0,1101.0,'successful',16,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Profound attitude-oriented functionalities',2677,4482,'Black, Armstrong and Anderson',8100.0,11339.0,'successful',107,'US','USD','1970-01-01','1970-01-01',false,true,'cat6','subcat14'),
-	 (NULL,'Digitized client-driven database',1865,3241,'Maldonado-Gonzalez',3100.0,10085.0,'successful',134,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Organized bi-directional function',170,3477,'Kim-Rice',9900.0,5027.0,'failed',88,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Reduced stable middleware',462,2265,'Garcia, Garcia and Lopez',8800.0,14878.0,'successful',198,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat9'),
-	 (NULL,'Universal 5thgeneration neural-net',3122,5911,'Watts Group',5600.0,11924.0,'successful',111,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Virtual uniform frame',1175,2288,'Werner-Bryant',1800.0,7991.0,'successful',222,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Profound explicit paradigm',2301,4064,'Schmitt-Mendoza',90200.0,167717.0,'successful',6212,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat16'),
-	 (NULL,'Visionary real-time groupware',91,1294,'Reid-Mccullough',1600.0,10541.0,'successful',98,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat6','subcat14'),
-	 (NULL,'Networked tertiary Graphical User Interface',87,5008,'Woods-Clark',9500.0,4530.0,'failed',48,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Virtual grid-enabled task-force',1482,3604,'Vaughn, Hunt and Caldwell',3700.0,4247.0,'successful',92,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Function-based multi-state software',1711,3263,'Bennett and Sons',1500.0,7129.0,'successful',149,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Optimized leadingedge concept',2294,5631,'Lamb Inc',33300.0,128862.0,'successful',2431,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Sharable holistic interface',2389,2851,'Casey-Kelly',7200.0,13653.0,'successful',303,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Down-sized system-worthy secured line',378,3714,'Jones, Taylor and Moore',100.0,2.0,'failed',1,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat2','subcat17'),
-	 (NULL,'Inverse secondary infrastructure',1213,1664,'Bradshaw, Gill and Donovan',158100.0,145243.0,'failed',1467,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat3','subcat9'),
-	 (NULL,'Organic foreground leverage',29,5027,'Hernandez, Rodriguez and Clark',7200.0,2459.0,'failed',75,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Reverse-engineered static concept',2309,3070,'Smith-Jones',8800.0,12356.0,'successful',209,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Multi-channeled neutral customer loyalty',2101,4248,'Roy PLC',6000.0,5392.0,'failed',120,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Reverse-engineered bifurcated strategy',1057,2034,'Wright, Brooks and Villarreal',6600.0,11746.0,'successful',131,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat18'),
-	 (NULL,'Horizontal context-sensitive knowledge user',2655,4085,'Flores, Miller and Johnson',8000.0,11493.0,'successful',164,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Cross-group multi-state task-force',202,3569,'Bridges, Freeman and Kim',2900.0,6243.0,'successful',201,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Expanded 3rdgeneration strategy',2025,3889,'Anderson-Perez',2700.0,6132.0,'successful',211,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Assimilated real-time support',2395,3136,'Wright, Fox and Marks',1400.0,3851.0,'successful',128,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'User-centric regional database',1418,2103,'Crawford-Peters',94200.0,135997.0,'successful',1600,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Open-source zero administration complexity',1905,2329,'Romero-Hoffman',199200.0,184750.0,'failed',2253,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Organized incremental standardization',1969,3325,'Sparks-West',2000.0,14452.0,'successful',249,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Assimilated didactic open system',2430,3131,'Baker, Morgan and Brown',4700.0,557.0,'failed',5,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Vision-oriented logistical intranet',1291,4995,'Mosley-Gilbert',2800.0,2734.0,'failed',38,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat3'),
-	 (NULL,'Mandatory incremental projection',1934,3631,'Berry-Boyer',6100.0,14405.0,'successful',236,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Grass-roots needs-based encryption',1225,5373,'Sanders-Allen',2900.0,1307.0,'failed',12,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Team-oriented 6thgeneration middleware',1363,3126,'Lopez Inc',72600.0,117892.0,'successful',4065,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat3','subcat9'),
-	 (NULL,'Inverse multi-tasking installation',963,2194,'Moreno-Turner',5700.0,14508.0,'successful',246,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Switchable disintermediate moderator',1486,2906,'Jones-Watson',7900.0,1901.0,'canceled',17,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Re-engineered 24/7 task-force',676,2611,'Barker Inc',128000.0,158389.0,'successful',2475,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Organic object-oriented budgetary management',2137,2374,'Tate, Bass and House',6000.0,6484.0,'successful',76,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Seamless coherent parallelism',2656,3254,'Hampton, Lewis and Ray',600.0,4022.0,'successful',54,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Cross-platform even-keeled initiative',1556,3571,'Collins-Goodman',1400.0,9253.0,'successful',88,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat18'),
-	 (NULL,'Progressive tertiary framework',747,2812,'Davis-Michael',3900.0,4776.0,'successful',85,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat2','subcat17'),
-	 (NULL,'Multi-layered dynamic protocol',60,3961,'White, Torres and Bishop',9700.0,14606.0,'successful',170,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Horizontal next generation function',2459,3872,'Martin, Conway and Larsen',122900.0,95993.0,'failed',1684,'US','USD','1970-01-01','1970-01-01',true,true,'cat4','subcat4'),
-	 (NULL,'Pre-emptive impactful model',1903,4736,'Acevedo-Huffman',9500.0,4460.0,'failed',56,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat11'),
-	 (NULL,'User-centric bifurcated knowledge user',2003,5119,'Montgomery, Larson and Spencer',4500.0,13536.0,'successful',330,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19'),
-	 (NULL,'Triple-buffered reciprocal project',2885,5725,'Soto LLC',57800.0,40228.0,'failed',838,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Cross-platform needs-based approach',2067,4037,'Sutton, Barrett and Tucker',1100.0,7012.0,'successful',127,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'User-friendly static contingency',1610,2109,'Gomez, Bailey and Flores',16800.0,37857.0,'successful',411,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Reactive content-based framework',2909,3283,'Porter-George',1000.0,14973.0,'successful',180,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat7','subcat12'),
-	 (NULL,'Realigned user-facing concept',1239,6181,'Fitzgerald PLC',106400.0,39996.0,'failed',1000,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'Public-key zero tolerance orchestration',2480,3251,'Cisneros-Burton',31400.0,41564.0,'successful',374,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Multi-tiered eco-centric architecture',2181,3443,'Hill, Lawson and Wilkinson',4900.0,6430.0,'successful',71,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Organic motivating firmware',2030,2988,'Davis-Smith',7400.0,12405.0,'successful',203,'US','USD','1970-01-01','1970-01-01',true,false,'cat4','subcat4'),
-	 (NULL,'Synergized 4thgeneration conglomeration',2311,1673,'Farrell and Sons',198500.0,123040.0,'failed',1482,'AU','AUD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Grass-roots fault-tolerant policy',2821,2085,'Clark Group',4800.0,12516.0,'successful',113,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19'),
-	 (NULL,'Monitored scalable knowledgebase',2468,1672,'White, Singleton and Zimmerman',3400.0,8588.0,'successful',96,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Synergistic explicit parallelism',656,4426,'Kramer Group',7800.0,6132.0,'failed',106,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Enhanced systemic analyzer',2791,3211,'Frazier, Patrick and Smith',154300.0,74688.0,'failed',679,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat6','subcat19'),
-	 (NULL,'Object-based analyzing knowledge user',1527,3190,'Santos, Bell and Lloyd',20000.0,51775.0,'successful',498,'CH','CHF','1970-01-01','1970-01-01',false,true,'cat7','subcat12'),
-	 (NULL,'Pre-emptive radical architecture',1891,2081,'Hall and Sons',108800.0,65877.0,'canceled',610,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Grass-roots web-enabled contingency',580,3185,'Hanson Inc',2900.0,8807.0,'successful',180,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Stand-alone system-worthy standardization',682,5044,'Sanchez LLC',900.0,1017.0,'successful',27,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Down-sized systematic policy',3097,1883,'Howard Ltd',69700.0,151513.0,'successful',2331,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Cloned bi-directional architecture',873,2067,'Stewart LLC',1300.0,12047.0,'successful',113,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Seamless transitional portal',1668,4604,'Arias, Allen and Miller',97800.0,32951.0,'failed',1220,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Fully-configurable motivating approach',3076,3203,'Baker-Morris',7600.0,14951.0,'successful',164,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Upgradable fault-tolerant approach',3146,5758,'Tucker, Fox and Green',100.0,1.0,'failed',1,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Reduced heuristic moratorium',253,5755,'Douglas LLC',900.0,9193.0,'successful',164,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat6'),
-	 (NULL,'Front-line web-enabled model',3088,5150,'Garcia Inc',3700.0,10422.0,'successful',336,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat9'),
-	 (NULL,'Polarized incremental emulation',393,4181,'Frye, Hunt and Powell',10000.0,2461.0,'failed',37,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'Self-enabling grid-enabled initiative',2912,3006,'Smith, Wells and Nguyen',119200.0,170623.0,'successful',1917,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Total fresh-thinking system engine',478,4865,'Charles-Johnson',6800.0,9829.0,'successful',95,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Ameliorated clear-thinking circuit',1061,2862,'Brandt, Carter and Wood',3900.0,14006.0,'successful',147,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Multi-layered encompassing installation',2957,6070,'Tucker, Schmidt and Reid',3500.0,6527.0,'successful',86,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Universal encompassing implementation',2015,5300,'Decker Inc',1500.0,8929.0,'successful',83,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Object-based client-server application',1179,3486,'Romero and Sons',5200.0,3079.0,'failed',60,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat20');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Cross-platform solution-oriented process improvement',2568,5989,'Castillo-Carey',142400.0,21307.0,'failed',296,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Re-engineered user-facing approach',2869,2849,'Hart-Briggs',61400.0,73653.0,'successful',676,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat16'),
-	 (NULL,'Re-engineered client-driven hub',718,1612,'Jones-Meyer',4700.0,12635.0,'successful',361,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'User-friendly tertiary array',1211,3307,'Wright, Hartman and Yu',3300.0,12437.0,'successful',131,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Robust heuristic encoding',2431,5288,'Harper-Davis',1900.0,13816.0,'successful',126,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat9'),
-	 (NULL,'Team-oriented clear-thinking capacity',468,6026,'Barrett PLC',166700.0,145382.0,'failed',3304,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat6','subcat14'),
-	 (NULL,'De-engineered motivating standardization',1862,2212,'David-Clark',7200.0,6336.0,'failed',73,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Business-focused 24hour groupware',2300,4591,'Chaney-Dennis',4900.0,8523.0,'successful',275,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat20'),
-	 (NULL,'Organic next generation protocol',449,2771,'Robinson, Lopez and Christensen',5400.0,6351.0,'successful',67,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Reverse-engineered full-range Internet solution',283,5682,'Clark and Sons',5000.0,10748.0,'successful',154,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Synchronized regional synergy',2484,5368,'Vega Group',75100.0,112272.0,'successful',1782,'US','USD','1970-01-01','1970-01-01',false,true,'cat7','subcat21'),
-	 (NULL,'Multi-lateral homogeneous success',1490,3706,'Brown-Brown',45300.0,99361.0,'successful',903,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Seamless zero-defect solution',186,4034,'Taylor PLC',136800.0,88055.0,'failed',3387,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat14'),
-	 (NULL,'Enhanced scalable concept',2999,3209,'Edwards-Lewis',177700.0,33092.0,'failed',662,'CA','CAD','1970-01-01','1970-01-01',true,false,'cat4','subcat4'),
-	 (NULL,'Polarized uniform software',2819,2384,'Stanton, Neal and Rodriguez',2600.0,9562.0,'successful',94,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Stand-alone web-enabled moderator',2105,3074,'Pratt LLC',5300.0,8475.0,'successful',180,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Proactive methodical benchmark',1324,2031,'Gross PLC',180200.0,69617.0,'failed',774,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Team-oriented 6thgeneration matrix',1952,5873,'Martinez, Gomez and Dalton',103200.0,53067.0,'failed',672,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Phased human-resource core',2404,5501,'Allen-Curtis',70600.0,42596.0,'canceled',532,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Mandatory tertiary implementation',990,3489,'Morgan-Martinez',148500.0,4756.0,'canceled',55,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat1','subcat1');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Secured directional encryption',1459,4210,'Luna, Anderson and Fox',9600.0,14925.0,'successful',533,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Distributed 5thgeneration implementation',1106,6151,'Fleming, Zhang and Henderson',164700.0,166116.0,'successful',2443,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Virtual static core',1488,6047,'Flowers and Sons',3300.0,3834.0,'successful',89,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Secured content-based product',2107,5445,'Gates PLC',4500.0,13985.0,'successful',159,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat22'),
-	 (NULL,'Secured executive concept',2660,5493,'Caldwell LLC',99500.0,89288.0,'failed',940,'CH','CHF','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Balanced zero-defect software',2647,6036,'Le, Burton and Evans',7700.0,5488.0,'failed',117,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Distributed context-sensitive flexibility',565,2368,'Briggs PLC',82800.0,2721.0,'canceled',58,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat7'),
-	 (NULL,'Down-sized disintermediate support',2713,1501,'Hudson-Nguyen',1800.0,4712.0,'successful',50,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Stand-alone mission-critical moratorium',558,4351,'Hogan Ltd',9600.0,9216.0,'failed',115,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat21'),
-	 (NULL,'Down-sized empowering protocol',698,3096,'Hamilton, Wright and Chavez',92100.0,19246.0,'failed',326,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat9');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Fully-configurable coherent Internet solution',321,6162,'Bautista-Cross',5500.0,12274.0,'successful',186,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Distributed motivating algorithm',1302,1433,'Jackson LLC',64300.0,65323.0,'successful',1071,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Expanded solution-oriented benchmark',1410,2720,'Figueroa Ltd',5000.0,11502.0,'successful',117,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Implemented discrete secured line',2465,5251,'Avila-Jones',5400.0,7322.0,'successful',70,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Multi-lateral actuating installation',377,1797,'Martin, Lopez and Hunter',9000.0,11619.0,'successful',135,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Secured reciprocal array',1882,1656,'Fields-Moore',25000.0,59128.0,'successful',768,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Optional bandwidth-monitored middleware',822,1346,'Harris-Golden',8800.0,1518.0,'canceled',51,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Upgradable upward-trending workforce',2730,2989,'Moss, Norman and Dunlap',8300.0,9337.0,'successful',199,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Upgradable hybrid capability',2198,5629,'White, Larson and Wright',9300.0,11255.0,'successful',107,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Managed fresh-thinking flexibility',2757,3456,'Payne, Oliver and Burch',6200.0,13632.0,'successful',195,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Networked stable workforce',2588,3229,'Brown, Palmer and Pace',100.0,1.0,'failed',1,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Customizable intermediate extranet',1090,2277,'Parker LLC',137200.0,88037.0,'failed',1467,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'User-centric fault-tolerant task-force',64,1276,'Bowen, Mcdonald and Hall',41500.0,175573.0,'successful',3376,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Multi-tiered radical definition',2171,3694,'Whitehead, Bell and Hughes',189400.0,176112.0,'failed',5681,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Devolved foreground benchmark',625,2260,'Rodriguez-Brown',171300.0,100650.0,'failed',1059,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat8'),
-	 (NULL,'Distributed eco-centric methodology',1065,5374,'Hall-Schaefer',139500.0,90706.0,'failed',1194,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Streamlined encompassing encryption',174,4420,'Meza-Rogers',36400.0,26914.0,'canceled',379,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'User-friendly reciprocal initiative',1344,3849,'Curtis-Curtis',4200.0,2212.0,'failed',30,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Ergonomic fresh-thinking installation',2824,1638,'Carlson Inc',2100.0,4640.0,'successful',41,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Robust explicit hardware',940,5230,'Clarke, Anderson and Lee',191200.0,191222.0,'successful',1821,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Stand-alone actuating support',3024,1763,'Evans Group',8000.0,12985.0,'successful',164,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Cross-platform methodical process improvement',2164,4323,'Bruce Group',5500.0,4300.0,'failed',75,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat3'),
-	 (NULL,'Extended bottom-line open architecture',2427,5256,'Keith, Alvarez and Potter',6100.0,9134.0,'successful',157,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Extended reciprocal circuit',1548,4836,'Burton-Watkins',3500.0,8864.0,'successful',246,'US','USD','1970-01-01','1970-01-01',false,true,'cat8','subcat15'),
-	 (NULL,'Polarized human-resource protocol',2657,5981,'Lopez and Sons',150500.0,150755.0,'successful',1396,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Synergized radical product',2916,1463,'Cordova Ltd',90400.0,110279.0,'successful',2506,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Robust heuristic artificial intelligence',1348,4577,'Brown-Vang',9800.0,13439.0,'successful',244,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Robust content-based emulation',557,4951,'Cruz-Ward',2600.0,10804.0,'successful',146,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Ergonomic uniform open system',2915,3567,'Hernandez Group',128100.0,40107.0,'failed',955,'DK','DKK','1970-01-01','1970-01-01',false,true,'cat2','subcat8'),
-	 (NULL,'Profit-focused modular product',320,5475,'Tran, Steele and Wilson',23300.0,98811.0,'successful',1267,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat13');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Mandatory mobile product',1458,2114,'Summers, Gallegos and Stein',188100.0,5528.0,'failed',67,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Public-key 3rdgeneration budgetary management',379,5216,'Blair Group',4900.0,521.0,'failed',5,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19'),
-	 (NULL,'Centralized national firmware',1879,1665,'Nixon Inc',800.0,663.0,'failed',26,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Cross-group 4thgeneration middleware',597,6051,'White LLC',96700.0,157635.0,'successful',1561,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Pre-emptive scalable access',1130,3983,'Santos, Black and Donovan',600.0,5368.0,'successful',48,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat9'),
-	 (NULL,'Sharable intangible migration',2354,2966,'Jones, Contreras and Burnett',181200.0,47459.0,'failed',1130,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Proactive scalable Graphical User Interface',1358,4478,'Stone-Orozco',115000.0,86060.0,'failed',782,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Digitized solution-oriented product',188,4238,'Lee, Gibson and Morgan',38800.0,161593.0,'successful',2739,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Triple-buffered cohesive structure',2228,4404,'Alexander-Williams',7200.0,6927.0,'failed',210,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Realigned human-resource orchestration',1743,5666,'Marks Ltd',44500.0,159185.0,'successful',3537,'CA','CAD','1970-01-01','1970-01-01',false,true,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Optional clear-thinking software',2563,3691,'Olsen, Edwards and Reid',56000.0,172736.0,'successful',2107,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Centralized global approach',2424,2703,'Daniels, Rose and Tyler',8600.0,5315.0,'failed',136,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Reverse-engineered bandwidth-monitored contingency',2369,4253,'Adams Group',27100.0,195750.0,'successful',3318,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Pre-emptive bandwidth-monitored instruction set',1134,5652,'Rogers, Huerta and Medina',5100.0,3525.0,'failed',86,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Adaptive asynchronous emulation',2241,3279,'Howard, Carter and Griffith',3600.0,10550.0,'successful',340,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Innovative actuating conglomeration',2745,3233,'Bailey PLC',1000.0,718.0,'failed',19,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat20'),
-	 (NULL,'Grass-roots foreground policy',1055,3017,'Parker Group',88800.0,28358.0,'failed',886,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Horizontal transitional paradigm',1215,3482,'Fox Group',60200.0,138384.0,'successful',1442,'CA','CAD','1970-01-01','1970-01-01',false,true,'cat5','subcat13'),
-	 (NULL,'Networked didactic info-mediaries',2036,2166,'Walker, Jones and Rodriguez',8200.0,2625.0,'failed',35,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Switchable contextually-based access',1191,4146,'Anthony-Shaw',191300.0,45004.0,'canceled',441,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Up-sized dynamic throughput',879,2651,'Cook LLC',3700.0,2538.0,'failed',24,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Mandatory reciprocal superstructure',3062,1409,'Sutton PLC',8400.0,3188.0,'failed',86,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Upgradable 4thgeneration productivity',611,3717,'Long, Morgan and Mitchell',42600.0,8517.0,'failed',243,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Progressive discrete hub',3195,3963,'Calhoun, Rogers and Long',6600.0,3012.0,'failed',65,'US','USD','1970-01-01','1970-01-01',true,false,'cat2','subcat8'),
-	 (NULL,'Assimilated multi-tasking archive',1221,2152,'Sandoval Group',7100.0,8716.0,'successful',126,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat17'),
-	 (NULL,'Upgradable high-level solution',2536,2974,'Smith and Sons',15800.0,57157.0,'successful',524,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'Organic bandwidth-monitored frame',1834,1268,'King Inc',8200.0,5178.0,'failed',100,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Business-focused logistical framework',593,1822,'Perry and Sons',54700.0,163118.0,'successful',1989,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Universal multi-state capability',3039,5066,'Palmer Inc',63200.0,6041.0,'failed',168,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'Digitized reciprocal infrastructure',777,5075,'Hull, Baker and Martinez',1800.0,968.0,'failed',13,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Reduced dedicated capability',835,3855,'Becker, Rice and White',100.0,2.0,'failed',1,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Cross-platform bi-directional workforce',797,5923,'Osborne, Perkins and Knox',2100.0,14305.0,'successful',157,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Upgradable scalable methodology',509,1867,'Mcknight-Freeman',8300.0,6543.0,'canceled',82,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Customer-focused client-server service-desk',2286,4376,'Hayden, Shannon and Stein',143900.0,193413.0,'successful',4498,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Mandatory multimedia leverage',2110,2785,'Daniel-Luna',75000.0,2529.0,'failed',40,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat18'),
-	 (NULL,'Focused analyzing circuit',1038,5884,'Weaver-Marquez',1300.0,5614.0,'successful',80,'US','USD','1970-01-01','1970-01-01',true,false,'cat4','subcat4'),
-	 (NULL,'Fundamental grid-enabled strategy',2893,2441,'Austin, Baker and Kelley',9000.0,3496.0,'canceled',57,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat14'),
-	 (NULL,'Digitized 5thgeneration knowledgebase',805,1243,'Carney-Anderson',1000.0,4257.0,'successful',43,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Mandatory multi-tasking encryption',225,3411,'Jackson Inc',196900.0,199110.0,'successful',2053,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Distributed system-worthy application',968,2467,'Warren Ltd',194500.0,41212.0,'live',808,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat5','subcat5');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Synergistic tertiary time-frame',1369,1850,'Schultz Inc',9400.0,6338.0,'failed',226,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat5','subcat23'),
-	 (NULL,'Customer-focused impactful benchmark',1417,2604,'Thompson LLC',104400.0,99100.0,'failed',1625,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Profound next generation infrastructure',3011,1693,'Johnson Inc',8100.0,12300.0,'successful',168,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Face-to-face encompassing info-mediaries',2691,2969,'Morgan-Warren',87900.0,171549.0,'successful',4289,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat8'),
-	 (NULL,'Open-source fresh-thinking policy',2159,1544,'Sullivan Group',1400.0,14324.0,'successful',165,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Extended 24/7 implementation',2515,4149,'Vargas, Banks and Palmer',156800.0,6024.0,'failed',143,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Organic dynamic algorithm',544,3463,'Johnson, Dixon and Zimmerman',121700.0,188721.0,'successful',1815,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Organic multi-tasking focus group',3030,2939,'Moore, Dudley and Navarro',129400.0,57911.0,'failed',934,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat23'),
-	 (NULL,'Adaptive logistical initiative',817,2202,'Price-Rodriguez',5700.0,12309.0,'successful',397,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat5','subcat13'),
-	 (NULL,'Stand-alone mobile customer loyalty',1400,1728,'Huang-Henderson',41700.0,138497.0,'successful',1539,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Focused composite approach',657,5362,'Owens-Le',7900.0,667.0,'failed',17,'US','USD','1970-01-01','1970-01-01',true,false,'cat4','subcat4'),
-	 (NULL,'Face-to-face clear-thinking Local Area Network',966,4840,'Huff LLC',121500.0,119830.0,'failed',2179,'US','USD','1970-01-01','1970-01-01',true,false,'cat1','subcat1'),
-	 (NULL,'Cross-group cohesive circuit',1558,2955,'Johnson LLC',4800.0,6623.0,'successful',138,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Synergistic explicit capability',1379,5354,'Chavez, Garcia and Cantu',87300.0,81897.0,'failed',931,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Diverse analyzing definition',286,3847,'Lester-Moore',46300.0,186885.0,'successful',3594,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat23'),
-	 (NULL,'Enterprise-wide reciprocal success',894,3025,'Fox-Quinn',67800.0,176398.0,'successful',5880,'US','USD','1970-01-01','1970-01-01',true,false,'cat2','subcat2'),
-	 (NULL,'Progressive neutral middleware',709,1615,'Garcia Inc',3000.0,10999.0,'successful',112,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Intuitive exuding process improvement',1599,5154,'Johnson-Lee',60900.0,102751.0,'successful',943,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat21'),
-	 (NULL,'Exclusive real-time protocol',905,5005,'Pineda Group',137900.0,165352.0,'successful',2468,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Extended encompassing application',146,1349,'Hoffman-Howard',85600.0,165798.0,'successful',2551,'US','USD','1970-01-01','1970-01-01',false,true,'cat7','subcat21');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Progressive value-added ability',1632,3670,'Miranda, Hall and Mcgrath',2400.0,10084.0,'successful',101,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Cross-platform uniform hardware',537,2912,'Williams, Carter and Gonzalez',7200.0,5523.0,'canceled',67,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Progressive secondary portal',1289,4336,'Davis-Rodriguez',3400.0,5823.0,'successful',92,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Multi-lateral national adapter',2712,5576,'Reid, Rivera and Perry',3800.0,6000.0,'successful',62,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Enterprise-wide motivating matrices',1980,2736,'Mendoza-Parker',7500.0,8181.0,'successful',149,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat7','subcat12'),
-	 (NULL,'Polarized upward-trending Local Area Network',296,3321,'Lee, Ali and Guzman',8600.0,3589.0,'failed',92,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Object-based directional function',1760,3353,'Gallegos-Cobb',39500.0,4323.0,'failed',57,'AU','AUD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Re-contextualized tangible open architecture',2435,2336,'Ellison PLC',9300.0,14822.0,'successful',329,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Distributed systemic adapter',2343,4369,'Bolton, Sanchez and Carrillo',2400.0,10138.0,'successful',97,'DK','DKK','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Networked web-enabled instruction set',2556,4464,'Mason-Sanders',3200.0,3127.0,'failed',41,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Vision-oriented dynamic service-desk',2495,5626,'Pitts-Reed',29400.0,123124.0,'successful',1784,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Vision-oriented actuating open system',2497,1669,'Gonzalez-Martinez',168500.0,171729.0,'successful',1684,'AU','AUD','1970-01-01','1970-01-01',false,true,'cat6','subcat10'),
-	 (NULL,'Sharable scalable core',1955,5544,'Hill, Martin and Garcia',8400.0,10729.0,'successful',250,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Customer-focused attitude-oriented function',1129,6078,'Garcia PLC',2300.0,10240.0,'successful',238,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Reverse-engineered system-worthy extranet',636,2580,'Herring-Bailey',700.0,3988.0,'successful',53,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Re-engineered systematic monitoring',434,3592,'Russell-Gardner',2900.0,14771.0,'successful',214,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Seamless value-added standardization',1231,4914,'Walters-Carter',4500.0,14649.0,'successful',222,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Triple-buffered fresh-thinking frame',3162,3848,'Johnson, Patterson and Montoya',19800.0,184658.0,'successful',1884,'US','USD','1970-01-01','1970-01-01',false,true,'cat6','subcat14'),
-	 (NULL,'Streamlined holistic knowledgebase',1717,2619,'Roberts and Sons',6200.0,13103.0,'successful',218,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat7','subcat21'),
-	 (NULL,'Up-sized intermediate website',211,4605,'Avila-Nelson',61500.0,168095.0,'successful',6465,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Future-proofed directional synergy',2635,6147,'Robbins and Sons',100.0,3.0,'failed',1,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Enhanced user-facing function',1854,1383,'Singleton Ltd',7100.0,3840.0,'failed',101,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Operative bandwidth-monitored interface',436,1757,'Perez PLC',1000.0,6263.0,'successful',59,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Upgradable multi-state instruction set',2965,4390,'Rogers, Jacobs and Jackson',121500.0,108161.0,'failed',1335,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'De-engineered static Local Area Network',1034,4165,'Barry Group',4600.0,8505.0,'successful',88,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Upgradable grid-enabled superstructure',614,4529,'Rosales, Branch and Harmon',80500.0,96735.0,'successful',1697,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Optimized actuating toolset',1792,6084,'Smith-Reid',4100.0,959.0,'failed',15,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Decentralized exuding strategy',121,2916,'Williams Inc',5700.0,8322.0,'successful',92,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Assimilated coherent hardware',2936,2005,'Duncan, Mcdonald and Miller',5000.0,13424.0,'successful',186,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Multi-channeled responsive implementation',2081,2261,'Watkins Ltd',1800.0,10755.0,'successful',138,'US','USD','1970-01-01','1970-01-01',true,false,'cat8','subcat15');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Centralized modular initiative',1204,5342,'Allen-Jones',6300.0,9935.0,'successful',261,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Reverse-engineered cohesive migration',669,4087,'Mason-Smith',84300.0,26303.0,'failed',454,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Compatible multimedia hub',735,2761,'Lloyd, Kennedy and Davis',1700.0,5328.0,'successful',107,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat8'),
-	 (NULL,'Organic eco-centric success',933,2908,'Walker Ltd',2900.0,10756.0,'successful',199,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Virtual reciprocal policy',3055,2155,'Gordon PLC',45600.0,165375.0,'successful',5512,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Persevering interactive emulation',270,5642,'Lee and Sons',4900.0,6031.0,'successful',86,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Proactive responsive emulation',647,6217,'Cole LLC',111900.0,85902.0,'failed',3182,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat2','subcat18'),
-	 (NULL,'Extended eco-centric function',1219,4222,'Acosta PLC',61600.0,143910.0,'successful',2768,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Networked optimal productivity',1257,4798,'Brown-Mckee',1500.0,2708.0,'successful',48,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Persistent attitude-oriented approach',2162,5660,'Miles and Sons',3500.0,8842.0,'successful',87,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat20');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Triple-buffered 4thgeneration toolset',2274,5000,'Sawyer, Horton and Williams',173900.0,47260.0,'canceled',1890,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Progressive zero administration leverage',2284,2809,'Foley-Cox',153700.0,1953.0,'live',61,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Networked radical neural-net',407,3349,'Horton, Morrison and Clark',51100.0,155349.0,'successful',1894,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Re-engineered heuristic forecast',2440,3647,'Thomas and Sons',7800.0,10704.0,'successful',282,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Fully-configurable background algorithm',2476,5745,'Morgan-Jenkins',2400.0,773.0,'failed',15,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Stand-alone discrete Graphical User Interface',41,2583,'Ward, Sanchez and Kemp',3900.0,9419.0,'successful',116,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19'),
-	 (NULL,'Front-line foreground project',890,5441,'Fields Ltd',5500.0,5324.0,'failed',133,'US','USD','1970-01-01','1970-01-01',false,true,'cat7','subcat12'),
-	 (NULL,'Persevering system-worthy info-mediaries',2743,2090,'Ramos-Mitchell',700.0,7465.0,'successful',83,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Distributed multi-tasking strategy',266,3386,'Higgins, Davis and Salazar',2700.0,8799.0,'successful',91,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Vision-oriented methodical application',3113,1816,'Smith-Jenkins',8000.0,13656.0,'successful',546,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Function-based high-level infrastructure',1909,4718,'Braun PLC',2500.0,14536.0,'successful',393,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Profound object-oriented paradigm',962,1677,'Drake PLC',164500.0,150552.0,'failed',2062,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Virtual contextually-based circuit',213,4218,'Ross, Kelly and Brown',8400.0,9076.0,'successful',133,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat20'),
-	 (NULL,'Business-focused dynamic instruction set',2741,4548,'Lucas-Mullins',8100.0,1517.0,'failed',29,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Ameliorated fresh-thinking protocol',2589,1431,'Tran LLC',9800.0,8153.0,'failed',132,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Front-line optimizing emulation',1238,2830,'Dawson, Brady and Gilbert',900.0,6357.0,'successful',254,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Devolved uniform complexity',164,4400,'Obrien-Aguirre',112100.0,19557.0,'canceled',184,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Public-key intangible superstructure',2685,5773,'Ferguson PLC',6300.0,13213.0,'successful',176,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'Secured global success',2836,4161,'Garcia Ltd',5600.0,5476.0,'failed',137,'DK','DKK','1970-01-01','1970-01-01',false,true,'cat2','subcat17'),
-	 (NULL,'Grass-roots mission-critical capability',2062,2062,'Smith, Love and Smith',800.0,13474.0,'successful',337,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Advanced global data-warehouse',3111,3458,'Wilson, Hall and Osborne',168600.0,91722.0,'failed',908,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Self-enabling uniform complexity',1414,3174,'Bell, Grimes and Kerr',1800.0,8219.0,'successful',107,'US','USD','1970-01-01','1970-01-01',true,false,'cat3','subcat3'),
-	 (NULL,'Versatile cohesive encoding',2765,5565,'Ho-Harris',7300.0,717.0,'failed',10,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Organized executive solution',939,1906,'Ross Group',6500.0,1065.0,'canceled',32,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Automated local emulation',390,5479,'Turner-Davis',600.0,8038.0,'successful',183,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Enterprise-wide intermediate middleware',2851,4320,'Smith, Jackson and Herrera',192900.0,68769.0,'failed',1910,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Grass-roots real-time Local Area Network',1607,4213,'Smith-Hess',6100.0,3352.0,'failed',38,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Organized client-driven capacity',3201,3373,'Brown, Herring and Bass',7200.0,6785.0,'failed',104,'AU','AUD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Adaptive intangible database',641,4184,'Chase, Garcia and Johnson',3500.0,5037.0,'successful',72,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Grass-roots contextually-based algorithm',524,5472,'Ramsey and Sons',3800.0,1954.0,'failed',49,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Focused executive core',2423,5559,'Cooke PLC',100.0,5.0,'failed',1,'DK','DKK','1970-01-01','1970-01-01',false,true,'cat6','subcat10'),
-	 (NULL,'Multi-channeled disintermediate policy',1532,5419,'Wong-Walker',900.0,12102.0,'successful',295,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Customizable bi-directional hardware',1748,4171,'Ferguson, Collins and Mata',76100.0,24234.0,'failed',245,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Networked optimal architecture',3168,1302,'Guerrero, Flores and Jenkins',3400.0,2809.0,'failed',32,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'User-friendly discrete benchmark',1077,3520,'Peterson PLC',2100.0,11469.0,'successful',142,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Grass-roots actuating policy',3114,6010,'Townsend Ltd',2800.0,8014.0,'successful',85,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Enterprise-wide 3rdgeneration knowledge user',2547,4617,'Rush, Reed and Hall',6500.0,514.0,'failed',7,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Face-to-face zero tolerance moderator',2065,1417,'Salazar-Dodson',32900.0,43473.0,'successful',659,'DK','DKK','1970-01-01','1970-01-01',false,true,'cat6','subcat14'),
-	 (NULL,'Grass-roots optimizing projection',1143,4770,'Davis Ltd',118200.0,87560.0,'failed',803,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'User-centric 6thgeneration attitude',2545,4328,'Harris-Perry',4100.0,3087.0,'canceled',75,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat8');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Switchable zero tolerance website',1315,5171,'Velazquez, Hunt and Ortiz',7800.0,1586.0,'failed',16,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Focused real-time help-desk',2219,4394,'Flores PLC',6300.0,12812.0,'successful',121,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Robust impactful approach',854,1794,'Martinez LLC',59100.0,183345.0,'successful',3742,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Secured maximized policy',336,3510,'Miller-Irwin',2200.0,8697.0,'successful',223,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Realigned upward-trending strategy',3014,2487,'Sanchez-Morgan',1400.0,4126.0,'successful',133,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Open-source interactive knowledge user',326,2215,'Lopez, Adams and Johnson',9500.0,3220.0,'failed',31,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Configurable demand-driven matrix',2991,4136,'Martin-Marshall',9600.0,6401.0,'failed',108,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat1','subcat1'),
-	 (NULL,'Cross-group coherent hierarchy',1359,3723,'Summers PLC',6600.0,1269.0,'failed',30,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Decentralized demand-driven open system',341,5842,'Young, Hart and Ryan',5700.0,903.0,'failed',17,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Advanced empowering matrix',2365,3289,'Mills Group',8400.0,3251.0,'canceled',64,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Phased holistic implementation',358,1249,'Sandoval-Powell',84400.0,8092.0,'failed',80,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat14'),
-	 (NULL,'Proactive attitude-oriented knowledge user',583,5409,'Mills, Frazier and Perez',170400.0,160422.0,'failed',2468,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat13'),
-	 (NULL,'Visionary asymmetric Graphical User Interface',1373,2951,'Hebert Group',117900.0,196377.0,'successful',5168,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Integrated zero-defect help-desk',2665,3432,'Cole, Smith and Wood',8900.0,2148.0,'failed',26,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Inverse analyzing matrices',2500,2297,'Harris, Hall and Harris',7100.0,11648.0,'successful',307,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Programmable systemic implementation',921,6161,'Saunders Group',6500.0,5897.0,'failed',73,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Multi-channeled next generation architecture',135,4603,'Pham, Avila and Nash',7200.0,3326.0,'failed',128,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Digitized 3rdgeneration encoding',2413,5818,'Patterson, Salinas and Lucas',2600.0,1002.0,'failed',33,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Innovative well-modulated functionalities',3004,4270,'Young PLC',98700.0,131826.0,'successful',2441,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Fundamental incremental database',1911,6007,'Willis and Sons',93800.0,21477.0,'live',211,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Expanded encompassing open architecture',2726,4084,'Thompson-Bates',33700.0,62330.0,'successful',1385,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Intuitive static portal',2049,1340,'Rose-Silva',3300.0,14643.0,'successful',190,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Optional bandwidth-monitored definition',1732,5675,'Pacheco, Johnson and Torres',20700.0,41396.0,'successful',470,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Persistent well-modulated synergy',1174,2010,'Carlson, Dixon and Jones',9600.0,11900.0,'successful',253,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Assimilated discrete algorithm',1194,6201,'Mcgee Group',66200.0,123538.0,'successful',1113,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Operative uniform hub',3176,1791,'Jordan-Acosta',173800.0,198628.0,'successful',2283,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Customizable intangible capability',642,3314,'Nunez Inc',70700.0,68602.0,'failed',1072,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Innovative didactic analyzer',34,5852,'Hayden Ltd',94500.0,116064.0,'successful',1095,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Decentralized intangible encoding',217,4618,'Gonzalez-Burton',69800.0,125042.0,'successful',1690,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Front-line transitional algorithm',1693,2618,'Lewis, Taylor and Rivers',136300.0,108974.0,'canceled',1297,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Switchable didactic matrices',2333,4967,'Butler, Henry and Espinoza',37100.0,34964.0,'failed',393,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Ameliorated disintermediate utilization',80,4594,'Guzman Group',114300.0,96777.0,'failed',1257,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Visionary foreground middleware',2847,2080,'Gibson-Hernandez',47900.0,31864.0,'failed',328,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Optional zero-defect task-force',3104,2793,'Spencer-Weber',9000.0,4853.0,'failed',147,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Devolved exuding emulation',980,4890,'Berger, Johnson and Marshall',197600.0,82959.0,'failed',830,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Open-source neutral task-force',476,3528,'Taylor, Cisneros and Romero',157600.0,23159.0,'failed',331,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Virtual attitude-oriented migration',116,5810,'Little-Marsh',8000.0,2758.0,'failed',25,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat8'),
-	 (NULL,'Open-source full-range portal',2900,5720,'Petersen and Sons',900.0,12607.0,'successful',191,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Versatile cohesive open system',553,4593,'Hensley Ltd',199000.0,142823.0,'failed',3483,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Multi-layered bottom-line frame',2834,3186,'Navarro and Sons',180800.0,95958.0,'failed',923,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Pre-emptive neutral capacity',2314,5136,'Shannon Ltd',100.0,5.0,'failed',1,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat18'),
-	 (NULL,'Universal maximized methodology',2005,2646,'Young LLC',74100.0,94631.0,'successful',2013,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Expanded hybrid hardware',2514,3460,'Adams, Willis and Sanchez',2800.0,977.0,'failed',33,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Profit-focused multi-tasking access',702,4345,'Mills-Roy',33600.0,137961.0,'successful',1703,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Profit-focused transitional capability',42,2690,'Brown Group',6100.0,7548.0,'successful',80,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Front-line scalable definition',948,4025,'Burns-Burnett',3800.0,2241.0,'live',86,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Open-source systematic protocol',2926,4524,'Glass, Nunez and Mcdonald',9300.0,3431.0,'failed',40,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Implemented tangible algorithm',1971,3978,'Perez, Davis and Wilson',2300.0,4253.0,'successful',41,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Profit-focused 3rdgeneration circuit',748,3910,'Diaz-Garcia',9700.0,1146.0,'failed',23,'CA','CAD','1970-01-01','1970-01-01',true,false,'cat8','subcat15'),
-	 (NULL,'Compatible needs-based architecture',684,5825,'Salazar-Moon',4000.0,11948.0,'successful',187,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Right-sized zero tolerance migration',385,3564,'Larsen-Chung',59700.0,135132.0,'successful',2875,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Quality-focused reciprocal structure',3007,2396,'Anderson and Sons',5500.0,9546.0,'successful',88,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Automated actuating conglomeration',2612,2140,'Lawrence Group',3700.0,13755.0,'successful',191,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Re-contextualized local initiative',807,3079,'Gray-Davis',5200.0,8330.0,'successful',139,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Switchable intangible definition',2087,2017,'Ramirez-Myers',900.0,14547.0,'successful',186,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Networked bottom-line initiative',53,5444,'Lucas, Hall and Bonilla',1600.0,11735.0,'successful',112,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Robust directional system engine',2944,2216,'Williams, Perez and Villegas',1800.0,10658.0,'successful',101,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Triple-buffered explicit methodology',2963,1241,'Brooks, Jones and Ingram',9900.0,1870.0,'failed',75,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Reactive directional capacity',2976,1484,'Whitaker, Wallace and Daniels',5200.0,14394.0,'successful',206,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Polarized needs-based approach',3051,3475,'Smith-Gonzalez',5400.0,14743.0,'successful',154,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat20');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Intuitive well-modulated middleware',2777,4333,'Skinner PLC',112300.0,178965.0,'successful',5966,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Multi-channeled logistical matrices',3064,5657,'Nolan, Smith and Sanchez',189200.0,128410.0,'failed',2176,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Pre-emptive bifurcated artificial intelligence',56,2527,'Green-Carr',900.0,14324.0,'successful',169,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Down-sized coherent toolset',763,5967,'Brown-Parker',22500.0,164291.0,'successful',2106,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Open-source multi-tasking data-warehouse',896,5698,'Marshall Inc',167400.0,22073.0,'failed',441,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Future-proofed upward-trending contingency',1409,3331,'Leblanc-Pineda',2700.0,1479.0,'failed',25,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Mandatory uniform matrix',2889,3841,'Perry PLC',3400.0,12275.0,'successful',131,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Phased methodical initiative',2338,6105,'Klein, Stark and Livingston',49700.0,5098.0,'failed',127,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Managed stable function',2905,3895,'Fleming-Oliver',178200.0,24882.0,'failed',355,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Realigned clear-thinking migration',1779,1891,'Reilly, Aguirre and Johnson',7200.0,2912.0,'failed',44,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Optional clear-thinking process improvement',2291,1281,'Davidson, Wilcox and Lewis',2500.0,4008.0,'successful',84,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Cross-group global moratorium',3192,4186,'Michael, Anderson and Vincent',5300.0,9749.0,'successful',155,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Visionary systemic process improvement',1696,2511,'King Ltd',9100.0,5803.0,'failed',67,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Progressive intangible flexibility',1559,4272,'Baker Ltd',6300.0,14199.0,'successful',189,'US','USD','1970-01-01','1970-01-01',false,true,'cat1','subcat1'),
-	 (NULL,'Reactive real-time software',1405,3533,'Baker, Collins and Smith',114400.0,196779.0,'successful',4799,'US','USD','1970-01-01','1970-01-01',true,true,'cat5','subcat5'),
-	 (NULL,'Programmable incremental knowledge user',521,3618,'Warren-Harrison',38900.0,56859.0,'successful',1137,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Progressive 5thgeneration customer loyalty',1625,2177,'Gardner Group',135500.0,103554.0,'failed',1068,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Triple-buffered logistical frame',2808,4102,'Flores-Lambert',109000.0,42795.0,'failed',424,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Exclusive dynamic adapter',764,6089,'Cruz Ltd',114800.0,12938.0,'canceled',145,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Automated systemic hierarchy',834,4701,'Knox-Garner',83000.0,101352.0,'successful',1152,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Digitized eco-centric core',2793,5645,'Davis-Allen',2400.0,4477.0,'successful',50,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Mandatory uniform strategy',2901,4499,'Miller-Patel',60400.0,4393.0,'failed',151,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Profit-focused zero administration forecast',2141,3365,'Hernandez-Grimes',102900.0,67546.0,'failed',1608,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'De-engineered static orchestration',308,2290,'Owens, Hall and Gonzalez',62800.0,143788.0,'successful',3059,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat2','subcat18'),
-	 (NULL,'Customizable dynamic info-mediaries',705,1890,'Noble-Bailey',800.0,3755.0,'successful',34,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Enhanced incremental budgetary management',1670,1304,'Taylor PLC',7100.0,9238.0,'successful',220,'US','USD','1970-01-01','1970-01-01',true,false,'cat4','subcat4'),
-	 (NULL,'Digitized local info-mediaries',1159,3799,'Holmes PLC',46100.0,77012.0,'successful',1604,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Virtual systematic monitoring',2592,2749,'Jones-Martin',8100.0,14083.0,'successful',454,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Reactive bottom-line open architecture',1195,2028,'Myers LLC',1700.0,12202.0,'successful',123,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat5','subcat11'),
-	 (NULL,'Pre-emptive interactive model',1635,2383,'Acosta, Mullins and Morris',97300.0,62127.0,'failed',941,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Ergonomic eco-centric open architecture',2432,5721,'Bell PLC',100.0,2.0,'failed',1,'US','USD','1970-01-01','1970-01-01',false,true,'cat8','subcat15'),
-	 (NULL,'Inverse radical hierarchy',109,1394,'Smith-Schmidt',900.0,13772.0,'successful',299,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Team-oriented static interface',1509,3451,'Ruiz, Richardson and Cole',7300.0,2946.0,'failed',40,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat13'),
-	 (NULL,'Virtual foreground throughput',1285,5512,'Leonard-Mcclain',195800.0,168820.0,'failed',3015,'CA','CAD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Visionary exuding Internet solution',500,2453,'Bailey-Boyer',48900.0,154321.0,'successful',2237,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Synchronized secondary analyzer',2835,6055,'Lee LLC',29600.0,26527.0,'failed',435,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Balanced attitude-oriented parallelism',1533,5704,'Lyons Inc',39300.0,71583.0,'successful',645,'US','USD','1970-01-01','1970-01-01',true,false,'cat5','subcat5'),
-	 (NULL,'Organized bandwidth-monitored core',2445,3707,'Herrera-Wilson',3400.0,12100.0,'successful',484,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Cloned leadingedge utilization',2906,2205,'Mahoney, Adams and Lucas',9200.0,12129.0,'successful',154,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Secured asymmetric projection',1237,5976,'Stewart LLC',135600.0,62804.0,'failed',714,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Advanced cohesive Graphic Interface',1572,3290,'Mcmillan Group',153700.0,55536.0,'live',1111,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat21'),
-	 (NULL,'Down-sized maximized function',254,4257,'Beck, Thompson and Martinez',7800.0,8161.0,'successful',82,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Realigned zero tolerance software',576,4588,'Rodriguez-Scott',2100.0,14046.0,'successful',134,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat14'),
-	 (NULL,'Persevering analyzing extranet',563,4785,'Rush-Bowers',189500.0,117628.0,'live',1089,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Innovative human-resource migration',2201,3033,'Davis and Sons',188200.0,159405.0,'failed',5497,'US','USD','1970-01-01','1970-01-01',false,true,'cat1','subcat1'),
-	 (NULL,'Intuitive needs-based monitoring',1339,2779,'Anderson-Pham',113500.0,12552.0,'failed',418,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Customer-focused disintermediate toolset',197,2131,'Stewart-Coleman',134600.0,59007.0,'failed',1439,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Upgradable 24/7 emulation',2035,6229,'Bradshaw, Smith and Ryan',1700.0,943.0,'failed',15,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Quality-focused client-server core',1739,3429,'Jackson PLC',163700.0,93963.0,'failed',1999,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Upgradable maximized protocol',2352,1613,'Ware-Arias',113800.0,140469.0,'successful',5203,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Cross-platform interactive synergy',691,4734,'Blair, Reyes and Woods',5000.0,6423.0,'successful',94,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'User-centric fault-tolerant archive',298,4439,'Thomas-Lopez',9400.0,6015.0,'failed',118,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat9'),
-	 (NULL,'Reverse-engineered regional knowledge user',206,1441,'Brown, Davies and Pacheco',8700.0,11075.0,'successful',205,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Self-enabling real-time definition',1003,5799,'Jones-Riddle',147800.0,15723.0,'failed',162,'US','USD','1970-01-01','1970-01-01',false,true,'cat1','subcat1'),
-	 (NULL,'User-centric impactful projection',1653,1419,'Schmidt-Gomez',5100.0,2064.0,'failed',83,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Vision-oriented actuating hardware',1549,3059,'Sullivan, Davis and Booth',2700.0,7767.0,'successful',92,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Virtual leadingedge framework',1026,3224,'Edwards-Kane',1800.0,10313.0,'successful',219,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Managed discrete framework',2523,3181,'Hicks, Wall and Webb',174500.0,197018.0,'successful',2526,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Progressive zero-defect capability',1620,6061,'Mayer-Richmond',101400.0,47037.0,'failed',747,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Right-sized demand-driven adapter',2594,4466,'Robles Ltd',191000.0,173191.0,'canceled',2138,'US','USD','1970-01-01','1970-01-01',false,true,'cat8','subcat15');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Re-engineered attitude-oriented frame',539,6081,'Cochran Ltd',8100.0,5487.0,'failed',84,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Compatible multimedia utilization',687,2159,'Rosales LLC',5100.0,9817.0,'successful',94,'US','USD','1970-01-01','1970-01-01',true,false,'cat4','subcat4'),
-	 (NULL,'Re-contextualized dedicated hardware',2302,3324,'Harper-Bryan',7700.0,6369.0,'failed',91,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Decentralized composite paradigm',694,3176,'Potter, Harper and Everett',121400.0,65755.0,'failed',792,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Cloned transitional hierarchy',3123,5874,'Floyd-Sims',5400.0,903.0,'canceled',10,'CA','CAD','1970-01-01','1970-01-01',true,false,'cat4','subcat4'),
-	 (NULL,'Advanced discrete leverage',2576,5110,'Spence, Jackson and Kelly',152400.0,178120.0,'successful',1713,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Open-source incremental throughput',2349,5490,'King-Nguyen',1300.0,13678.0,'successful',249,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat18'),
-	 (NULL,'Centralized regional interface',516,1922,'Hansen Group',8100.0,9969.0,'successful',192,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat11'),
-	 (NULL,'Streamlined web-enabled knowledgebase',290,4398,'Mathis, Hall and Hansen',8300.0,14827.0,'successful',247,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Digitized transitional monitoring',1691,4754,'Cummings Inc',28400.0,100900.0,'successful',2293,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat23');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Networked optimal adapter',1689,3309,'Miller-Poole',102500.0,165954.0,'successful',3131,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat20'),
-	 (NULL,'Automated optimal function',2403,1244,'Rodriguez-West',7000.0,1744.0,'failed',32,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Devolved system-worthy framework',3203,2892,'Calderon, Bradford and Dean',5400.0,10731.0,'successful',143,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Stand-alone user-facing service-desk',2113,2777,'Clark-Bowman',9300.0,3232.0,'canceled',90,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Versatile global attitude',3158,4952,'Hensley Ltd',6200.0,10938.0,'successful',296,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat8'),
-	 (NULL,'Intuitive demand-driven Local Area Network',348,5144,'Anderson-Pearson',2100.0,10739.0,'successful',170,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Assimilated uniform methodology',1136,5487,'Martin, Martin and Solis',6800.0,5579.0,'failed',186,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Self-enabling next generation algorithm',956,1932,'Harrington-Harper',155200.0,37754.0,'canceled',439,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat5','subcat20'),
-	 (NULL,'Object-based demand-driven strategy',2393,3364,'Price and Sons',89900.0,45384.0,'failed',605,'US','USD','1970-01-01','1970-01-01',false,true,'cat7','subcat12'),
-	 (NULL,'Public-key coherent ability',3208,5165,'Cuevas-Morales',900.0,8703.0,'successful',86,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat7','subcat12');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Up-sized composite success',2530,3858,'Delgado-Hatfield',100.0,4.0,'failed',1,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Innovative exuding matrix',305,4666,'Padilla-Porter',148400.0,182302.0,'successful',6286,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Realigned impactful artificial intelligence',1383,2896,'Morris Group',4800.0,3045.0,'failed',31,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Multi-layered multi-tasking secured line',783,4520,'Saunders Ltd',182400.0,102749.0,'failed',1181,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat23'),
-	 (NULL,'Upgradable upward-trending portal',47,5726,'Woods Inc',4000.0,1763.0,'failed',39,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat7'),
-	 (NULL,'Profit-focused global product',3157,5661,'Villanueva, Wright and Richardson',116500.0,137904.0,'successful',3727,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Operative well-modulated data-warehouse',1646,4765,'Wilson, Brooks and Clark',146400.0,152438.0,'successful',1605,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat8'),
-	 (NULL,'Cloned asymmetric functionalities',1729,3710,'Sheppard, Smith and Spence',5000.0,1332.0,'failed',46,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Pre-emptive neutral portal',2964,4925,'Wise, Thompson and Allen',33800.0,118706.0,'successful',2120,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Switchable demand-driven help-desk',675,1533,'Lane, Ryan and Chapman',6300.0,5674.0,'failed',105,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Business-focused static ability',790,5264,'Rich, Alvarez and King',2400.0,4119.0,'successful',50,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Networked secondary structure',1103,4606,'Terry-Salinas',98800.0,139354.0,'successful',2080,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Total multimedia website',969,2043,'Wang-Rodriguez',188800.0,57734.0,'failed',535,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat21'),
-	 (NULL,'Cross-platform upward-trending parallelism',1634,3871,'Mckee-Hill',134300.0,145265.0,'successful',2105,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Pre-emptive mission-critical hardware',2279,6205,'Gomez LLC',71200.0,95020.0,'successful',2436,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Up-sized responsive protocol',387,3193,'Gonzalez-Robbins',4700.0,8829.0,'successful',80,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19'),
-	 (NULL,'Pre-emptive transitional frame',586,1810,'Obrien and Sons',1200.0,3984.0,'successful',42,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat9'),
-	 (NULL,'Profit-focused content-based application',1145,4797,'Shaw Ltd',1400.0,8053.0,'successful',139,'CA','CAD','1970-01-01','1970-01-01',false,true,'cat3','subcat3'),
-	 (NULL,'Streamlined neutral analyzer',2776,1487,'Hughes Inc',4000.0,1620.0,'failed',16,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Assimilated neutral utilization',2099,3474,'Olsen-Ryan',5600.0,10328.0,'successful',159,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Extended dedicated archive',470,5771,'Grimes, Holland and Sloan',3600.0,10289.0,'successful',381,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Configurable static help-desk',343,6074,'Perry and Sons',3100.0,9889.0,'successful',194,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat1','subcat1'),
-	 (NULL,'Self-enabling clear-thinking framework',2090,1568,'Turner, Young and Collins',153800.0,60342.0,'failed',575,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Assimilated fault-tolerant capacity',1401,4263,'Richardson Inc',5000.0,8907.0,'successful',106,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'Enhanced neutral ability',596,5850,'Santos-Young',4000.0,14606.0,'successful',142,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat20'),
-	 (NULL,'Function-based attitude-oriented groupware',1139,5619,'Nichols Ltd',7400.0,8432.0,'successful',211,'US','USD','1970-01-01','1970-01-01',false,true,'cat6','subcat19'),
-	 (NULL,'Optional solution-oriented instruction set',2080,1904,'Murphy PLC',191500.0,57122.0,'failed',1120,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat14'),
-	 (NULL,'Organic object-oriented core',88,5388,'Hogan, Porter and Rivera',8500.0,4613.0,'failed',113,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat23'),
-	 (NULL,'Balanced impactful circuit',2806,2150,'Lyons LLC',68800.0,162603.0,'successful',2756,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Future-proofed heuristic encryption',3153,2653,'Long-Greene',2400.0,12310.0,'successful',173,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat1','subcat1');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Balanced bifurcated leverage',2391,2687,'Robles-Hudson',8600.0,8656.0,'successful',87,'US','USD','1970-01-01','1970-01-01',false,true,'cat8','subcat15'),
-	 (NULL,'Sharable discrete budgetary management',84,3779,'Mcclure LLC',196600.0,159931.0,'failed',1538,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Focused solution-oriented instruction set',1987,1494,'Martin, Russell and Baker',4200.0,689.0,'failed',9,'US','USD','1970-01-01','1970-01-01',false,true,'cat6','subcat14'),
-	 (NULL,'Down-sized actuating infrastructure',2790,4129,'Rice-Parker',91400.0,48236.0,'failed',554,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Synergistic cohesive adapter',37,3035,'Landry Inc',29600.0,77021.0,'successful',1572,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat1','subcat1'),
-	 (NULL,'Quality-focused mission-critical structure',2981,2069,'Richards-Davis',90600.0,27844.0,'failed',648,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Compatible exuding Graphical User Interface',1730,5469,'Davis, Cox and Fox',5200.0,702.0,'failed',21,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat6','subcat19'),
-	 (NULL,'Monitored 24/7 time-frame',3172,3903,'Smith-Wallace',110300.0,197024.0,'successful',2346,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Virtual secondary open architecture',32,4083,'Cordova, Shaw and Wang',5300.0,11663.0,'successful',115,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Down-sized mobile time-frame',2322,4003,'Clark Inc',9200.0,9339.0,'successful',85,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat3','subcat9');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Innovative disintermediate encryption',1095,3565,'Young and Sons',2400.0,4596.0,'successful',144,'US','USD','1970-01-01','1970-01-01',false,false,'cat9','subcat24'),
-	 (NULL,'Universal contextually-based knowledgebase',1067,1640,'Henson PLC',56800.0,173437.0,'successful',2443,'US','USD','1970-01-01','1970-01-01',false,true,'cat1','subcat1'),
-	 (NULL,'Persevering interactive matrix',2676,4769,'Garcia Group',191000.0,45831.0,'canceled',595,'US','USD','1970-01-01','1970-01-01',true,true,'cat5','subcat13'),
-	 (NULL,'Seamless background framework',549,3398,'Adams, Walker and Wong',900.0,6514.0,'successful',64,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Balanced upward-trending productivity',302,1865,'Hopkins-Browning',2500.0,13684.0,'successful',268,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Centralized clear-thinking solution',2758,5690,'Bell, Edwards and Andersen',3200.0,13264.0,'successful',195,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Optimized bi-directional extranet',2450,3814,'Morales Group',183800.0,1667.0,'failed',54,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Intuitive actuating benchmark',2310,2942,'Lucero Group',9800.0,3349.0,'failed',120,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat9'),
-	 (NULL,'Devolved background project',2185,5095,'Smith, Brown and Davis',193400.0,46317.0,'failed',579,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Reverse-engineered executive emulation',1929,2878,'Hunt Group',163800.0,78743.0,'failed',2072,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Team-oriented clear-thinking matrix',1823,3697,'Valdez Ltd',100.0,0.0,'failed',0,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Focused coherent methodology',699,4744,'Mccann-Le',153600.0,107743.0,'failed',1796,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Reduced context-sensitive complexity',1926,2104,'Johnson Inc',1300.0,6889.0,'successful',186,'AU','AUD','1970-01-01','1970-01-01',false,true,'cat7','subcat12'),
-	 (NULL,'Decentralized 4thgeneration time-frame',2208,4883,'Collins LLC',25500.0,45983.0,'successful',460,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'De-engineered cohesive moderator',3136,4807,'Smith-Miller',7500.0,6924.0,'failed',62,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Ameliorated explicit parallelism',1623,1372,'Jensen-Vargas',89900.0,12497.0,'failed',347,'US','USD','1970-01-01','1970-01-01',false,true,'cat6','subcat16'),
-	 (NULL,'Customizable background monitoring',277,3666,'Robles, Bell and Gonzalez',18000.0,166874.0,'successful',2528,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Compatible well-modulated budgetary management',1522,2066,'Turner, Miller and Francis',2100.0,837.0,'failed',19,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat3'),
-	 (NULL,'Up-sized radical pricing structure',2582,1834,'Roberts Group',172700.0,193820.0,'successful',3657,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Robust zero-defect project',595,5853,'White LLC',168500.0,119510.0,'failed',1258,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Re-engineered mobile task-force',1060,2219,'Best, Miller and Thomas',7800.0,9289.0,'successful',131,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'User-centric intangible neural-net',2551,4148,'Smith-Mullins',147800.0,35498.0,'failed',362,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Organized explicit core',975,4477,'Williams-Walsh',9100.0,12678.0,'successful',239,'US','USD','1970-01-01','1970-01-01',false,true,'cat7','subcat12'),
-	 (NULL,'Synchronized 6thgeneration adapter',300,1786,'Harrison, Blackwell and Mendez',8300.0,3260.0,'canceled',35,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat20'),
-	 (NULL,'Centralized motivating capacity',1883,3455,'Sanchez, Bradley and Flores',138700.0,31123.0,'canceled',528,'CH','CHF','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Phased 24hour flexibility',2973,5707,'Cox LLC',8600.0,4797.0,'failed',133,'CA','CAD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Exclusive 5thgeneration structure',1831,5470,'Morales-Odonnell',125400.0,53324.0,'failed',846,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Multi-tiered maximized orchestration',3019,3274,'Ramirez LLC',5900.0,6608.0,'successful',78,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Open-architected uniform instruction set',1598,4613,'Ramirez Group',8800.0,622.0,'failed',10,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat11'),
-	 (NULL,'Exclusive asymmetric analyzer',1898,4465,'Marsh-Coleman',177700.0,180802.0,'successful',1773,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Organic radical collaboration',944,1652,'Frederick, Jenkins and Collins',800.0,3406.0,'successful',32,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Function-based multi-state software',2775,2100,'Wilson Ltd',7600.0,11061.0,'successful',369,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat7'),
-	 (NULL,'Innovative static budgetary management',2021,4321,'Cline, Peterson and Lowery',50500.0,16389.0,'failed',191,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat13'),
-	 (NULL,'Triple-buffered holistic ability',1473,4168,'Underwood, James and Jones',900.0,6303.0,'successful',89,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat13'),
-	 (NULL,'Diverse scalable superstructure',353,3733,'Johnson-Contreras',96700.0,81136.0,'failed',1979,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Balanced leadingedge data-warehouse',400,2594,'Greene, Lloyd and Sims',2100.0,1768.0,'failed',63,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Digitized bandwidth-monitored open architecture',930,3909,'Smith-Sparks',8300.0,12944.0,'successful',147,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Enterprise-wide intermediate portal',1281,5179,'Rosario-Smith',189200.0,188480.0,'failed',6080,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Focused leadingedge matrix',726,2228,'Avila, Ford and Welch',9000.0,7227.0,'failed',80,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Seamless logistical encryption',2177,6222,'Gallegos Inc',5100.0,574.0,'failed',9,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Stand-alone human-resource workforce',1652,2354,'Morrow, Santiago and Soto',105000.0,96328.0,'failed',1784,'US','USD','1970-01-01','1970-01-01',false,true,'cat6','subcat14'),
-	 (NULL,'Automated zero tolerance implementation',65,1725,'Berry-Richardson',186700.0,178338.0,'live',3640,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Pre-emptive grid-enabled contingency',911,2960,'Cordova-Torres',1600.0,8046.0,'successful',126,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Multi-lateral didactic encoding',2082,2077,'Holt, Bernard and Johnson',115600.0,184086.0,'successful',2218,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Self-enabling didactic orchestration',458,5662,'Clark, Mccormick and Mendoza',89100.0,13385.0,'failed',243,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat7'),
-	 (NULL,'Profit-focused 24/7 data-warehouse',1085,3481,'Garrison LLC',2600.0,12533.0,'successful',202,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Enhanced methodical middleware',1451,2565,'Shannon-Olson',9800.0,14697.0,'successful',140,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat6','subcat14'),
-	 (NULL,'Synchronized client-driven projection',1068,4436,'Murillo-Mcfarland',84400.0,98935.0,'successful',1052,'DK','DKK','1970-01-01','1970-01-01',true,true,'cat5','subcat5'),
-	 (NULL,'Networked didactic time-frame',241,5072,'Young, Gilbert and Escobar',151300.0,57034.0,'failed',1296,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat21'),
-	 (NULL,'Assimilated exuding toolset',2654,5200,'Thomas, Welch and Santana',9800.0,7120.0,'failed',77,'US','USD','1970-01-01','1970-01-01',false,true,'cat1','subcat1');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Front-line client-server secured line',159,4502,'Brown-Pena',5300.0,14097.0,'successful',247,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Polarized systemic Internet solution',1010,4945,'Holder, Caldwell and Vance',178000.0,43086.0,'failed',395,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat7','subcat21'),
-	 (NULL,'Profit-focused exuding moderator',1807,3012,'Harrison-Bridges',77000.0,1930.0,'failed',49,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Cross-group high-level moderator',1135,6094,'Johnson, Murphy and Peterson',84900.0,13864.0,'failed',180,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Public-key 3rdgeneration system engine',1859,3815,'Taylor Inc',2800.0,7742.0,'successful',84,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Organized value-added access',1265,4838,'Deleon and Sons',184800.0,164109.0,'failed',2690,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Cloned global Graphical User Interface',2648,3469,'Benjamin, Paul and Ferguson',4200.0,6870.0,'successful',88,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Focused solution-oriented matrix',141,4874,'Hardin-Dixon',1300.0,12597.0,'successful',156,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Monitored discrete toolset',1944,1792,'York-Pitts',66100.0,179074.0,'successful',2985,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Business-focused intermediate system engine',3187,4356,'Jarvis and Sons',29500.0,83843.0,'successful',762,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'De-engineered disintermediate encoding',1436,6196,'Morrison-Henderson',100.0,4.0,'canceled',1,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Streamlined upward-trending analyzer',1384,3578,'Martin-James',180100.0,105598.0,'failed',2779,'AU','AUD','1970-01-01','1970-01-01',false,true,'cat3','subcat3'),
-	 (NULL,'Distributed human-resource policy',2446,4491,'Mercer, Solomon and Singleton',9000.0,8866.0,'failed',92,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'De-engineered 5thgeneration contingency',2215,3054,'Dougherty, Austin and Mills',170600.0,75022.0,'failed',1028,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Multi-channeled upward-trending application',2704,1968,'Ritter PLC',9500.0,14408.0,'successful',554,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Organic maximized database',2470,5869,'Anderson Group',6300.0,14089.0,'successful',135,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Grass-roots 24/7 attitude',1056,5858,'Smith and Sons',5200.0,12467.0,'successful',122,'US','USD','1970-01-01','1970-01-01',false,true,'cat6','subcat19'),
-	 (NULL,'Team-oriented global strategy',1278,5203,'Lam-Hamilton',6000.0,11960.0,'successful',221,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat23'),
-	 (NULL,'Enhanced client-driven capacity',2987,2577,'Ho Ltd',5800.0,7966.0,'successful',126,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Exclusive systematic productivity',417,3216,'Brown, Estrada and Jensen',105300.0,106321.0,'successful',1022,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Re-engineered radical policy',670,2037,'Hunt LLC',20000.0,158832.0,'successful',3177,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Down-sized logistical adapter',1427,3867,'Fowler-Smith',3000.0,11091.0,'successful',198,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Configurable bandwidth-monitored throughput',2918,5109,'Blair Inc',9900.0,1269.0,'failed',26,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Optional tangible pricing structure',306,1376,'Kelley, Stanton and Sanchez',3700.0,5107.0,'successful',85,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Organic high-level implementation',1714,5260,'Hernandez-Macdonald',168700.0,141393.0,'failed',1790,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Decentralized logistical collaboration',1354,2350,'Joseph LLC',94900.0,194166.0,'successful',3596,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Advanced content-based installation',810,2269,'Webb-Smith',9300.0,4124.0,'failed',37,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat6'),
-	 (NULL,'Distributed high-level open architecture',304,3650,'Johns PLC',6800.0,14865.0,'successful',244,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Synergized zero tolerance help-desk',752,3934,'Hardin-Foley',72400.0,134688.0,'successful',5180,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Extended multi-tasking definition',2254,4048,'Fischer, Fowler and Arnold',20100.0,47705.0,'successful',589,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat5','subcat11');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Realigned uniform knowledge user',1654,4266,'Martinez-Juarez',31200.0,95364.0,'successful',2725,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Monitored grid-enabled model',2729,3863,'Wilson and Sons',3500.0,3295.0,'failed',35,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat5','subcat13'),
-	 (NULL,'Assimilated actuating policy',913,4922,'Clements Group',9000.0,4896.0,'canceled',94,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Total incremental productivity',1388,4517,'Valenzuela-Cook',6700.0,7496.0,'successful',300,'US','USD','1970-01-01','1970-01-01',false,false,'cat9','subcat24'),
-	 (NULL,'Adaptive local task-force',76,3259,'Parker, Haley and Foster',2700.0,9967.0,'successful',144,'US','USD','1970-01-01','1970-01-01',false,true,'cat1','subcat1'),
-	 (NULL,'Universal zero-defect concept',1172,3123,'Fuentes LLC',83300.0,52421.0,'failed',558,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Object-based bottom-line superstructure',2579,3870,'Moran and Sons',9700.0,6298.0,'failed',64,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Adaptive 24hour projection',2371,2996,'Stevens Inc',8200.0,1546.0,'canceled',37,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat18'),
-	 (NULL,'Sharable radical toolset',359,2993,'Martinez-Johnson',96500.0,16168.0,'failed',245,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat23'),
-	 (NULL,'Focused multimedia knowledgebase',1423,4556,'Franklin Inc',6200.0,6269.0,'successful',87,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat18');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Seamless 6thgeneration extranet',2239,2326,'Perez PLC',43800.0,149578.0,'successful',3116,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Sharable mobile knowledgebase',1835,4109,'Sanchez, Cross and Savage',6000.0,3841.0,'failed',71,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Cross-group global system engine',2097,5739,'Pineda Ltd',8700.0,4531.0,'failed',42,'US','USD','1970-01-01','1970-01-01',false,true,'cat7','subcat12'),
-	 (NULL,'Centralized clear-thinking conglomeration',1165,5887,'Powell and Sons',18900.0,60934.0,'successful',909,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'De-engineered cohesive system engine',1368,1651,'Nunez-Richards',86400.0,103255.0,'successful',1613,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Reactive analyzing function',2331,1628,'Pugh LLC',8900.0,13065.0,'successful',136,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19'),
-	 (NULL,'Robust hybrid budgetary management',3145,2642,'Rowe-Wong',700.0,6654.0,'successful',130,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Open-source analyzing monitoring',2313,6020,'Williams-Santos',9400.0,6852.0,'failed',156,'CA','CAD','1970-01-01','1970-01-01',false,true,'cat1','subcat1'),
-	 (NULL,'Up-sized discrete firmware',251,4747,'Weber Inc',157600.0,124517.0,'failed',1368,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Exclusive intangible extranet',1956,5534,'Avery, Brown and Parker',7900.0,5113.0,'failed',102,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Synergized analyzing process improvement',1575,4790,'Cox Group',7100.0,5824.0,'failed',86,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat6','subcat16'),
-	 (NULL,'Realigned dedicated system engine',1917,4632,'Jensen LLC',600.0,6226.0,'successful',102,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Object-based bandwidth-monitored concept',2447,1952,'Brown Inc',156800.0,20243.0,'failed',253,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Ameliorated client-driven open system',1813,4388,'Hale-Hayes',121600.0,188288.0,'successful',4006,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Upgradable leadingedge Local Area Network',367,5529,'Mcbride PLC',157300.0,11167.0,'failed',157,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Customizable intermediate data-warehouse',1803,1316,'Harris-Jennings',70300.0,146595.0,'successful',1629,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Managed optimizing archive',284,1670,'Becker-Scott',7900.0,7875.0,'failed',183,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat7'),
-	 (NULL,'Diverse systematic projection',2603,4909,'Todd, Freeman and Henry',73800.0,148779.0,'successful',2188,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Up-sized web-enabled info-mediaries',653,3401,'Martinez, Garza and Young',108500.0,175868.0,'successful',2409,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Persevering optimizing Graphical User Interface',1131,4619,'Smith-Ramos',140300.0,5112.0,'failed',82,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat5','subcat5');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Cross-platform tertiary array',349,4722,'Brown-George',100.0,5.0,'failed',1,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Inverse neutral structure',2509,2188,'Waters and Sons',6300.0,13018.0,'successful',194,'US','USD','1970-01-01','1970-01-01',true,false,'cat3','subcat9'),
-	 (NULL,'Quality-focused system-worthy support',3139,5497,'Brown Ltd',71100.0,91176.0,'successful',1140,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Vision-oriented 5thgeneration array',480,5711,'Christian, Yates and Greer',5300.0,6342.0,'successful',102,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Cross-platform logistical circuit',1205,4076,'Cole, Hernandez and Rodriguez',88700.0,151438.0,'successful',2857,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Profound solution-oriented matrix',291,1847,'Ortiz, Valenzuela and Collins',3300.0,6178.0,'successful',107,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Extended asynchronous initiative',1758,2816,'Valencia PLC',3400.0,6405.0,'successful',160,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Fundamental needs-based frame',766,5019,'Gordon, Mendez and Johnson',137600.0,180667.0,'successful',2230,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Compatible full-range leverage',569,4869,'Johnson Group',3900.0,11075.0,'successful',316,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat18'),
-	 (NULL,'Upgradable holistic system engine',50,3613,'Rose-Fuller',10000.0,12042.0,'successful',117,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat23');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Stand-alone multi-state data-warehouse',1875,3069,'Hughes, Mendez and Patterson',42800.0,179356.0,'successful',6406,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Multi-lateral maximized core',3040,2601,'Brady, Cortez and Rodriguez',8200.0,1136.0,'canceled',15,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Innovative holistic hub',179,2133,'Wang, Nguyen and Horton',6200.0,8645.0,'successful',192,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'Reverse-engineered 24/7 methodology',114,3164,'Santos, Williams and Brown',1100.0,1914.0,'successful',26,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Business-focused dynamic info-mediaries',260,3897,'Barnett and Sons',26500.0,41205.0,'successful',723,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Digitized clear-thinking installation',1810,5663,'Petersen-Rodriguez',8500.0,14488.0,'successful',170,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Quality-focused 24/7 superstructure',68,3879,'Burnett-Mora',6400.0,12129.0,'successful',238,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat2','subcat8'),
-	 (NULL,'Multi-channeled local intranet',1148,5900,'King LLC',1400.0,3496.0,'successful',55,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Open-architected mobile emulation',2489,2272,'Miller Ltd',198600.0,97037.0,'failed',1198,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Ameliorated foreground methodology',1586,5436,'Case LLC',195900.0,55757.0,'failed',648,'US','USD','1970-01-01','1970-01-01',true,true,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Synergized well-modulated project',2339,3676,'Swanson, Wilson and Baker',4300.0,11525.0,'successful',128,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Extended context-sensitive forecast',1687,4676,'Dean, Fox and Phillips',25600.0,158669.0,'successful',2144,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Total leadingedge neural-net',1260,1563,'Smith-Smith',189000.0,5916.0,'failed',64,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Organic actuating protocol',2240,4349,'Smith, Scott and Rodriguez',94300.0,150806.0,'successful',2693,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Down-sized national software',1762,1658,'White, Robertson and Roberts',5100.0,14249.0,'successful',432,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Organic upward-trending Graphical User Interface',331,2552,'Martinez Inc',7500.0,5803.0,'failed',62,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Synergistic tertiary budgetary management',1330,4847,'Tucker, Mccoy and Marquez',6400.0,13205.0,'successful',189,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Open-architected incremental ability',427,1553,'Martin, Lee and Armstrong',1600.0,11108.0,'successful',154,'GB','GBP','1970-01-01','1970-01-01',true,false,'cat1','subcat1'),
-	 (NULL,'Intuitive object-oriented task-force',2929,2632,'Dunn, Moreno and Green',1900.0,2884.0,'successful',96,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Multi-tiered executive toolset',2940,1908,'Jackson, Martinez and Ray',85900.0,55476.0,'failed',750,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Grass-roots directional workforce',2047,5801,'Patterson-Johnson',9500.0,5973.0,'canceled',87,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Quality-focused real-time solution',536,1935,'Carlson-Hernandez',59200.0,183756.0,'successful',3063,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Reduced interactive matrix',238,2609,'Parker PLC',72100.0,30902.0,'live',278,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Adaptive context-sensitive architecture',30,2740,'Yu and Sons',6700.0,5569.0,'failed',105,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Polarized incremental portal',1151,1907,'Taylor, Johnson and Hernandez',118200.0,92824.0,'canceled',1658,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat20'),
-	 (NULL,'Reactive regional access',1484,1831,'Mack Ltd',139000.0,158590.0,'successful',2266,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat20'),
-	 (NULL,'Stand-alone reciprocal frame',1941,5177,'Lamb-Sanders',197700.0,127591.0,'failed',2604,'DK','DKK','1970-01-01','1970-01-01',false,true,'cat5','subcat11'),
-	 (NULL,'Open-architected 24/7 throughput',546,6179,'Williams-Ramirez',8500.0,6750.0,'failed',65,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Monitored 24/7 approach',221,2917,'Weaver Ltd',81600.0,9318.0,'failed',94,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Upgradable explicit forecast',2882,1486,'Barnes-Williams',8600.0,4832.0,'live',45,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat7');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Pre-emptive context-sensitive support',2938,3735,'Richardson, Woodward and Hansen',119800.0,19769.0,'failed',257,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Business-focused leadingedge instruction set',785,3838,'Hunt, Barker and Baker',9400.0,11277.0,'successful',194,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Extended multi-state knowledge user',2785,2430,'Ramos, Moreno and Lewis',9200.0,13382.0,'successful',129,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Future-proofed modular groupware',876,2480,'Harris Inc',14900.0,32986.0,'successful',375,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Distributed real-time algorithm',932,3431,'Peters-Nelson',169400.0,81984.0,'failed',2928,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Multi-lateral heuristic throughput',507,1742,'Ferguson, Murphy and Bright',192100.0,178483.0,'failed',4697,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Switchable reciprocal middleware',1672,4628,'Robinson Group',98700.0,87448.0,'failed',2915,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Inverse multimedia Graphic Interface',917,2385,'Jordan-Wolfe',4500.0,1863.0,'failed',18,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19'),
-	 (NULL,'Vision-oriented local contingency',2931,2213,'Vargas-Cox',98600.0,62174.0,'canceled',723,'US','USD','1970-01-01','1970-01-01',true,false,'cat1','subcat1'),
-	 (NULL,'Reactive 6thgeneration hub',2415,5188,'Yang and Sons',121700.0,59003.0,'failed',602,'CH','CHF','1970-01-01','1970-01-01',true,true,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Optional asymmetric success',1805,3418,'Wilson, Wilson and Mathis',100.0,2.0,'failed',1,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat18'),
-	 (NULL,'Digitized analyzing capacity',495,5637,'Wang, Koch and Weaver',196700.0,174039.0,'failed',3868,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat5','subcat13'),
-	 (NULL,'Vision-oriented regional hub',2988,3530,'Cisneros Ltd',10000.0,12684.0,'successful',409,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Monitored incremental info-mediaries',3169,3731,'Williams-Jones',600.0,14033.0,'successful',234,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Programmable static middleware',467,3219,'Roberts, Hinton and Williams',35000.0,177936.0,'successful',3016,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat17'),
-	 (NULL,'Multi-layered bottom-line encryption',1551,2392,'Gonzalez, Williams and Benson',6900.0,13212.0,'successful',264,'US','USD','1970-01-01','1970-01-01',true,false,'cat8','subcat15'),
-	 (NULL,'Vision-oriented systematic Graphical User Interface',2467,5103,'Hobbs, Brown and Lee',118400.0,49879.0,'failed',504,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Balanced optimal hardware',1193,3992,'Russo, Kim and Mccoy',10000.0,824.0,'failed',14,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat23'),
-	 (NULL,'Self-enabling mission-critical success',1016,2442,'Howell, Myers and Olson',52600.0,31594.0,'canceled',390,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Grass-roots dynamic emulation',313,2913,'Bailey and Sons',120700.0,57010.0,'failed',750,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat5','subcat5');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Fundamental disintermediate matrix',117,1631,'Jensen-Brown',9100.0,7438.0,'failed',77,'US','USD','1970-01-01','1970-01-01',true,false,'cat4','subcat4'),
-	 (NULL,'Right-sized secondary challenge',2747,4073,'Smith Group',106800.0,57872.0,'failed',752,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat2','subcat18'),
-	 (NULL,'Implemented exuding software',1244,4568,'Murphy-Farrell',9100.0,8906.0,'failed',131,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Total optimizing software',564,1830,'Everett-Wolfe',10000.0,7724.0,'failed',87,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Optional maximized attitude',3129,2623,'Young PLC',79400.0,26571.0,'failed',1063,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat18'),
-	 (NULL,'Customer-focused impactful extranet',800,4327,'Park-Goodman',5100.0,12219.0,'successful',272,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Cloned bottom-line success',1255,3713,'York, Barr and Grant',3100.0,1985.0,'canceled',25,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Decentralized bandwidth-monitored ability',2448,2389,'Little Ltd',6900.0,12155.0,'successful',419,'US','USD','1970-01-01','1970-01-01',false,false,'cat9','subcat24'),
-	 (NULL,'Programmable leadingedge budgetary management',578,5141,'Brown and Sons',27500.0,5593.0,'failed',76,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Upgradable bi-directional concept',418,3522,'Payne, Garrett and Thomas',48800.0,175020.0,'successful',1621,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Re-contextualized homogeneous flexibility',255,1334,'Robinson Group',16200.0,75955.0,'successful',1101,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Monitored bi-directional standardization',1918,4721,'Robinson-Kelly',97600.0,119127.0,'successful',1073,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Stand-alone grid-enabled leverage',2837,3768,'Kelly-Colon',197900.0,110689.0,'failed',4428,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Assimilated regional groupware',842,1639,'Turner, Scott and Gentry',5600.0,2445.0,'failed',58,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Up-sized 24hour instruction set',503,5149,'Sanchez Ltd',170700.0,57250.0,'canceled',1218,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Right-sized web-enabled intranet',602,2153,'Giles-Smith',9700.0,11929.0,'successful',331,'US','USD','1970-01-01','1970-01-01',false,false,'cat9','subcat24'),
-	 (NULL,'Expanded needs-based orchestration',1317,2767,'Thompson-Moreno',62300.0,118214.0,'successful',1170,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Organic system-worthy orchestration',2071,5124,'Murphy-Fox',5300.0,4432.0,'failed',111,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat14'),
-	 (NULL,'Inverse static standardization',2773,2097,'Rodriguez-Patterson',99500.0,17879.0,'canceled',215,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Synchronized motivating solution',1814,4796,'Davis Ltd',1400.0,14511.0,'successful',363,'US','USD','1970-01-01','1970-01-01',false,true,'cat1','subcat1');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Open-source 4thgeneration open system',2600,5849,'Nelson-Valdez',145600.0,141822.0,'failed',2955,'US','USD','1970-01-01','1970-01-01',false,true,'cat7','subcat21'),
-	 (NULL,'Decentralized context-sensitive superstructure',426,1495,'Kelly PLC',184100.0,159037.0,'failed',1657,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Compatible 5thgeneration concept',2206,2462,'Nguyen and Sons',5400.0,8109.0,'successful',103,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Virtual systemic intranet',2032,2280,'Jones PLC',2300.0,8244.0,'successful',147,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Optimized systemic algorithm',397,1877,'Gilmore LLC',1400.0,7600.0,'successful',110,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Customizable homogeneous firmware',865,6108,'Lee-Cobb',140000.0,94501.0,'failed',926,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Front-line cohesive extranet',3027,4427,'Jones, Wiley and Robbins',7500.0,14381.0,'successful',134,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Distributed holistic neural-net',31,2881,'Martin, Gates and Holt',1500.0,13980.0,'successful',269,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Devolved client-server monitoring',1234,2339,'Bowen, Davies and Burns',2900.0,12449.0,'successful',175,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat20'),
-	 (NULL,'Seamless directional capacity',497,5156,'Nguyen Inc',7300.0,7348.0,'successful',69,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Polarized actuating implementation',2084,4750,'Walsh-Watts',3600.0,8158.0,'successful',190,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Front-line disintermediate hub',337,4852,'Ray, Li and Li',5000.0,7119.0,'successful',237,'US','USD','1970-01-01','1970-01-01',true,true,'cat5','subcat5'),
-	 (NULL,'Decentralized 4thgeneration challenge',3182,5734,'Murray Ltd',6000.0,5438.0,'failed',77,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Reverse-engineered composite hierarchy',1494,3801,'Bradford-Silva',180400.0,115396.0,'failed',1748,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Programmable tangible ability',2570,4474,'Mora-Bradley',9100.0,7656.0,'failed',79,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Configurable full-range emulation',2205,1992,'Cardenas, Thompson and Carey',9200.0,12322.0,'successful',196,'IT','EUR','1970-01-01','1970-01-01',true,false,'cat2','subcat2'),
-	 (NULL,'Total real-time hardware',314,5796,'Lopez, Reid and Johnson',164100.0,96888.0,'failed',889,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Profound system-worthy functionalities',1659,1373,'Fox-Williams',128900.0,196960.0,'successful',7295,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'Cloned hybrid focus group',1656,1879,'Taylor, Wood and Taylor',42100.0,188057.0,'successful',2893,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Ergonomic dedicated focus group',514,3072,'King Inc',7400.0,6245.0,'failed',56,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Realigned zero administration paradigm',649,4561,'Cole, Petty and Cameron',100.0,3.0,'failed',1,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Open-source multi-tasking methodology',1769,5201,'Mcclain LLC',52000.0,91014.0,'successful',820,'US','USD','1970-01-01','1970-01-01',true,false,'cat4','subcat4'),
-	 (NULL,'Object-based attitude-oriented analyzer',33,5871,'Sims-Gross',8700.0,4710.0,'failed',83,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Cross-platform tertiary hub',195,3041,'Perez Group',63400.0,197728.0,'successful',2038,'US','USD','1970-01-01','1970-01-01',true,true,'cat6','subcat19'),
-	 (NULL,'Seamless clear-thinking artificial intelligence',742,5864,'Haynes-Williams',8700.0,10682.0,'successful',116,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Centralized tangible success',2093,3999,'Ford LLC',169700.0,168048.0,'failed',2025,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Customer-focused multimedia methodology',1338,4849,'Moreno Ltd',108400.0,138586.0,'successful',1345,'AU','AUD','1970-01-01','1970-01-01',false,true,'cat3','subcat3'),
-	 (NULL,'Visionary maximized Local Area Network',52,5461,'Moore, Cook and Wright',7300.0,11579.0,'successful',168,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Secured bifurcated intranet',1651,5946,'Ortega LLC',1700.0,12020.0,'successful',137,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Grass-roots 4thgeneration product',452,4508,'Silva, Walker and Martin',9800.0,13954.0,'successful',186,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Reduced next generation info-mediaries',1808,5096,'Huynh, Gallegos and Mills',4300.0,6358.0,'successful',125,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Customizable full-range artificial intelligence',2288,5443,'Anderson LLC',6200.0,1260.0,'failed',14,'IT','EUR','1970-01-01','1970-01-01',true,true,'cat4','subcat4'),
-	 (NULL,'Programmable leadingedge contingency',1855,2165,'Garza-Bryant',800.0,14725.0,'successful',202,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Multi-layered global groupware',3035,2125,'Mays LLC',6900.0,11174.0,'successful',103,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat16'),
-	 (NULL,'Switchable methodical superstructure',2285,6141,'Evans-Jones',38500.0,182036.0,'successful',1785,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Expanded even-keeled portal',1203,5245,'Fischer, Torres and Walker',118000.0,28870.0,'failed',656,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat21'),
-	 (NULL,'Advanced modular moderator',2852,2190,'Tapia, Kramer and Hicks',2000.0,10353.0,'successful',157,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Reverse-engineered well-modulated ability',2160,2243,'Barnes, Wilcox and Riley',5600.0,13868.0,'successful',555,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Expanded optimal pricing structure',113,3336,'Reyes PLC',8300.0,8317.0,'successful',297,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Down-sized uniform ability',2609,3305,'Pace, Simpson and Watkins',6900.0,10557.0,'successful',123,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat14');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Multi-layered upward-trending conglomeration',2529,6191,'Valenzuela, Davidson and Castro',8700.0,3227.0,'canceled',38,'DK','DKK','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Open-architected systematic intranet',1780,1326,'Dominguez-Owens',123600.0,5429.0,'canceled',60,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Proactive 24hour frame',1840,6159,'Thomas-Simmons',48500.0,75906.0,'successful',3036,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Exclusive fresh-thinking model',2280,2003,'Beck-Knight',4900.0,13250.0,'successful',144,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Business-focused encompassing intranet',3150,5881,'Mccoy Ltd',8400.0,11261.0,'successful',121,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Optional 6thgeneration access',2490,1918,'Dawson-Tyler',193200.0,97369.0,'failed',1596,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat21'),
-	 (NULL,'Realigned web-enabled functionalities',3081,2157,'Johns-Thomas',54300.0,48227.0,'canceled',524,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Enterprise-wide multimedia software',1954,3149,'Quinn, Cruz and Schmidt',8900.0,14685.0,'successful',181,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Versatile mission-critical knowledgebase',2560,2444,'Stewart Inc',4200.0,735.0,'failed',10,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Multi-lateral object-oriented open system',1071,6207,'Moore Group',5600.0,10397.0,'successful',122,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Visionary system-worthy attitude',1649,5580,'Carson PLC',28800.0,118847.0,'successful',1071,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Synergized content-based hierarchy',685,5942,'Cruz, Hall and Mason',8000.0,7220.0,'canceled',219,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Business-focused 24hour access',1069,1592,'Glass, Baker and Jones',117000.0,107622.0,'failed',1121,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Automated hybrid orchestration',1277,2344,'Marquez-Kerr',15800.0,83267.0,'successful',980,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat17'),
-	 (NULL,'Exclusive 5thgeneration leverage',2764,5995,'Stone PLC',4200.0,13404.0,'successful',536,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Grass-roots zero administration alliance',959,5022,'Caldwell PLC',37100.0,131404.0,'successful',1991,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Proactive heuristic orchestration',1746,5991,'Silva-Hawkins',7700.0,2533.0,'canceled',29,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Function-based systematic Graphical User Interface',2392,4020,'Gardner Inc',3700.0,5028.0,'successful',180,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Extended zero administration software',2762,6028,'Garcia Group',74700.0,1557.0,'failed',15,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Multi-tiered discrete support',1699,2790,'Meyer-Avila',10000.0,6100.0,'failed',191,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Phased system-worthy conglomeration',220,4033,'Nelson, Smith and Graham',5300.0,1592.0,'failed',16,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Balanced mobile alliance',285,1261,'Garcia Ltd',1200.0,14150.0,'successful',130,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Reactive solution-oriented groupware',2182,1979,'West-Stevens',1200.0,13513.0,'successful',122,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'Exclusive bandwidth-monitored orchestration',2244,2122,'Clark-Conrad',3900.0,504.0,'failed',17,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Intuitive exuding initiative',2357,4506,'Fitzgerald Group',2000.0,14240.0,'successful',140,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Streamlined needs-based knowledge user',971,3016,'Hill, Mccann and Moore',6900.0,2091.0,'failed',34,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'Automated system-worthy structure',2077,3272,'Edwards LLC',55800.0,118580.0,'successful',3388,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Secured clear-thinking intranet',2197,1375,'Greer and Sons',4900.0,11214.0,'successful',280,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Cloned actuating architecture',1294,4014,'Martinez PLC',194900.0,68137.0,'canceled',614,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat11'),
-	 (NULL,'Down-sized needs-based task-force',1111,3199,'Hunter-Logan',8600.0,13527.0,'successful',366,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat3','subcat9');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Extended responsive Internet solution',985,2184,'Ramos and Sons',100.0,1.0,'failed',1,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'Universal value-added moderator',487,2170,'Lane-Barber',3600.0,8363.0,'successful',270,'US','USD','1970-01-01','1970-01-01',true,true,'cat6','subcat10'),
-	 (NULL,'Sharable motivating emulation',1496,1478,'Lowery Group',5800.0,5362.0,'canceled',114,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Networked web-enabled product',3054,6163,'Guerrero-Griffin',4700.0,12065.0,'successful',137,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Advanced dedicated encoding',501,1889,'Perez, Reed and Lee',70400.0,118603.0,'successful',3205,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Stand-alone multi-state project',632,5912,'Chen, Pollard and Clarke',4500.0,7496.0,'successful',288,'DK','DKK','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Customizable bi-directional monitoring',1253,2537,'Serrano, Gallagher and Griffith',1300.0,10037.0,'successful',148,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Profit-focused motivating function',665,2118,'Callahan-Gilbert',1400.0,5696.0,'successful',114,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Proactive systemic firmware',2505,3234,'Logan-Miranda',29600.0,167005.0,'successful',1518,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Grass-roots upward-trending installation',1519,3842,'Rodriguez PLC',167500.0,114615.0,'failed',1274,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Virtual heuristic hub',1920,3032,'Smith-Kennedy',48300.0,16592.0,'failed',210,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat7','subcat12'),
-	 (NULL,'Customizable leadingedge model',2782,3238,'Mitchell-Lee',2200.0,14420.0,'successful',166,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Upgradable uniform service-desk',2089,2059,'Davis Ltd',3500.0,6204.0,'successful',100,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat2','subcat18'),
-	 (NULL,'Inverse client-driven product',2607,5238,'Rowland PLC',5600.0,6338.0,'successful',235,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Managed bandwidth-monitored system engine',2464,2578,'Shaffer-Mason',1100.0,8010.0,'successful',148,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Advanced transitional help-desk',335,4789,'Matthews LLC',3900.0,8125.0,'successful',198,'US','USD','1970-01-01','1970-01-01',true,true,'cat2','subcat8'),
-	 (NULL,'De-engineered disintermediate encryption',1973,2357,'Montgomery-Castro',43800.0,13653.0,'failed',248,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat5','subcat23'),
-	 (NULL,'Upgradable attitude-oriented project',1006,1235,'Hale, Pearson and Jenkins',97200.0,55372.0,'failed',513,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19'),
-	 (NULL,'Fundamental zero tolerance alliance',2678,3558,'Ramirez-Calderon',4800.0,11088.0,'successful',150,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Devolved 24hour forecast',2103,1707,'Johnson-Morales',125600.0,109106.0,'failed',3410,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'User-centric attitude-oriented intranet',627,2842,'Mathis-Rodriguez',4300.0,11642.0,'successful',216,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Self-enabling 5thgeneration paradigm',2242,5318,'Smith, Mack and Williams',5600.0,2769.0,'canceled',26,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Persistent 3rdgeneration moratorium',2711,1620,'Johnson-Pace',149600.0,169586.0,'successful',5139,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Cross-platform empowering project',1210,4998,'Meza, Kirby and Patel',53100.0,101185.0,'successful',2353,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Polarized user-facing interface',692,3111,'Gonzalez-Snow',5000.0,6775.0,'successful',78,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Customer-focused non-volatile framework',864,1424,'Murphy LLC',9400.0,968.0,'failed',10,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Synchronized multimedia frame',1349,3244,'Taylor-Rowe',110800.0,72623.0,'failed',2201,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Open-architected stable algorithm',1582,4643,'Henderson Ltd',93800.0,45987.0,'failed',676,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Cross-platform optimizing website',2862,6132,'Moss-Guzman',1300.0,10243.0,'successful',174,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Public-key actuating projection',23,3790,'Webb Group',108700.0,87293.0,'failed',831,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Implemented intangible instruction set',526,1312,'Brooks-Rodriguez',5100.0,5421.0,'successful',164,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat7'),
-	 (NULL,'Cross-group interactive architecture',2134,5686,'Thomas Ltd',8700.0,4414.0,'canceled',56,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Centralized asymmetric framework',422,2111,'Williams and Sons',5100.0,10981.0,'successful',161,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat11'),
-	 (NULL,'Down-sized systematic utilization',988,5685,'Vega, Chan and Carney',7400.0,10451.0,'successful',138,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Profound fault-tolerant model',812,1905,'Byrd Group',88900.0,102535.0,'successful',3308,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Multi-channeled bi-directional moratorium',1589,3271,'Peterson, Fletcher and Sanchez',6700.0,12939.0,'successful',127,'AU','AUD','1970-01-01','1970-01-01',false,true,'cat5','subcat11'),
-	 (NULL,'Object-based content-based ability',2504,4178,'Smith-Brown',1500.0,10946.0,'successful',207,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat2','subcat18'),
-	 (NULL,'Progressive coherent secured line',1707,3275,'Vance-Glover',61200.0,60994.0,'failed',859,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Synchronized directional capability',3138,5713,'Joyce PLC',3600.0,3174.0,'live',31,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Cross-platform composite migration',120,3339,'Kennedy-Miller',9000.0,3351.0,'failed',45,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Operative local pricing structure',265,5585,'White-Obrien',185900.0,56774.0,'canceled',1113,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Optional web-enabled extranet',2499,4407,'Stafford, Hess and Raymond',2100.0,540.0,'failed',6,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Reduced 6thgeneration intranet',127,1941,'Jordan, Schneider and Hall',2000.0,680.0,'failed',7,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Networked disintermediate leverage',1705,4690,'Rodriguez, Cox and Rodriguez',1100.0,13045.0,'successful',181,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Optional optimal website',415,3607,'Welch Inc',6600.0,8276.0,'successful',110,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Stand-alone asynchronous functionalities',3042,2670,'Vasquez Inc',7100.0,1022.0,'failed',31,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Profound full-range open system',2098,5261,'Freeman-Ferguson',7800.0,4275.0,'failed',78,'US','USD','1970-01-01','1970-01-01',false,true,'cat7','subcat21'),
-	 (NULL,'Optional tangible utilization',1015,4121,'Houston, Moore and Rogers',7600.0,8332.0,'successful',185,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Seamless maximized product',2454,4620,'Small-Fuentes',3400.0,6408.0,'successful',121,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Devolved tertiary time-frame',662,4630,'Reid-Day',84500.0,73522.0,'failed',1225,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Centralized regional function',751,3440,'Wallace LLC',100.0,1.0,'failed',1,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'User-friendly high-level initiative',2336,3572,'Olson-Bishop',2300.0,4667.0,'successful',106,'US','USD','1970-01-01','1970-01-01',false,true,'cat8','subcat15'),
-	 (NULL,'Reverse-engineered zero-defect infrastructure',1757,5306,'Rodriguez, Anderson and Porter',6200.0,12216.0,'successful',142,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Stand-alone background customer loyalty',2779,5122,'Perez, Brown and Meyers',6100.0,6527.0,'successful',233,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Business-focused discrete software',1698,1368,'English-Mccullough',2600.0,6987.0,'successful',218,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Advanced intermediate Graphic Interface',550,5370,'Smith-Nguyen',9700.0,4932.0,'failed',67,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Adaptive holistic hub',746,5636,'Harmon-Madden',700.0,8262.0,'successful',76,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat7'),
-	 (NULL,'Automated uniform concept',906,6033,'Walker-Taylor',700.0,1848.0,'successful',43,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Enhanced regional flexibility',3098,3599,'Harris, Medina and Mitchell',5200.0,1583.0,'failed',19,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Public-key bottom-line algorithm',1052,5566,'Williams and Sons',140800.0,88536.0,'failed',2108,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat5','subcat5');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Multi-layered intangible instruction set',1073,1873,'Ball-Fisher',6400.0,12360.0,'successful',221,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Fundamental methodical emulation',1327,3904,'Page, Holt and Mack',92500.0,71320.0,'failed',679,'US','USD','1970-01-01','1970-01-01',false,true,'cat7','subcat12'),
-	 (NULL,'Expanded value-added hardware',1849,4453,'Landry Group',59700.0,134640.0,'successful',2805,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat6','subcat10'),
-	 (NULL,'Diverse high-level attitude',1550,5481,'Buckley Group',3200.0,7661.0,'successful',68,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Visionary 24hour analyzer',2139,2987,'Vincent PLC',3200.0,2950.0,'failed',36,'DK','DKK','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Centralized bandwidth-monitored leverage',2442,2431,'Watson-Douglas',9000.0,11721.0,'successful',183,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Ergonomic mission-critical moratorium',108,4158,'Jones, Casey and Jones',2300.0,14150.0,'successful',133,'US','USD','1970-01-01','1970-01-01',true,true,'cat4','subcat4'),
-	 (NULL,'Front-line intermediate moderator',322,3753,'Alvarez-Bauer',51300.0,189192.0,'successful',2489,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat6','subcat10'),
-	 (NULL,'Automated local secured line',2060,4391,'Martinez LLC',700.0,7664.0,'successful',69,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Integrated bandwidth-monitored alliance',589,2026,'Buck-Khan',8900.0,4509.0,'failed',47,'US','USD','1970-01-01','1970-01-01',true,false,'cat7','subcat12');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Cross-group heuristic forecast',198,4547,'Valdez, Williams and Meyer',1500.0,12009.0,'successful',279,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Extended impactful secured line',1485,2798,'Alvarez-Andrews',4900.0,14273.0,'successful',210,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Distributed optimizing protocol',2136,4732,'Stewart and Sons',54000.0,188982.0,'successful',2100,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Secured well-modulated system engine',3200,5126,'Dyer Inc',4100.0,14640.0,'successful',252,'US','USD','1970-01-01','1970-01-01',true,true,'cat2','subcat2'),
-	 (NULL,'Streamlined national benchmark',2693,5151,'Anderson, Williams and Cox',85000.0,107516.0,'successful',1280,'US','USD','1970-01-01','1970-01-01',false,true,'cat6','subcat10'),
-	 (NULL,'Open-architected 24/7 infrastructure',1335,2134,'Solomon PLC',3600.0,13950.0,'successful',157,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat5','subcat13'),
-	 (NULL,'Digitized 6thgeneration Local Area Network',1171,5786,'Miller-Hubbard',2800.0,12797.0,'successful',194,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Innovative actuating artificial intelligence',1935,5515,'Miranda, Martinez and Lowery',2300.0,6134.0,'successful',82,'AU','AUD','1970-01-01','1970-01-01',false,true,'cat5','subcat7'),
-	 (NULL,'Cross-platform reciprocal budgetary management',1097,4530,'Munoz, Cherry and Bell',7100.0,4899.0,'failed',70,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Vision-oriented scalable portal',1307,4088,'Baker-Higgins',9600.0,4929.0,'failed',154,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Persevering zero administration knowledge user',1300,3667,'Johnson, Turner and Carroll',121600.0,1424.0,'failed',22,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Front-line bottom-line Graphic Interface',2587,3286,'Ward PLC',97100.0,105817.0,'successful',4233,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Synergized fault-tolerant hierarchy',964,4804,'Bradley, Beck and Mayo',43200.0,136156.0,'successful',1297,'DK','DKK','1970-01-01','1970-01-01',true,false,'cat6','subcat19'),
-	 (NULL,'Expanded asynchronous groupware',1093,5768,'Levine, Martin and Hernandez',6800.0,10723.0,'successful',165,'DK','DKK','1970-01-01','1970-01-01',false,false,'cat6','subcat19'),
-	 (NULL,'Expanded fault-tolerant emulation',1199,6098,'Gallegos, Wagner and Gaines',7300.0,11228.0,'successful',119,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Future-proofed 24hour model',2259,2508,'Hodges, Smith and Kelly',86200.0,77355.0,'failed',1758,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Optimized didactic intranet',1169,5779,'Macias Inc',8100.0,6086.0,'failed',94,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Right-sized dedicated standardization',2575,1717,'Cook-Ortiz',17700.0,150960.0,'successful',1797,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat18'),
-	 (NULL,'Vision-oriented high-level extranet',1889,3368,'Jordan-Fischer',6400.0,8890.0,'successful',261,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Organized scalable initiative',2267,4265,'Pierce-Ramirez',7700.0,14644.0,'successful',157,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Enhanced regional moderator',78,4455,'Howell and Sons',116300.0,116583.0,'successful',3533,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Automated even-keeled emulation',55,2940,'Garcia, Dunn and Richardson',9100.0,12991.0,'successful',155,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Reverse-engineered multi-tasking product',725,6144,'Lawson and Sons',1500.0,8447.0,'successful',132,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat3','subcat9'),
-	 (NULL,'De-engineered next generation parallelism',1927,3657,'Porter-Hicks',8800.0,2703.0,'failed',33,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Intuitive cohesive groupware',398,1537,'Rodriguez-Hansen',8800.0,8747.0,'canceled',94,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Up-sized high-level access',2554,2116,'Williams LLC',69900.0,138087.0,'successful',1354,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Phased empowering success',2293,5102,'Cooper, Stanley and Bryant',1000.0,5085.0,'successful',48,'US','USD','1970-01-01','1970-01-01',true,true,'cat3','subcat3'),
-	 (NULL,'Distributed actuating project',2978,5815,'Miller, Glenn and Adams',4700.0,11174.0,'successful',110,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Robust motivating orchestration',1443,4250,'Cole, Salazar and Moreno',3200.0,10831.0,'successful',172,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Vision-oriented uniform instruction set',342,4533,'Jones-Ryan',6700.0,8917.0,'successful',307,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat8');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Cross-group upward-trending hierarchy',1719,3329,'Hood, Perez and Meadows',100.0,1.0,'failed',1,'US','USD','1970-01-01','1970-01-01',true,false,'cat2','subcat2'),
-	 (NULL,'Object-based needs-based info-mediaries',2004,3606,'Bright and Sons',6000.0,12468.0,'successful',160,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'Open-source reciprocal standardization',784,4749,'Brady Ltd',4900.0,2505.0,'failed',31,'US','USD','1970-01-01','1970-01-01',false,true,'cat7','subcat12'),
-	 (NULL,'Secured well-modulated projection',3061,2222,'Collier LLC',17100.0,111502.0,'successful',1467,'CA','CAD','1970-01-01','1970-01-01',false,true,'cat2','subcat8'),
-	 (NULL,'Multi-channeled secondary middleware',559,1939,'Campbell, Thomas and Obrien',171000.0,194309.0,'successful',2662,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat6','subcat14'),
-	 (NULL,'Horizontal clear-thinking framework',978,2456,'Moses-Terry',23400.0,23956.0,'successful',452,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Profound composite core',1387,2794,'Williams and Sons',2400.0,8558.0,'successful',158,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Programmable disintermediate matrices',499,2648,'Miranda, Gray and Hale',5300.0,7413.0,'successful',225,'CH','CHF','1970-01-01','1970-01-01',true,false,'cat5','subcat13'),
-	 (NULL,'Realigned 5thgeneration knowledge user',1439,2545,'Ayala, Crawford and Taylor',4000.0,2778.0,'failed',35,'US','USD','1970-01-01','1970-01-01',true,false,'cat1','subcat1'),
-	 (NULL,'Multi-layered upward-trending groupware',3130,3273,'Martinez Ltd',7300.0,2594.0,'failed',63,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Re-contextualized leadingedge firmware',1526,6155,'Lee PLC',2000.0,5033.0,'successful',65,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat9'),
-	 (NULL,'Devolved disintermediate analyzer',1229,6064,'Young, Ramsey and Powell',8800.0,9317.0,'successful',163,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Profound disintermediate open system',780,1729,'Lewis and Sons',3500.0,6560.0,'successful',85,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Automated reciprocal protocol',936,4969,'Davis-Johnson',1400.0,5415.0,'successful',217,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat20'),
-	 (NULL,'Automated static workforce',2820,3402,'Stevenson-Thompson',4200.0,14577.0,'successful',150,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat13'),
-	 (NULL,'Horizontal attitude-oriented help-desk',3118,2810,'Ellis, Smith and Armstrong',81000.0,150515.0,'successful',3272,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Versatile 5thgeneration matrices',750,2217,'Jackson-Brown',182800.0,79045.0,'canceled',898,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Cross-platform next generation service-desk',2948,5140,'Kane, Pruitt and Rivera',4800.0,7797.0,'successful',300,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Front-line web-enabled installation',1818,4497,'Wood, Buckley and Meza',7000.0,12939.0,'successful',126,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Multi-channeled responsive product',1715,5100,'Brown-Williams',161900.0,38376.0,'failed',526,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat7');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Adaptive demand-driven encryption',2667,3390,'Hansen-Austin',7700.0,6920.0,'failed',121,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Re-engineered client-driven knowledge user',2818,1926,'Santana-George',71500.0,194912.0,'successful',2320,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Compatible logistical paradigm',175,3264,'Davis LLC',4700.0,7992.0,'successful',81,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat5','subcat23'),
-	 (NULL,'Intuitive value-added installation',2701,2573,'Vazquez, Ochoa and Clark',42100.0,79268.0,'successful',1887,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Managed discrete parallelism',338,3628,'Chung-Nguyen',40200.0,139468.0,'successful',4358,'US','USD','1970-01-01','1970-01-01',false,true,'cat8','subcat15'),
-	 (NULL,'Implemented tangible approach',1372,3826,'Mueller-Harmon',7900.0,5465.0,'failed',67,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Re-engineered encompassing definition',399,5983,'Dixon, Perez and Banks',8300.0,2111.0,'failed',57,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Multi-lateral uniform collaboration',2734,5678,'Estrada Group',163600.0,126628.0,'failed',1229,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Enterprise-wide foreground paradigm',2663,2093,'Lutz Group',2700.0,1012.0,'failed',12,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat2','subcat17'),
-	 (NULL,'Stand-alone incremental parallelism',2951,5333,'Ortiz Inc',1000.0,5438.0,'successful',53,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat10');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Persevering 5thgeneration throughput',733,5139,'Craig, Ellis and Miller',84500.0,193101.0,'successful',2414,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat6'),
-	 (NULL,'Implemented object-oriented synergy',374,3173,'Charles Inc',81300.0,31665.0,'failed',452,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Balanced demand-driven definition',1949,3333,'White-Rosario',800.0,2960.0,'successful',80,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Customer-focused mobile Graphic Interface',48,2262,'Simmons-Villarreal',3400.0,8089.0,'successful',193,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat13'),
-	 (NULL,'Horizontal secondary interface',3020,1531,'Strickland Group',170800.0,109374.0,'failed',1886,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Virtual analyzing collaboration',749,4881,'Lynch Ltd',1800.0,2129.0,'successful',52,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Multi-tiered explicit focus group',1336,3928,'Sanders LLC',150600.0,127745.0,'failed',1825,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Multi-layered systematic knowledgebase',2390,1803,'Cooper LLC',7800.0,2289.0,'failed',31,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Reverse-engineered uniform knowledge user',851,2321,'Palmer Ltd',5800.0,12174.0,'successful',290,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Secured dynamic capacity',2394,6234,'Santos Group',5600.0,9508.0,'successful',122,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat6');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Devolved foreground throughput',1062,1422,'Christian, Kim and Jimenez',134400.0,155849.0,'successful',1470,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Synchronized demand-driven infrastructure',1024,2660,'Williams, Price and Hurley',3000.0,7758.0,'successful',165,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Realigned discrete structure',1261,5361,'Anderson, Parks and Estrada',6000.0,13835.0,'successful',182,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19'),
-	 (NULL,'Progressive grid-enabled website',2029,3420,'Collins-Martinez',8400.0,10770.0,'successful',199,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Organic cohesive neural-net',267,4337,'Barrett Inc',1700.0,3208.0,'successful',56,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat5','subcat20'),
-	 (NULL,'Integrated demand-driven info-mediaries',3140,2338,'Adams-Rollins',159800.0,11108.0,'failed',107,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Reverse-engineered client-server extranet',2599,4140,'Wright-Bryant',19800.0,153338.0,'successful',1460,'AU','AUD','1970-01-01','1970-01-01',false,true,'cat1','subcat1'),
-	 (NULL,'Organized discrete encoding',1505,2373,'Berry-Cannon',8800.0,2437.0,'failed',27,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Balanced regional flexibility',2736,1344,'Davis-Gonzalez',179100.0,93991.0,'failed',1221,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Implemented multimedia time-frame',2444,2141,'Best-Young',3100.0,12620.0,'successful',123,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat2','subcat18');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Enhanced uniform service-desk',212,3415,'Powers, Smith and Deleon',100.0,2.0,'failed',1,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat3'),
-	 (NULL,'Versatile bottom-line definition',1226,5696,'Hogan Group',5600.0,8746.0,'successful',159,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Integrated bifurcated software',2381,1798,'Wang, Silva and Byrd',1400.0,3534.0,'successful',110,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Assimilated next generation instruction set',2510,1657,'Parker-Morris',41000.0,709.0,'live',14,'US','USD','1970-01-01','1970-01-01',false,true,'cat6','subcat10'),
-	 (NULL,'Digitized foreground array',182,3651,'Rodriguez, Johnson and Jackson',6500.0,795.0,'failed',16,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat16'),
-	 (NULL,'Re-engineered clear-thinking project',1340,3574,'Haynes PLC',7900.0,12955.0,'successful',236,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Implemented even-keeled standardization',663,6063,'Hayes Group',5500.0,8964.0,'successful',191,'US','USD','1970-01-01','1970-01-01',true,true,'cat5','subcat5'),
-	 (NULL,'Quality-focused asymmetric adapter',167,2404,'White, Pena and Calhoun',9100.0,1843.0,'failed',41,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Networked intangible help-desk',3143,2705,'Bryant-Pope',38200.0,121950.0,'successful',3934,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Synchronized attitude-oriented frame',1571,5059,'Gates, Li and Thompson',1800.0,8621.0,'successful',80,'CA','CAD','1970-01-01','1970-01-01',false,true,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Proactive incremental architecture',1216,5466,'King-Morris',154500.0,30215.0,'canceled',296,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Cloned responsive standardization',237,5821,'Carter, Cole and Curtis',5800.0,11539.0,'successful',462,'US','USD','1970-01-01','1970-01-01',true,false,'cat3','subcat3'),
-	 (NULL,'Reduced bifurcated pricing structure',1524,5385,'Sanchez-Parsons',1800.0,14310.0,'successful',179,'US','USD','1970-01-01','1970-01-01',true,false,'cat5','subcat7'),
-	 (NULL,'Re-engineered asymmetric challenge',218,3506,'Rivera-Pearson',70200.0,35536.0,'failed',523,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat5','subcat7'),
-	 (NULL,'Diverse client-driven conglomeration',2508,5427,'Ramirez, Padilla and Barrera',6400.0,3676.0,'failed',141,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Configurable upward-trending solution',1873,6142,'Riggs Group',125900.0,195936.0,'successful',1866,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat5','subcat20'),
-	 (NULL,'Persistent bandwidth-monitored framework',1378,2873,'Clements Ltd',3700.0,1343.0,'failed',52,'US','USD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Polarized discrete product',2488,3916,'Cooper Inc',3600.0,2097.0,'live',27,'GB','GBP','1970-01-01','1970-01-01',false,true,'cat5','subcat13'),
-	 (NULL,'Seamless dynamic website',2924,1687,'Jones-Gonzalez',3800.0,9021.0,'successful',156,'CH','CHF','1970-01-01','1970-01-01',false,false,'cat6','subcat16'),
-	 (NULL,'Extended multimedia firmware',316,1542,'Fox Ltd',35600.0,20915.0,'failed',225,'AU','AUD','1970-01-01','1970-01-01',false,true,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Versatile directional project',531,3087,'Green, Murphy and Webb',5300.0,9676.0,'successful',255,'US','USD','1970-01-01','1970-01-01',true,false,'cat5','subcat11'),
-	 (NULL,'Profound directional knowledge user',435,3857,'Stevenson PLC',160400.0,1210.0,'failed',38,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Ameliorated logistical capability',1381,5921,'Soto-Anthony',51400.0,90440.0,'successful',2261,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat22'),
-	 (NULL,'Sharable discrete definition',2606,3144,'Wise and Sons',1700.0,4044.0,'successful',40,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'User-friendly next generation core',2402,2676,'Butler-Barr',39400.0,192292.0,'successful',2289,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Profit-focused empowering system engine',761,3646,'Wilson, Jefferson and Anderson',3000.0,6722.0,'successful',65,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Synchronized cohesive encoding',1447,1321,'Brown-Oliver',8700.0,1577.0,'failed',15,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Synergistic dynamic utilization',1724,1399,'Davis-Gardner',7200.0,3301.0,'failed',37,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Triple-buffered bi-directional model',1050,3169,'Dawson Group',167400.0,196386.0,'successful',3777,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Polarized tertiary function',443,2058,'Turner-Terrell',5500.0,11952.0,'successful',184,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Configurable fault-tolerant structure',974,1300,'Hall, Buchanan and Benton',3500.0,3930.0,'successful',85,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Digitized 24/7 budgetary management',534,2075,'Lowery, Hayden and Cruz',7900.0,5729.0,'failed',112,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Stand-alone zero tolerance algorithm',289,2984,'Mora, Miller and Harper',2300.0,4883.0,'successful',144,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Implemented tangible support',2046,4768,'Espinoza Group',73000.0,175015.0,'successful',1902,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Reactive radical framework',2614,3682,'Davis, Crawford and Lopez',6200.0,11280.0,'successful',105,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Object-based full-range knowledge user',2652,5901,'Richards, Stevens and Fleming',6100.0,10012.0,'successful',132,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Enhanced composite contingency',1303,3540,'Brown Ltd',103200.0,1690.0,'failed',21,'US','USD','1970-01-01','1970-01-01',true,false,'cat4','subcat4'),
-	 (NULL,'Cloned fresh-thinking model',2638,2225,'Tapia, Sandoval and Hurley',171000.0,84891.0,'canceled',976,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Total dedicated benchmark',2865,1485,'Allen Inc',9200.0,10093.0,'successful',96,'US','USD','1970-01-01','1970-01-01',false,true,'cat6','subcat14'),
-	 (NULL,'Streamlined human-resource Graphic Interface',640,5343,'Williams, Johnson and Campbell',7800.0,3839.0,'failed',67,'US','USD','1970-01-01','1970-01-01',false,true,'cat7','subcat12');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Upgradable analyzing core',910,5594,'Wiggins Ltd',9900.0,6161.0,'live',66,'CA','CAD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Profound exuding pricing structure',333,2482,'Luna-Horne',43000.0,5615.0,'failed',78,'US','USD','1970-01-01','1970-01-01',true,false,'cat4','subcat4'),
-	 (NULL,'Horizontal optimizing model',1722,2706,'Allen Inc',9600.0,6205.0,'failed',67,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Synchronized fault-tolerant algorithm',1437,4861,'Peterson, Gonzalez and Spencer',7500.0,11969.0,'successful',114,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Streamlined 5thgeneration intranet',806,2961,'Walter Inc',10000.0,8142.0,'failed',263,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat8','subcat15'),
-	 (NULL,'Cross-group clear-thinking task-force',1563,3043,'Sanders, Farley and Huffman',172000.0,55805.0,'failed',1691,'US','USD','1970-01-01','1970-01-01',true,false,'cat8','subcat15'),
-	 (NULL,'Public-key bandwidth-monitored intranet',878,6103,'Hall, Holmes and Walker',153700.0,15238.0,'failed',181,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Upgradable clear-thinking hardware',2968,4708,'Smith-Powell',3600.0,961.0,'failed',13,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Integrated holistic paradigm',1876,4395,'Smith-Hill',9400.0,5918.0,'canceled',160,'US','USD','1970-01-01','1970-01-01',true,true,'cat5','subcat5'),
-	 (NULL,'Seamless clear-thinking conglomeration',2686,4912,'Wright LLC',5900.0,9520.0,'successful',203,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Persistent content-based methodology',513,2030,'Williams, Orozco and Gomez',100.0,5.0,'failed',1,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Re-engineered 24hour matrix',3165,5235,'Peterson Ltd',14500.0,159056.0,'successful',1559,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Virtual multi-tasking core',1847,5001,'Cummings-Hayes',145500.0,101987.0,'canceled',2266,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Streamlined fault-tolerant conglomeration',1994,4093,'Boyle Ltd',3300.0,1980.0,'failed',21,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat23'),
-	 (NULL,'Enterprise-wide client-driven policy',201,2576,'Henderson, Parker and Diaz',42600.0,156384.0,'successful',1548,'AU','AUD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Function-based next generation emulation',960,6122,'Moss-Obrien',700.0,7763.0,'successful',80,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Re-engineered composite focus group',1475,2813,'Wood Inc',187600.0,35698.0,'failed',830,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat23'),
-	 (NULL,'Profound mission-critical function',3149,3737,'Riley, Cohen and Goodman',9800.0,12434.0,'successful',131,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'De-engineered zero-defect open system',877,2803,'Green, Robinson and Ho',1100.0,8081.0,'successful',112,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat11'),
-	 (NULL,'Operative hybrid utilization',2122,5508,'Black-Graham',145000.0,6631.0,'failed',130,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Function-based interactive matrix',923,3850,'Robbins Group',5500.0,4678.0,'failed',55,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Optimized content-based collaboration',1809,4220,'Mason, Case and May',5700.0,6800.0,'successful',155,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19'),
-	 (NULL,'User-centric cohesive policy',3209,4532,'Harris, Russell and Mitchell',3600.0,10657.0,'successful',266,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Ergonomic methodical hub',1951,6013,'Rodriguez-Robinson',5900.0,4997.0,'failed',114,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat8','subcat15'),
-	 (NULL,'Devolved disintermediate encryption',2566,3396,'Peck, Higgins and Smith',3700.0,13164.0,'successful',155,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Phased clear-thinking policy',2925,4401,'Nunez-King',2200.0,8501.0,'successful',207,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Seamless solution-oriented capacity',3087,2981,'Davis and Sons',1700.0,13468.0,'successful',245,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Organized human-resource attitude',2040,4467,'Howard-Douglas',88400.0,121138.0,'successful',1573,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat22'),
-	 (NULL,'Open-architected disintermediate budgetary management',1755,1377,'Gonzalez-White',2400.0,8117.0,'successful',114,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Multi-lateral radical solution',965,5036,'Lopez-King',7900.0,8550.0,'successful',93,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Inverse context-sensitive info-mediaries',2019,5761,'Glover-Nelson',94900.0,57659.0,'failed',594,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Versatile neutral workforce',843,3699,'Garner and Sons',5100.0,1414.0,'failed',24,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat20'),
-	 (NULL,'Multi-tiered systematic knowledge user',1593,4519,'Sellers, Roach and Garrison',42700.0,97524.0,'successful',1681,'US','USD','1970-01-01','1970-01-01',false,true,'cat3','subcat3'),
-	 (NULL,'Programmable multi-state algorithm',2494,5395,'Herrera, Bennett and Silva',121100.0,26176.0,'failed',252,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Multi-channeled reciprocal interface',2250,3057,'Thomas, Clay and Mendoza',800.0,2991.0,'successful',32,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat8'),
-	 (NULL,'Right-sized maximized migration',1498,2741,'Ayala Group',5400.0,8366.0,'successful',135,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Self-enabling value-added artificial intelligence',356,1675,'Huerta, Roberts and Dickerson',4000.0,12886.0,'successful',140,'US','USD','1970-01-01','1970-01-01',false,true,'cat4','subcat4'),
-	 (NULL,'Vision-oriented interactive solution',1432,2712,'Johnson Group',7000.0,5177.0,'failed',67,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1'),
-	 (NULL,'Fundamental user-facing productivity',25,4527,'Bailey, Nguyen and Martinez',1000.0,8641.0,'successful',92,'US','USD','1970-01-01','1970-01-01',false,false,'cat7','subcat12'),
-	 (NULL,'Innovative well-modulated capability',488,1722,'Williams, Martin and Meyer',60200.0,86244.0,'successful',1015,'GB','GBP','1970-01-01','1970-01-01',false,false,'cat4','subcat4');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Universal fault-tolerant orchestration',423,4330,'Huff-Johnson',195200.0,78630.0,'failed',742,'US','USD','1970-01-01','1970-01-01',true,false,'cat6','subcat10'),
-	 (NULL,'Grass-roots executive synergy',2028,5219,'Diaz-Little',6700.0,11941.0,'successful',323,'US','USD','1970-01-01','1970-01-01',false,false,'cat3','subcat3'),
-	 (NULL,'Multi-layered optimal application',1521,4997,'Freeman-French',7200.0,6115.0,'failed',75,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat5'),
-	 (NULL,'Business-focused full-range core',2780,2239,'Beck-Weber',129100.0,188404.0,'successful',2326,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Exclusive system-worthy Graphic Interface',2316,4587,'Lewis-Jacobson',6500.0,9910.0,'successful',381,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Enhanced optimal ability',2247,4113,'Logan-Curtis',170600.0,114523.0,'failed',4405,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Optional zero administration neural-net',2408,4762,'Chan, Washington and Callahan',7800.0,3144.0,'failed',92,'US','USD','1970-01-01','1970-01-01',false,false,'cat2','subcat2'),
-	 (NULL,'Ameliorated foreground focus group',3184,5242,'Wilson Group',6200.0,13441.0,'successful',480,'US','USD','1970-01-01','1970-01-01',false,false,'cat5','subcat5'),
-	 (NULL,'Triple-buffered multi-tasking matrices',1680,5765,'Gardner, Ryan and Gutierrez',9400.0,4899.0,'failed',64,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat16'),
-	 (NULL,'Versatile dedicated migration',2585,2185,'Hernandez Inc',2400.0,11990.0,'successful',226,'US','USD','1970-01-01','1970-01-01',false,false,'cat6','subcat19');
-INSERT INTO crowdfunding.campaign ("name",description,cf_id,contact_id,company_name,goal,pledged,outcome,backers_count,country,currency,launched_date,end_date,staff_pick,spotlight,category_id,subcategory_id) VALUES
-	 (NULL,'Devolved foreground customer loyalty',1561,5500,'Ortiz-Roberts',7800.0,6839.0,'failed',64,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat7'),
-	 (NULL,'Reduced reciprocal focus group',2632,3494,'Ramirez LLC',9800.0,11091.0,'successful',241,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat2'),
-	 (NULL,'Networked global migration',439,3924,'Morrow Inc',3100.0,13223.0,'successful',132,'US','USD','1970-01-01','1970-01-01',false,true,'cat5','subcat7'),
-	 (NULL,'De-engineered even-keeled definition',461,3521,'Erickson-Rogers',9800.0,7608.0,'canceled',75,'IT','EUR','1970-01-01','1970-01-01',false,true,'cat8','subcat15'),
-	 (NULL,'Implemented bi-directional flexibility',1419,5262,'Leach, Rich and Price',141100.0,74073.0,'failed',842,'US','USD','1970-01-01','1970-01-01',false,true,'cat6','subcat19'),
-	 (NULL,'Vision-oriented scalable definition',2986,3684,'Manning-Hamilton',97300.0,153216.0,'successful',2043,'US','USD','1970-01-01','1970-01-01',false,true,'cat1','subcat1'),
-	 (NULL,'Future-proofed upward-trending migration',2031,5784,'Butler LLC',6600.0,4814.0,'failed',112,'US','USD','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Right-sized full-range throughput',1627,1498,'Ball LLC',7600.0,4603.0,'canceled',139,'IT','EUR','1970-01-01','1970-01-01',false,false,'cat4','subcat4'),
-	 (NULL,'Polarized composite customer loyalty',2175,6073,'Taylor, Santiago and Flores',66600.0,37823.0,'failed',374,'US','USD','1970-01-01','1970-01-01',false,true,'cat2','subcat8'),
-	 (NULL,'Expanded eco-centric policy',1788,4939,'Hernandez, Norton and Kelley',111100.0,62819.0,'canceled',1122,'US','USD','1970-01-01','1970-01-01',false,false,'cat1','subcat1');
-INSERT INTO crowdfunding.category ("name",description,category_id,category) VALUES
-	 (NULL,NULL,'cat1','food'),
-	 (NULL,NULL,'cat2','music'),
-	 (NULL,NULL,'cat3','technology'),
-	 (NULL,NULL,'cat4','theater'),
-	 (NULL,NULL,'cat5','film & video'),
-	 (NULL,NULL,'cat6','publishing'),
-	 (NULL,NULL,'cat7','games'),
-	 (NULL,NULL,'cat8','photography'),
-	 (NULL,NULL,'cat9','journalism');
+CREATE TABLE subcategory (
+	project_id serial4 NOT NULL,
+	"name" varchar(255) NULL,
+	description text NULL,
+	subcategory_id varchar(50) NULL,
+	subcategory varchar(50) NULL,
+	CONSTRAINT subcategory_pkey PRIMARY KEY (project_id)
+);
